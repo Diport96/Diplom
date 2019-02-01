@@ -14,10 +14,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace DiplomApp
-{   
-    public partial class MainWindow : Window
+{
+    /// <summary>
+    /// Логика взаимодействия для ConnectionsNotifier.xaml
+    /// </summary>
+    public partial class ConnectionsNotifier : UserControl
     {
-        public MainWindow()
+        public ConnectionsNotifier()
         {
             InitializeComponent();
         }

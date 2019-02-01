@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomApp", "DiplomApp\DiplomApp.csproj", "{311A393F-8BE7-40B2-9BB2-C2C69D38A228}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetOfConstants", "SetOfConstants\SetOfConstants.csproj", "{B710B932-92F7-4802-994F-D8E0179E4B6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{311A393F-8BE7-40B2-9BB2-C2C69D38A228}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{311A393F-8BE7-40B2-9BB2-C2C69D38A228}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{311A393F-8BE7-40B2-9BB2-C2C69D38A228}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B710B932-92F7-4802-994F-D8E0179E4B6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B710B932-92F7-4802-994F-D8E0179E4B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B710B932-92F7-4802-994F-D8E0179E4B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B710B932-92F7-4802-994F-D8E0179E4B6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
