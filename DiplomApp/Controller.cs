@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DiplomApp;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,15 +10,13 @@ using System.Threading.Tasks;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
-namespace MQTTTestApp
+namespace DiplomApp
 {
     abstract class Controller : INotifyPropertyChanged
     {
-        string name;
-        readonly ClientDevice Client;
+        private string name;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public string ID { get; }
+        public Guid ID { get; }
         public CType Type { get; }
         public string Name
         {
@@ -29,14 +28,13 @@ namespace MQTTTestApp
             }
         }
         abstract public string Value { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public Controller(string name)
+        public Controller(Guid id, string name)
         {
+            ID = id;
             Type = TypeInit();
-            ID = Guid.NewGuid().ToString();
             Name = name;
-            Client = new ClientDevice(this);
-
         }
 
         protected void OnPropertyChanged([CallerMemberName]string propertyName = null)
