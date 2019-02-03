@@ -20,6 +20,9 @@ namespace DiplomApp
         public MainWindow()
         {
             InitializeComponent();
+
+            ServerDevice server = ServerDevice.GetInstance();
+            server.Run();
         }
     }
 }

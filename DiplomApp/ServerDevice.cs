@@ -32,15 +32,16 @@ namespace DiplomApp
             }
             client.Connect(ID.ToString());
             client.MqttMsgPublishReceived += Client_MqttMsgPublishReceived;
-
-            SendBroadcast();
-
         }
 
         public static ServerDevice GetInstance()
         {
             if (instance == null) instance = new ServerDevice();
             return instance;
+        }
+        public void Run()
+        {
+            SendBroadcast();
         }
         void SendBroadcast()
         {
@@ -62,10 +63,15 @@ namespace DiplomApp
             client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
         }
         private void Client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
-        {
+        {            
             if (e.Topic == Topics[0])
             {
-                var message = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(e.Message))
+                var encode = e.Message;
+                var msg = Encoding.UTF8.GetString(encode);
+                var res = JsonConvert.DeserializeObject(msg);
+                
+
+                var message = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(encode))
                     as Dictionary<string, string>;
                 message.TryGetValue("Message_Type", out string val);
 
