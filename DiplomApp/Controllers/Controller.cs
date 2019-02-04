@@ -26,9 +26,7 @@ namespace DiplomApp
                 name = value;
                 OnPropertyChanged("Name");
             }
-        }
-        abstract public string Value { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
+        }       
 
         public Controller(Guid id, string name)
         {
@@ -37,10 +35,11 @@ namespace DiplomApp
             Name = name;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName]string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        internal abstract CType TypeInit();
+        protected abstract CType TypeInit();
     }
 }

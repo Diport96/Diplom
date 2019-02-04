@@ -13,14 +13,12 @@ namespace DiplomApp
     class Termometer : Controller
     {
         private double value;
-        public override string Value
+        public double Value
         {
-            get { return value.ToString(); }
+            get { return value; }
             set
             {
-                if (!double.TryParse(value, out double tmp))
-                    throw new ArgumentException("Не удалось распарсить передаваемое значение");
-                this.value = tmp;
+                this.value = value;
                 OnPropertyChanged("Value");
             }
         }
@@ -30,7 +28,7 @@ namespace DiplomApp
             this.value = value;            
         }        
 
-        internal override CType TypeInit()
+        protected override CType TypeInit()
         {
             return CType.Termometer;
         }
