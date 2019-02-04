@@ -13,10 +13,12 @@ namespace DiplomApp
 {
     class ServerDevice
     {
-        private static ServerDevice instance;
+        public delegate void ControllerConnectionHandler(object sender, Controller e);
         private readonly MqttClient client;
         public readonly Guid ID;
+        private static ServerDevice instance;
         public IReadOnlyList<string> Topics { get; }
+        public event ControllerConnectionHandler OnControllerConnected;
 
         private ServerDevice()
         {
@@ -49,7 +51,7 @@ namespace DiplomApp
             {
                 Message_Type = SetOfConstants.MessageTypes.BROADCAST_CONNECTION_REQUSET
             };
-            var res = JsonConvert.SerializeObject(message);
+            var res = JsonConvert.SerializeObject(message, Formatting.Indented);
             client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
         }
         void SendConnack(string id)
@@ -63,23 +65,36 @@ namespace DiplomApp
             client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
         }
         private void Client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
-        {            
+        {
             if (e.Topic == Topics[0])
             {
-                var encode = e.Message;
-                var msg = Encoding.UTF8.GetString(encode);
-                var res = JsonConvert.DeserializeObject(msg);
-                
-
-                var message = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(encode))
+                var message = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(e.Message), typeof(Dictionary<string, string>))
                     as Dictionary<string, string>;
-                message.TryGetValue("Message_Type", out string val);
+                message.TryGetValue("Message_Type", out string req);
 
-                if (val == SetOfConstants.MessageTypes.REQUSET_TO_CONNECT)
+                if (req == SetOfConstants.MessageTypes.REQUSET_TO_CONNECT)
                 {
                     message.TryGetValue("ID", out string id);
+                    message.TryGetValue("Name", out string name);
+                    message.TryGetValue("Type", out string type);
+                    message.TryGetValue("Value", out string value);                    
                     SendConnack(id);
+                    OnControllerConnected?.Invoke(this, BuildController(id,name,type,value));
                 }
+            }
+        }
+        private Controller BuildController(string id, string name, string type, string value)
+        {
+            var cType = (CType)Enum.Parse(typeof(CType), type);
+            if(cType == CType.Termometer)
+            {
+                var resID = Guid.Parse(id);
+                var resValue = double.Parse(value);
+                return new Termometer(resID, name, resValue);
+            }
+            else
+            {
+                throw new InvalidEnumArgumentException(); //MessageBox Alert
             }
         }
 

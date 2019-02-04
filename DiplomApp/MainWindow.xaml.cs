@@ -17,12 +17,21 @@ namespace DiplomApp
 {   
     public partial class MainWindow : Window
     {
+        List<Controller> Controllers;
+
         public MainWindow()
         {
             InitializeComponent();
 
+            Controllers = new List<Controller>();
             ServerDevice server = ServerDevice.GetInstance();
+            server.OnControllerConnected += Server_OnControllerConnected;
             server.Run();
+        }
+
+        private void Server_OnControllerConnected(object sender, EventArgs e)
+        {
+            
         }
     }
 }

@@ -62,8 +62,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CType.cs" />
-    <Compile Include="Termometer.cs" />
+    <Compile Include="Controllers\CType.cs" />
+    <Compile Include="Controllers\Termometer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -72,8 +72,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ServerDevice.cs" />
-    <Compile Include="Controller.cs" />
+    <Compile Include="Server\OnControllerConnectedEventArgs.cs" />
+    <Compile Include="Server\ServerDevice.cs" />
+    <Compile Include="Controllers\Controller.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
