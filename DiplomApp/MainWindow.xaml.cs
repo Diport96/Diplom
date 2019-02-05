@@ -32,22 +32,24 @@ namespace DiplomApp
 
         private void Server_OnControllerConnected(object sender, Dictionary<string, string> args)
         {
-            throw new NotImplementedException();
-        }
+            args.TryGetValue("ID", out string id);
+            args.TryGetValue("Name", out string name);
+            args.TryGetValue("Type", out string t);
+            args.TryGetValue("Value", out string val);
 
-        private Controller BuildController(string id, string name, string type, string value)
-        {
-            var cType = (CType)Enum.Parse(typeof(CType), type);
-            if (cType == CType.Termometer)
+            var guid = Guid.Parse(id);
+            var type = (CType)Enum.Parse(typeof(CType), t);
+            var value = double.Parse(val);
+
+            switch (type)
             {
-                var resID = Guid.Parse(id);
-                var resValue = double.Parse(value);
-                return new Termometer(resID, name, resValue);
+                case CType.Switch:
+                    break;
+                case CType.Termometer: Controllers.Add(new Termometer(guid, name, value));
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                throw new InvalidEnumArgumentException(); //MessageBox Alert
-            }
-        }
+        }               
     }
 }

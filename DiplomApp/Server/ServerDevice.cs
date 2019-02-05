@@ -14,11 +14,11 @@ namespace DiplomApp
     class ServerDevice
     {
         public delegate void ControllerConnectionHandler(object sender, Dictionary<string, string> args);
-        private readonly MqttClient client;
-        public Guid ID { get; }
-        private static ServerDevice instance;
-        public IReadOnlyList<string> Topics { get; }
         public event ControllerConnectionHandler OnControllerConnected;
+        private readonly MqttClient client;
+        private static ServerDevice instance;
+        public Guid ID { get; }
+        public IReadOnlyList<string> Topics { get; }
 
         private ServerDevice()
         {
@@ -44,26 +44,7 @@ namespace DiplomApp
         public void Run()
         {
             SendBroadcast();
-        }
-        void SendBroadcast()
-        {
-            var message = new
-            {
-                Message_Type = SetOfConstants.MessageTypes.BROADCAST_CONNECTION_REQUSET
-            };
-            var res = JsonConvert.SerializeObject(message, Formatting.Indented);
-            client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
-        }
-        void SendConnack(string id)
-        {
-            var message = new
-            {
-                Message_Type = SetOfConstants.MessageTypes.PERMIT_TO_CONNECT,
-                ID = id
-            };
-            var res = JsonConvert.SerializeObject(message);
-            client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
-        }
+        } // Сделать асинхронным методом
         private void MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
             if (e.Topic == Topics[0])
@@ -74,12 +55,32 @@ namespace DiplomApp
 
                 if (req == SetOfConstants.MessageTypes.REQUSET_TO_CONNECT)
                 {
-                    message.TryGetValue("ID", out string id);                
-                    
+                    message.TryGetValue("ID", out string id);
+                    message.Remove("Message_Type");
+
                     OnControllerConnected?.Invoke(this, message);
                     SendConnack(id);
                 }
             }
+        }
+        private void SendBroadcast()
+        {
+            var message = new
+            {
+                Message_Type = SetOfConstants.MessageTypes.BROADCAST_CONNECTION_REQUSET
+            };
+            var res = JsonConvert.SerializeObject(message, Formatting.Indented);
+            client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
+        }
+        private void SendConnack(string id)
+        {
+            var message = new
+            {
+                Message_Type = SetOfConstants.MessageTypes.PERMIT_TO_CONNECT,
+                ID = id
+            };
+            var res = JsonConvert.SerializeObject(message);
+            client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
         }
         
         ~ServerDevice()
