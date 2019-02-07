@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,19 +17,22 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace DiplomApp
-{   
+{
     public partial class MainWindow : Window
     {
-        List<Controller> Controllers;
+        static Logger logger = LogManager.GetCurrentClassLogger();
+        static ServerDevice server;
+        List<Controller> controllers;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            Controllers = new List<Controller>();
-            ServerDevice server = ServerDevice.GetInstance();
+            controllers = new List<Controller>();
+            server = ServerDevice.Instance;
             server.OnControllerConnected += Server_OnControllerConnected;
-            server.Run();
+            server.RunAsync();            
+            Closed += MainWindow_Closed;            
         }
 
         private void Server_OnControllerConnected(object sender, Dictionary<string, string> args)
@@ -45,11 +50,23 @@ namespace DiplomApp
             {
                 case CType.Switch:
                     break;
-                case CType.Termometer: Controllers.Add(new Termometer(guid, name, value));
+                case CType.Termometer:
+                    controllers.Add(new Termometer(guid, name, value));
+                    //LOG
+                    logger.Debug($"Добавлен новый контроллер с названием: {name}. Текущее количество: {controllers.Count}.");
                     break;
                 default:
                     break;
             }
-        }               
+        }
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+           server.Stop();
+        }
+
+        ~MainWindow()
+        {
+            server.Stop();
+        }
     }
 }
