@@ -92,7 +92,7 @@ namespace DiplomApp
                     message.TryGetValue("ID", out string id);
                     message.Remove("Message_Type");
 
-                    OnControllerConnected?.Invoke(this, message);
+                    OnControllerMessageReceived?.Invoke(this, message);
                     SendConnack(id);
                 }
             }
@@ -117,7 +117,7 @@ namespace DiplomApp
             client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
         }
 
-        public delegate void ControllerConnectionHandler(object sender, Dictionary<string, string> args);
-        public event ControllerConnectionHandler OnControllerConnected;
+        public delegate void ControllerMessageHandler(object sender, Dictionary<string, string> args);
+        public event ControllerMessageHandler OnControllerMessageReceived;
     }
 }

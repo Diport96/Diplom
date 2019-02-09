@@ -30,5 +30,10 @@ namespace SetOfConstants
         /// Тип зпароса на подтверждение соединения с сервером
         /// </summary>
         public const string PERMIT_TO_CONNECT = "CONNACK";
+
+        /// <summary>
+        /// Тип запроса на рассылку значений микроконтроллеров серверу
+        /// </summary>
+        public const string DISTRIBUTION_OF_VALUES = "DISTRIBUTE";
     }      
 }

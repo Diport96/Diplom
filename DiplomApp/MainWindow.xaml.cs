@@ -30,7 +30,7 @@ namespace DiplomApp
 
             controllers = new List<Controller>();
             server = ServerDevice.Instance;
-            server.OnControllerConnected += Server_OnControllerConnected;
+            server.OnControllerMessageReceived += Server_OnControllerConnected;
             server.RunAsync();            
             Closed += MainWindow_Closed;            
         }
