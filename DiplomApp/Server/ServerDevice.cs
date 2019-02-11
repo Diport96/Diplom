@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,12 +12,15 @@ using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
 
-namespace DiplomApp
+namespace DiplomApp.Server
 {
     class ServerDevice
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static ServerDevice instance;
+        private readonly MqttClient client;
+        private readonly CancellationTokenSource cancellationRun;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         public static ServerDevice Instance
         {
             get
@@ -25,9 +29,6 @@ namespace DiplomApp
                 return instance;
             }
         }
-
-        private readonly MqttClient client;
-        private readonly CancellationTokenSource cancellation;
         public Guid ID { get; }
         public IReadOnlyList<string> Topics { get; }
 
@@ -42,18 +43,18 @@ namespace DiplomApp
             foreach (var topic in Topics)
             {
                 client.Subscribe(new string[] { topic }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-            }            
+            }
             client.MqttMsgPublishReceived += MqttMsgPublishReceived;
 
-            cancellation = new CancellationTokenSource();
+            cancellationRun = new CancellationTokenSource();
         }
 
         public async void RunAsync()
         {
             logger.Info("Запуск сервера");
             logger.Debug("Попытка подключения сервера к mqtt брокеру");
-            client.Connect(ID.ToString());            
-            var token = cancellation.Token;
+            client.Connect(ID.ToString());
+            var token = cancellationRun.Token;
             token.Register(() =>
             {
                 logger.Debug("Закрытие асинхронного потока для сервера");
@@ -64,38 +65,50 @@ namespace DiplomApp
                 while (true)
                 {
                     SendBroadcast();
-                    Thread.Sleep(5000);
+                    Thread.Sleep(10000);
                 }
-            }, cancellation.Token);
+            }, cancellationRun.Token);
         }
         public void Stop()
         {
             if (!client.IsConnected) return;
             logger.Info("Останока работы сервера");
-            cancellation.Cancel();
+            cancellationRun.Cancel();
             client.Disconnect();
+        }
+        public void SendMessage(string message, string topic)
+        {
+            client.Publish(topic, Encoding.UTF8.GetBytes(message));
+        }
+        public void SendMessage(Dictionary<string, string> keyValuePairs, string topic)
+        {
+            var str = JsonConvert.SerializeObject(keyValuePairs);
+            client.Publish(topic, Encoding.UTF8.GetBytes(str));
         }
 
         private void MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            logger.Debug($"Получено сообщение из топика {e.Topic}.");
-            if (e.Topic == Topics[0])
+            Dictionary<string, string> message = null;
+            try
             {
-                var message = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(e.Message), typeof(Dictionary<string, string>))
-                    as Dictionary<string, string>;
-                message.TryGetValue("Message_Type", out string req);
-
-                logger.Debug($"Тип сообшения: {req}");
-
-                if (req == SetOfConstants.MessageTypes.REQUSET_TO_CONNECT)
-                {
-                    message.TryGetValue("ID", out string id);
-                    message.Remove("Message_Type");
-
-                    OnControllerMessageReceived?.Invoke(this, message);
-                    SendConnack(id);
-                }
+                var jsonMessage = Encoding.UTF8.GetString(e.Message);
+                message = JsonConvert.DeserializeObject(jsonMessage, typeof(Dictionary<string, string>)) as Dictionary<string, string>;
             }
+            catch (Exception w)
+            {
+                logger.Error(w, "Не удалось распарсить данные, возможно нарушение структуры данных");
+                return;
+            }
+
+            message.TryGetValue("Message_Type", out string req);
+            logger.Debug($"Получено сообщение из топика { e.Topic}. Тип сообщения: {req}");
+            if (req == SetOfConstants.MessageTypes.BROADCAST_CONNECTION_REQUSET ||
+                req == SetOfConstants.MessageTypes.PERMIT_TO_CONNECT
+                ) return;
+
+            message.Add("Topic", e.Topic);
+            HandleRequest(message);
+
         }
         private void SendBroadcast()
         {
@@ -106,18 +119,25 @@ namespace DiplomApp
             var res = JsonConvert.SerializeObject(message, Formatting.Indented);
             client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
         }
-        private void SendConnack(string id)
+        private void HandleRequest(Dictionary<string, string> keyValuePairs)
         {
-            var message = new
-            {
-                Message_Type = SetOfConstants.MessageTypes.PERMIT_TO_CONNECT,
-                ID = id
-            };
-            var res = JsonConvert.SerializeObject(message);
-            client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
-        }
+            var interfaceName = typeof(IRequestHandler).Name;
+            keyValuePairs.TryGetValue("Message_Type", out string msgType);
+            var types = Assembly.GetExecutingAssembly().GetTypes().Where
+                (x => x.GetInterface(interfaceName) != null && x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
+            var types2 = types.Where
+                (x => x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
 
-        public delegate void ControllerMessageHandler(object sender, Dictionary<string, string> args);
-        public event ControllerMessageHandler OnControllerMessageReceived;
+            var type = types.FirstOrDefault(x => (x.GetCustomAttribute(typeof(RequestTypeAttribute)) as RequestTypeAttribute).MessageType == msgType);
+            if (type == null)
+                throw new NullReferenceException($"Не удалось найти обработчик события соответствующий запросу: {msgType}");
+            var prop = type.GetProperty("Instance");
+            if (prop == null)
+                throw new NotImplementedException($"В классе {type.Name} не реализован паттерн Singleton");
+            var getClass = prop.GetMethod.Invoke(null, null) as IRequestHandler;
+
+            keyValuePairs.Remove("Message_Type");
+            getClass.Execute(keyValuePairs);
+        }
     }
 }

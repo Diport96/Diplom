@@ -16,8 +16,7 @@ namespace DiplomApp
     {
         private string name;
 
-        public Guid ID { get; }
-        public CType Type { get; }
+        public string ID { get; }        
         public string Name
         {
             get { return name; }
@@ -28,10 +27,9 @@ namespace DiplomApp
             }
         }       
 
-        public Controller(Guid id, string name)
+        public Controller(string id, string name)
         {
-            ID = id;
-            Type = TypeInit();
+            ID = id;            
             Name = name;
         }
 
@@ -39,7 +37,6 @@ namespace DiplomApp
         protected void OnPropertyChanged([CallerMemberName]string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        protected abstract CType TypeInit();
+        }        
     }
 }

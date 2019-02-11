@@ -70,7 +70,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controllers\ConstollerManager.cs" />
     <Compile Include="Controllers\CType.cs" />
+    <Compile Include="Controllers\InvalidControllerTypeException.cs" />
     <Compile Include="Controllers\Termometer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -80,6 +82,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Server\IRequestHandler.cs" />
+    <Compile Include="Server\RequestTypeAttribute.cs" />
+    <Compile Include="Server\RequsestHandlers\RequestToConnectHandler.cs" />
     <Compile Include="Server\ServerDevice.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="MainWindow.xaml.cs">

@@ -23,14 +23,9 @@ namespace DiplomApp
             }
         }
 
-        public Termometer(Guid id, string name, double value) : base(id, name)
+        public Termometer(string id, string name, double value) : base(id, name)
         {
             this.value = value;            
         }        
-
-        protected override CType TypeInit()
-        {
-            return CType.Termometer;
-        }
     }
 }
