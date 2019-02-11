@@ -23,6 +23,14 @@ namespace DiplomApp.Controllers
             controllers.Add(controller);
             logger.Debug($"Добавлен новый контроллер. Общее количество: {controllers.Count}");
         }
+        public static void Remove(string id)
+        {
+            var control = controllers.Find(x => x.ID == id);
+            if (control == null)
+                logger.Error($"Ошибка удаления экземпляра микроконтроллера: не удалось найти экземпляр с идентификатором: {id}");
+            else
+                controllers.Remove(control);
+        }
         public static IEnumerable<Controller> GetControllers()
         {
             return controllers.AsReadOnly();

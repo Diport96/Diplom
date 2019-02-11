@@ -19,6 +19,7 @@ namespace DiplomApp.Server
         private static ServerDevice instance;
         private readonly MqttClient client;
         private readonly CancellationTokenSource cancellationRun;
+        private readonly Type[] SupportedRequestHandlers;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static ServerDevice Instance
@@ -34,11 +35,13 @@ namespace DiplomApp.Server
 
         private ServerDevice()
         {
+            //Инициализация полей и свойств
             ID = Guid.NewGuid();
             Topics = new List<string>() {
                 SetOfConstants.Topics.CONNECTION
             }.AsReadOnly();
 
+            //Инициализация MQTT клиента
             client = new MqttClient("localhost");
             foreach (var topic in Topics)
             {
@@ -46,6 +49,14 @@ namespace DiplomApp.Server
             }
             client.MqttMsgPublishReceived += MqttMsgPublishReceived;
 
+            //Инициализация обработчиков запросов
+            var interfaceName = typeof(IRequestHandler).Name;            
+            var types = Assembly.GetExecutingAssembly().GetTypes().Where
+                (x => x.GetInterface(interfaceName) != null && x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
+            SupportedRequestHandlers = types.Where
+                (x => x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1).ToArray();
+
+            //Создание токена отмены асинхронной задачи
             cancellationRun = new CancellationTokenSource();
         }
 
@@ -120,22 +131,15 @@ namespace DiplomApp.Server
             client.Publish(Topics[0], Encoding.UTF8.GetBytes(res));
         }
         private void HandleRequest(Dictionary<string, string> keyValuePairs)
-        {
-            var interfaceName = typeof(IRequestHandler).Name;
+        {            
             keyValuePairs.TryGetValue("Message_Type", out string msgType);
-            var types = Assembly.GetExecutingAssembly().GetTypes().Where
-                (x => x.GetInterface(interfaceName) != null && x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
-            var types2 = types.Where
-                (x => x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
-
-            var type = types.FirstOrDefault(x => (x.GetCustomAttribute(typeof(RequestTypeAttribute)) as RequestTypeAttribute).MessageType == msgType);
+            var type = SupportedRequestHandlers.FirstOrDefault(x => (x.GetCustomAttribute(typeof(RequestTypeAttribute)) as RequestTypeAttribute).MessageType == msgType);
             if (type == null)
                 throw new NullReferenceException($"Не удалось найти обработчик события соответствующий запросу: {msgType}");
             var prop = type.GetProperty("Instance");
             if (prop == null)
                 throw new NotImplementedException($"В классе {type.Name} не реализован паттерн Singleton");
             var getClass = prop.GetMethod.Invoke(null, null) as IRequestHandler;
-
             keyValuePairs.Remove("Message_Type");
             getClass.Execute(keyValuePairs);
         }
