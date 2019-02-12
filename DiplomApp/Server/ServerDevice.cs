@@ -10,16 +10,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
-
+using MQTTnet.Server;
+using MQTTnet;
 
 namespace DiplomApp.Server
 {
     class ServerDevice
     {
         private static ServerDevice instance;
+        private readonly IMqttServerOptions serverOptions;
+        private readonly IMqttServer server;
         private readonly MqttClient client;
         private readonly CancellationTokenSource cancellationRun;
-        private readonly Type[] SupportedRequestHandlers;
+        private readonly IEnumerable<Type> SupportedRequestHandlers;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static ServerDevice Instance
@@ -41,6 +44,10 @@ namespace DiplomApp.Server
                 SetOfConstants.Topics.CONNECTION
             }.AsReadOnly();
 
+            //Инициализация сервера
+            server = new MqttFactory().CreateMqttServer();
+            serverOptions = new MqttServerOptions();
+
             //Инициализация MQTT клиента
             client = new MqttClient("localhost");
             foreach (var topic in Topics)
@@ -54,7 +61,7 @@ namespace DiplomApp.Server
             var types = Assembly.GetExecutingAssembly().GetTypes().Where
                 (x => x.GetInterface(interfaceName) != null && x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
             SupportedRequestHandlers = types.Where
-                (x => x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1).ToArray();
+                (x => x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
 
             //Создание токена отмены асинхронной задачи
             cancellationRun = new CancellationTokenSource();
@@ -63,7 +70,8 @@ namespace DiplomApp.Server
         public async void RunAsync()
         {
             logger.Info("Запуск сервера");
-            logger.Debug("Попытка подключения сервера к mqtt брокеру");
+            await server.StartAsync(serverOptions);            
+            logger.Debug("Попытка подключения к mqtt серверу");
             client.Connect(ID.ToString());
             var token = cancellationRun.Token;
             token.Register(() =>
@@ -80,12 +88,13 @@ namespace DiplomApp.Server
                 }
             }, cancellationRun.Token);
         }
-        public void Stop()
+        public async void StopAsync()
         {
             if (!client.IsConnected) return;
             logger.Info("Останока работы сервера");
             cancellationRun.Cancel();
             client.Disconnect();
+            await server.StopAsync();
         }
         public void SendMessage(string message, string topic)
         {
