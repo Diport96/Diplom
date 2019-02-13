@@ -5,8 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;
+
 
 namespace DiplomApp
 {
@@ -25,7 +24,7 @@ namespace DiplomApp
 
         public Termometer(string id, string name, double value) : base(id, name)
         {
-            this.value = value;            
-        }        
+            this.value = value;
+        }
     }
 }
