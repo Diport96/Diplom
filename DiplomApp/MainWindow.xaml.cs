@@ -22,20 +22,20 @@ namespace DiplomApp
     public partial class MainWindow : Window
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
-        static ServerDevice server;        
+        static ServerDevice server;
 
         public MainWindow()
         {
             InitializeComponent();
-                        
-            server = ServerDevice.Instance;            
-            server.RunAsync();            
-            Closed += MainWindow_Closed;            
+
+            server = ServerDevice.Instance;
+            server.RunAsync();
+            Closed += MainWindow_Closed;
         }
-        
+
         private void MainWindow_Closed(object sender, EventArgs e)
         {
-           server.StopAsync();
+            server.StopAsync();
         }
 
         ~MainWindow()

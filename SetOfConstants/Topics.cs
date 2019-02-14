@@ -24,9 +24,23 @@ namespace SetOfConstants
         /// доменную область для устройств, тип которых не удалость определить
         /// </summary>
         public const string DEVICES = "Devices";
-        
-        public const string SWITCHES = "Devices/Switches";        
+
+        /// <summary>
+        /// Топик, определяющий доменную обдасть для обмена данными 
+        /// между сервером и переключателями
+        /// </summary>
+        public const string SWITCHES = "Devices/Switches";
+
+        /// <summary>
+        /// Топик, определяющий доменную обдасть для обмена данными 
+        /// между сервером и датчиками
+        /// </summary>
         public const string SENSORS = "Devices/Sensors";
+
+        /// <summary>
+        /// Топик, определяющий доменную обдасть для обмена данными 
+        /// между сервером и датчиками-термометрами
+        /// </summary>
         public const string TERMOMETERS = "Devices/Sensors/Termometers";
     }
 }
