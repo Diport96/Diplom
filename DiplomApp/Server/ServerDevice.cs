@@ -17,13 +17,14 @@ namespace DiplomApp.Server
     class ServerDevice
     {
         private static ServerDevice instance;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly object _locker = new object();
         private readonly IMqttServerOptions serverOptions;
         private readonly IMqttClientOptions clientOptions;
         private readonly IMqttServer server;
         private readonly IMqttClient client;
         private readonly CancellationTokenSource cancellationRun;
         private readonly IEnumerable<Type> SupportedRequestHandlers;
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static ServerDevice Instance
         {
@@ -34,9 +35,11 @@ namespace DiplomApp.Server
             }
         }
         public Guid ID { get; }
+        public bool IsRun { get; private set; }
 
         private ServerDevice()
         {
+            IsRun = false;
             var mqttFactory = new MqttFactory();
 
             //Инициализация полей и свойств
@@ -50,7 +53,7 @@ namespace DiplomApp.Server
             client = mqttFactory.CreateMqttClient();
             clientOptions = new MqttClientOptionsBuilder()
                 .WithClientId(ID.ToString())
-                .WithTcpServer("localhost")
+                .WithTcpServer(Properties.Settings.Default.ServerDomain)
                 .Build();
             client.ApplicationMessageReceived += MqttMsgPublishReceived;
 
@@ -74,7 +77,7 @@ namespace DiplomApp.Server
                     logger.Debug("Попытка подключения к mqtt серверу");
                     await client.ConnectAsync(clientOptions);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     logger.Warn(e, "Не удалось подключиться к серверу");
                     return false;
@@ -87,7 +90,7 @@ namespace DiplomApp.Server
             {
                 logger.Info("Запуск локального сервера");
                 await server.StartAsync(serverOptions);
-                await tryConnect(); 
+                await tryConnect();
             }
             var topic = new TopicFilterBuilder()
                   .WithTopic("#")
@@ -99,6 +102,7 @@ namespace DiplomApp.Server
             {
                 logger.Debug("Закрытие асинхронного потока для сервера");
             });
+            IsRun = true;
             await Task.Run(() =>
             {
                 logger.Debug("Запущен асинхронный поток для сервера");
@@ -109,12 +113,17 @@ namespace DiplomApp.Server
                 }
             }, cancellationRun.Token);
         }
-        public async void StopAsync()
+        public async Task StopAsync()
         {
-            if (!client.IsConnected) return;
+            lock (_locker)
+            {
+                if (!IsRun) return;
+            }
+            IsRun = false;
             logger.Info("Останока работы сервера");
             cancellationRun.Cancel();
-            await client.DisconnectAsync();
+            if(client.IsConnected)
+                await client.DisconnectAsync();            
             await server.StopAsync();
         }
         public async void SendMessage(string jsonMessage, string topic)

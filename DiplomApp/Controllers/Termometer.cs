@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace DiplomApp
+namespace DiplomApp.Controllers
 {
     class Termometer : Controller
     {

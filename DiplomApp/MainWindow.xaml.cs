@@ -34,13 +34,13 @@ namespace DiplomApp
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)
-        {
-            server.StopAsync();
+        {           
+            server.StopAsync().Wait();
         }
 
         ~MainWindow()
         {
-            server.StopAsync();
+            server.StopAsync().Wait();
         }
     }
 }

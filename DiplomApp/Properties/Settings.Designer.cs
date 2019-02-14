@@ -22,5 +22,17 @@ namespace DiplomApp.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        public string ServerDomain {
+            get {
+                return ((string)(this["ServerDomain"]));
+            }
+            set {
+                this["ServerDomain"] = value;
+            }
+        }
     }
 }
