@@ -70,6 +70,7 @@ namespace DiplomApp.Server
 
         public async void RunAsync()
         {
+            //!!! Method
             async Task<bool> tryConnect()
             {
                 try
@@ -84,6 +85,15 @@ namespace DiplomApp.Server
                 }
                 return true;
             }
+            Action<CancellationToken> broadcastAction = (x) =>
+            {
+                logger.Debug("Запущен асинхронный поток для сервера");
+                while (x.IsCancellationRequested)
+                {
+                    SendBroadcast();
+                    Thread.Sleep(10000); //!!! Seetings
+                }
+            };
 
             logger.Info("Подключение к удаленному серверу...");
             if (!await tryConnect())
@@ -103,15 +113,7 @@ namespace DiplomApp.Server
                 logger.Debug("Закрытие асинхронного потока для сервера");
             });
             IsRun = true;
-            await Task.Run(() =>
-            {
-                logger.Debug("Запущен асинхронный поток для сервера");
-                while (true)
-                {
-                    SendBroadcast();
-                    Thread.Sleep(10000);
-                }
-            }, cancellationRun.Token);
+            await Task.Run(() => broadcastAction(cancellationRun.Token), cancellationRun.Token);
         }
         public async Task StopAsync()
         {
@@ -122,8 +124,8 @@ namespace DiplomApp.Server
             IsRun = false;
             logger.Info("Останока работы сервера");
             cancellationRun.Cancel();
-            if(client.IsConnected)
-                await client.DisconnectAsync();            
+            if (client.IsConnected)
+                client.DisconnectAsync().Wait();
             await server.StopAsync();
         }
         public async void SendMessage(string jsonMessage, string topic)
