@@ -19,11 +19,11 @@ namespace DiplomApp.Server
         private static ServerDevice instance;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly object _locker = new object();
+        private readonly CancellationTokenSource cancellationSource;
         private readonly IMqttServerOptions serverOptions;
         private readonly IMqttClientOptions clientOptions;
         private readonly IMqttServer server;
         private readonly IMqttClient client;
-        private readonly CancellationTokenSource cancellationRun;
         private readonly IEnumerable<Type> SupportedRequestHandlers;
 
         public static ServerDevice Instance
@@ -65,17 +65,16 @@ namespace DiplomApp.Server
                 (x => x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
 
             //Создание токена отмены асинхронной задачи для остановки работы сервера
-            cancellationRun = new CancellationTokenSource();
+            cancellationSource = new CancellationTokenSource();
         }
 
-        public async void RunAsync()
+        public async Task RunAsync()
         {
-            //!!! Method
-            async Task<bool> tryConnect()
+            Func<Task<bool>> tryConnect = async () =>
             {
+                logger.Debug("Попытка подключения к mqtt серверу");
                 try
                 {
-                    logger.Debug("Попытка подключения к mqtt серверу");
                     await client.ConnectAsync(clientOptions);
                 }
                 catch (Exception e)
@@ -84,13 +83,13 @@ namespace DiplomApp.Server
                     return false;
                 }
                 return true;
-            }
+            };
             Action<CancellationToken> broadcastAction = (x) =>
             {
                 logger.Debug("Запущен асинхронный поток для сервера");
-                while (x.IsCancellationRequested)
+                while (!x.IsCancellationRequested)
                 {
-                    SendBroadcast();
+                    Task.Run(() => SendBroadcast());
                     Thread.Sleep(10000); //!!! Seetings
                 }
             };
@@ -107,13 +106,13 @@ namespace DiplomApp.Server
                   .WithExactlyOnceQoS()
                   .Build();
             await client.SubscribeAsync(topic);
-            var token = cancellationRun.Token;
+            var token = cancellationSource.Token;
             token.Register(() =>
             {
                 logger.Debug("Закрытие асинхронного потока для сервера");
             });
             IsRun = true;
-            await Task.Run(() => broadcastAction(cancellationRun.Token), cancellationRun.Token);
+            new Task(() => broadcastAction(cancellationSource.Token), cancellationSource.Token).Start();
         }
         public async Task StopAsync()
         {
@@ -123,7 +122,7 @@ namespace DiplomApp.Server
             }
             IsRun = false;
             logger.Info("Останока работы сервера");
-            cancellationRun.Cancel();
+            cancellationSource.Cancel();
             if (client.IsConnected)
                 client.DisconnectAsync().Wait();
             await server.StopAsync();
@@ -138,7 +137,7 @@ namespace DiplomApp.Server
             await client.PublishAsync(topic, str);
         }
 
-        private async void SendBroadcast()
+        private async Task SendBroadcast()
         {
             var message = new
             {
