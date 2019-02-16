@@ -39,11 +39,11 @@ namespace DiplomApp.Server
 
         private ServerDevice()
         {
-            IsRun = false;
             var mqttFactory = new MqttFactory();
 
             //Инициализация полей и свойств
             ID = Guid.NewGuid();
+            IsRun = false;
 
             //Инициализация сервера
             server = mqttFactory.CreateMqttServer();
@@ -70,6 +70,24 @@ namespace DiplomApp.Server
 
         public async Task RunAsync()
         {
+            Func<Task> sendBroadcast = async () =>
+            {
+                var message = new
+                {
+                    Message_Type = SetOfConstants.MessageTypes.BROADCAST_CONNECTION_REQUSET
+                };
+                var res = JsonConvert.SerializeObject(message, Formatting.Indented);
+                await client.PublishAsync(SetOfConstants.Topics.CONNECTION, res);
+            };
+            Action<CancellationToken> broadcastAction = (x) =>
+            {
+                logger.Debug("Запущен асинхронный поток для сервера");
+                while (!x.IsCancellationRequested)
+                {
+                    Task.Run(() => sendBroadcast());
+                    Thread.Sleep(10000); //!!! Seetings
+                }
+            };
             Func<Task<bool>> tryConnect = async () =>
             {
                 logger.Debug("Попытка подключения к mqtt серверу");
@@ -83,15 +101,6 @@ namespace DiplomApp.Server
                     return false;
                 }
                 return true;
-            };
-            Action<CancellationToken> broadcastAction = (x) =>
-            {
-                logger.Debug("Запущен асинхронный поток для сервера");
-                while (!x.IsCancellationRequested)
-                {
-                    Task.Run(() => SendBroadcast());
-                    Thread.Sleep(10000); //!!! Seetings
-                }
             };
 
             logger.Info("Подключение к удаленному серверу...");
@@ -119,12 +128,12 @@ namespace DiplomApp.Server
             lock (_locker)
             {
                 if (!IsRun) return;
+                IsRun = false;
             }
-            IsRun = false;
             logger.Info("Останока работы сервера");
             cancellationSource.Cancel();
             if (client.IsConnected)
-                client.DisconnectAsync().Wait();
+                await client.DisconnectAsync();
             await server.StopAsync();
         }
         public async void SendMessage(string jsonMessage, string topic)
@@ -137,15 +146,6 @@ namespace DiplomApp.Server
             await client.PublishAsync(topic, str);
         }
 
-        private async Task SendBroadcast()
-        {
-            var message = new
-            {
-                Message_Type = SetOfConstants.MessageTypes.BROADCAST_CONNECTION_REQUSET
-            };
-            var res = JsonConvert.SerializeObject(message, Formatting.Indented);
-            await client.PublishAsync(SetOfConstants.Topics.CONNECTION, res);
-        }
         private void MqttMsgPublishReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
         {
             Dictionary<string, string> message = null;

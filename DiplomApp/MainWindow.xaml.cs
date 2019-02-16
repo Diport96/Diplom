@@ -20,9 +20,8 @@ using System.Windows.Shapes;
 namespace DiplomApp
 {
     public partial class MainWindow : Window
-    {
-        static Logger logger = LogManager.GetCurrentClassLogger();
-        static ServerDevice server;
+    {        
+        private static ServerDevice server;
 
         public MainWindow()
         {
@@ -30,17 +29,6 @@ namespace DiplomApp
 
             server = ServerDevice.Instance;
             Task.Run(() => server.RunAsync());
-            Closed += MainWindow_Closed;
-        }        
-
-        private void MainWindow_Closed(object sender, EventArgs e)
-        {
-            server.StopAsync().Wait();
-        }
-
-        ~MainWindow()
-        {
-            server.StopAsync().Wait();
-        }
+        }       
     }
 }
