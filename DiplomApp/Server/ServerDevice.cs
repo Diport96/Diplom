@@ -18,13 +18,13 @@ namespace DiplomApp.Server
     {
         private static ServerDevice instance;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly IEnumerable<Type> SupportedRequestHandlers;
         private readonly object _locker = new object();
         private readonly CancellationTokenSource cancellationSource;
         private readonly IMqttServerOptions serverOptions;
         private readonly IMqttClientOptions clientOptions;
         private readonly IMqttServer server;
         private readonly IMqttClient client;
-        private readonly IEnumerable<Type> SupportedRequestHandlers;
 
         public static ServerDevice Instance
         {
@@ -57,15 +57,16 @@ namespace DiplomApp.Server
                 .Build();
             client.ApplicationMessageReceived += MqttMsgPublishReceived;
 
-            //Инициализация обработчиков запросов
+            //Создание токена отмены асинхронной задачи для остановки работы сервера
+            cancellationSource = new CancellationTokenSource();
+        }
+        static ServerDevice()
+        {
             var interfaceName = typeof(IRequestHandler).Name;
             var types = Assembly.GetExecutingAssembly().GetTypes().Where
                 (x => x.GetInterface(interfaceName) != null && x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
             SupportedRequestHandlers = types.Where
-                (x => x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
-
-            //Создание токена отмены асинхронной задачи для остановки работы сервера
-            cancellationSource = new CancellationTokenSource();
+               (x => x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
         }
 
         public async Task RunAsync()
@@ -148,7 +149,7 @@ namespace DiplomApp.Server
 
         private void MqttMsgPublishReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
         {
-            Dictionary<string, string> message = null;
+            Dictionary<string, string> message = null; //!!!
             try
             {
                 var jsonMessage = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
@@ -167,7 +168,14 @@ namespace DiplomApp.Server
                 ) return;
 
             message.Add("Topic", e.ApplicationMessage.Topic);
-            HandleRequest(message);
+            try
+            {
+                HandleRequest(message);
+            }
+            catch (HandlerNotFindException w)
+            {
+                logger.Error(w.Message);
+            }
 
         }
         private void HandleRequest(Dictionary<string, string> keyValuePairs)
@@ -175,7 +183,7 @@ namespace DiplomApp.Server
             keyValuePairs.TryGetValue("Message_Type", out string msgType);
             var type = SupportedRequestHandlers.FirstOrDefault(x => (x.GetCustomAttribute(typeof(RequestTypeAttribute)) as RequestTypeAttribute).MessageType == msgType);
             if (type == null)
-                throw new NullReferenceException($"Не удалось найти обработчик события соответствующий запросу: {msgType}");
+                throw new HandlerNotFindException($"Не удалось найти обработчик события соответствующий запросу: {msgType}");
             var prop = type.GetProperty("Instance");
             if (prop == null)
                 throw new NotImplementedException($"В классе {type.Name} не реализован паттерн Singleton");

@@ -14,6 +14,7 @@ namespace DiplomApp.Server.Requsests
     [RequestType(MessageTypes.REQUSET_TO_CONNECT)]
     class RequestToConnectHandler : IRequestHandler
     {
+        private static readonly IEnumerable<Type> Types;
         private static RequestToConnectHandler instance;
         public static RequestToConnectHandler Instance
         {
@@ -26,6 +27,10 @@ namespace DiplomApp.Server.Requsests
         }
 
         private RequestToConnectHandler() { }
+        static RequestToConnectHandler()
+        {
+            Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.BaseType == typeof(Controller));
+        }
 
         public void Execute(Dictionary<string, string> pairs)
         {
@@ -44,9 +49,8 @@ namespace DiplomApp.Server.Requsests
         }
 
         private Type GetCType(string Type)
-        {
-            Type[] types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.BaseType == typeof(Controller)).ToArray();
-            foreach (var t in types)
+        {            
+            foreach (var t in Types)
             {
                 if (t.Name == Type)
                     return t;

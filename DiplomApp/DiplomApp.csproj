@@ -81,6 +81,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Server\HandlerNotFindException.cs" />
     <Compile Include="Server\IRequestHandler.cs" />
     <Compile Include="Server\RequestTypeAttribute.cs" />
     <Compile Include="Server\RequsestHandlers\RequestToConnectHandler.cs" />
