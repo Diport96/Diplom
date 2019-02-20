@@ -72,6 +72,7 @@
     </ApplicationDefinition>
     <Compile Include="Controllers\ConstollerManager.cs" />
     <Compile Include="Controllers\InvalidControllerTypeException.cs" />
+    <Compile Include="Controllers\Switch.cs" />
     <Compile Include="Controllers\Termometer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
