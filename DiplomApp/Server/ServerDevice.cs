@@ -134,8 +134,10 @@ namespace DiplomApp.Server
             logger.Info("Останока работы сервера");
             cancellationSource.Cancel();
             if (client.IsConnected)
-                await client.DisconnectAsync();
-            await server.StopAsync();
+                await client.DisconnectAsync()
+                    .ConfigureAwait(false);
+            await server.StopAsync()
+                .ConfigureAwait(false);
         }
         public async void SendMessage(string jsonMessage, string topic)
         {

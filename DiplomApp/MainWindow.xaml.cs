@@ -29,6 +29,17 @@ namespace DiplomApp
 
             server = ServerDevice.Instance;
             Task.Run(() => server.RunAsync());
-        }       
+            Closed += MainWindow_Closed;
+        }
+
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            server.StopAsync().Wait();
+        }
+
+        ~MainWindow()
+        {
+            server.StopAsync().Wait();
+        }
     }
 }
