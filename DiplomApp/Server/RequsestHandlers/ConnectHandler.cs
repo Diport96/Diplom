@@ -12,22 +12,22 @@ using DiplomApp.Controllers;
 namespace DiplomApp.Server.Requsests
 {
     [RequestType(MessageTypes.REQUSET_TO_CONNECT)]
-    class RequestToConnectHandler : IRequestHandler
+    class ConnectHandler : IRequestHandler
     {
         private static readonly IEnumerable<Type> Types;
-        private static RequestToConnectHandler instance;
-        public static RequestToConnectHandler Instance
+        private static ConnectHandler instance;
+        public static ConnectHandler Instance
         {
             get
             {
                 if (instance == null)
-                    instance = new RequestToConnectHandler();
+                    instance = new ConnectHandler();
                 return instance;
             }
         }
 
-        private RequestToConnectHandler() { }
-        static RequestToConnectHandler()
+        private ConnectHandler() { }
+        static ConnectHandler()
         {
             Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.BaseType == typeof(Controller));
         }

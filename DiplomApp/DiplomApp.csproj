@@ -105,8 +105,9 @@
     <Compile Include="Server\HandlerNotFindException.cs" />
     <Compile Include="Server\IRequestHandler.cs" />
     <Compile Include="Server\RequestTypeAttribute.cs" />
-    <Compile Include="Server\RequsestHandlers\RequestToConnectHandler.cs" />
-    <Compile Include="Server\RequsestHandlers\RequestToDisconnectHandler.cs" />
+    <Compile Include="Server\RequsestHandlers\ConnectHandler.cs" />
+    <Compile Include="Server\RequsestHandlers\DisconnectHandler.cs" />
+    <Compile Include="Server\RequsestHandlers\DistributeHandler.cs" />
     <Compile Include="Server\ServerDevice.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -145,7 +146,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SetOfConstants\SetOfConstants.csproj">

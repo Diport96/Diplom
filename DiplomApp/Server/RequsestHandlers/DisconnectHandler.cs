@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 namespace DiplomApp.Server.RequsestHandlers
 {
     [RequestType(SetOfConstants.MessageTypes.REQUSET_TO_DISCONNECT)]
-    class RequestToDisconnectHandler : IRequestHandler
+    class DisconnectHandler : IRequestHandler
     {
-        private static RequestToDisconnectHandler instance;
-        public static RequestToDisconnectHandler Instance
+        private static DisconnectHandler instance;
+        public static DisconnectHandler Instance
         {
             get
             {
                 if (instance == null)
-                    instance = new RequestToDisconnectHandler();
+                    instance = new DisconnectHandler();
                 return instance;
             }
         }
 
-        private RequestToDisconnectHandler() { }
+        private DisconnectHandler() { }
 
         public void Execute(Dictionary<string, string> pairs)
         {

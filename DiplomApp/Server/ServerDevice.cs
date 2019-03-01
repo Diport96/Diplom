@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using MQTTnet.Server;
 using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Exceptions;
 
 namespace DiplomApp.Server
 {
@@ -53,7 +54,7 @@ namespace DiplomApp.Server
             client = mqttFactory.CreateMqttClient();
             clientOptions = new MqttClientOptionsBuilder()
                 .WithClientId(ID.ToString())
-                .WithTcpServer(Properties.Settings.Default.ServerDomain)
+                .WithTcpServer(Properties.Settings.Default.ServerDomain)                
                 .Build();
             client.ApplicationMessageReceived += MqttMsgPublishReceived;
 
@@ -78,7 +79,23 @@ namespace DiplomApp.Server
                     Message_Type = SetOfConstants.MessageTypes.BROADCAST_CONNECTION_REQUSET
                 };
                 var res = JsonConvert.SerializeObject(message, Formatting.Indented);
-                await client.PublishAsync(SetOfConstants.Topics.CONNECTION, res);
+                try
+                {
+                    await client.PublishAsync(SetOfConstants.Topics.CONNECTION, res);
+                }
+                catch(MqttCommunicationException e)
+                {
+                    logger.Error(e, e.Message);
+                    if(!client.IsConnected)
+                    {                        
+                        await client.ConnectAsync(clientOptions);
+                    }
+                }
+                catch(Exception e)
+                {
+                    logger.Error(e, e.Message);
+                    throw;
+                }
             };
             Action<CancellationToken> broadcastAction = (x) =>
             {
