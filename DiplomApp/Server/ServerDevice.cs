@@ -54,7 +54,7 @@ namespace DiplomApp.Server
             client = mqttFactory.CreateMqttClient();
             clientOptions = new MqttClientOptionsBuilder()
                 .WithClientId(ID.ToString())
-                .WithTcpServer(Properties.Settings.Default.ServerDomain)                
+                .WithTcpServer(Properties.Settings.Default.ServerDomain)
                 .Build();
             client.ApplicationMessageReceived += MqttMsgPublishReceived;
 
@@ -83,15 +83,15 @@ namespace DiplomApp.Server
                 {
                     await client.PublishAsync(SetOfConstants.Topics.CONNECTION, res);
                 }
-                catch(MqttCommunicationException e)
+                catch (MqttCommunicationException e)
                 {
-                    logger.Error(e, e.Message);
-                    if(!client.IsConnected)
-                    {                        
+                    logger.Warn(e, e.Message);
+                    if (!client.IsConnected)
+                    {
                         await client.ConnectAsync(clientOptions);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     logger.Error(e, e.Message);
                     throw;
@@ -103,7 +103,7 @@ namespace DiplomApp.Server
                 while (!x.IsCancellationRequested)
                 {
                     Task.Run(() => sendBroadcast());
-                    Thread.Sleep(10000); //!!! Seetings
+                    Thread.Sleep(Properties.Settings.Default.BroadcastDelay);
                 }
             };
             Func<Task<bool>> tryConnect = async () =>
@@ -115,7 +115,7 @@ namespace DiplomApp.Server
                 }
                 catch (Exception e)
                 {
-                    logger.Warn(e, "Не удалось подключиться к серверу");
+                    logger.Warn(e, "Не удалось осуществить соединение с сервером");
                     return false;
                 }
                 return true;
@@ -156,19 +156,19 @@ namespace DiplomApp.Server
             await server.StopAsync()
                 .ConfigureAwait(false);
         }
-        public async void SendMessage(string jsonMessage, string topic)
+        public async Task SendMessage(string jsonMessage, string topic)
         {
             await client.PublishAsync(topic, jsonMessage);
         }
-        public async void SendMessage(Dictionary<string, string> keyValuePairs, string topic)
+        public async Task SendMessage(Dictionary<string, string> keyValuePairs, string topic)
         {
             var str = JsonConvert.SerializeObject(keyValuePairs);
             await client.PublishAsync(topic, str);
         }
 
         private void MqttMsgPublishReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
-        {
-            Dictionary<string, string> message = null; //!!!
+        {            
+            Dictionary<string, string> message = null;
             try
             {
                 var jsonMessage = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
@@ -178,7 +178,7 @@ namespace DiplomApp.Server
             {
                 logger.Error(w, "Не удалось распарсить данные, возможно нарушение структуры данных");
                 return;
-            }
+            }           
 
             message.TryGetValue("Message_Type", out string req);
             logger.Trace($"Получено сообщение из топика { e.ApplicationMessage.Topic}. Тип сообщения: {req}");
@@ -195,7 +195,6 @@ namespace DiplomApp.Server
             {
                 logger.Error(w.Message);
             }
-
         }
         private void HandleRequest(Dictionary<string, string> keyValuePairs)
         {

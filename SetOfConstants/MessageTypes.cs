@@ -22,12 +22,12 @@ namespace SetOfConstants
         public const string REQUSET_TO_DISCONNECT = "DISCONNECT";
 
         /// <summary>
-        ///  Тип запроса на рассылку сообщений микроконтроллерам с поледующим откликом 
+        ///  Тип запроса на рассылку сообщений микроконтроллерам с последующим откликом 
         /// </summary>
         public const string BROADCAST_CONNECTION_REQUSET = "HELLO";
 
         /// <summary>
-        /// Тип зпароса на подтверждение соединения с сервером
+        /// Тип запроса на подтверждение соединения с сервером
         /// </summary>
         public const string PERMIT_TO_CONNECT = "CONNACK";
 

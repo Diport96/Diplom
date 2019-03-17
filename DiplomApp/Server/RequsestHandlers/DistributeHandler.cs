@@ -11,7 +11,7 @@ namespace DiplomApp.Server.RequsestHandlers
 {
     [RequestType(SetOfConstants.MessageTypes.DISTRIBUTION_OF_VALUES)]
     class DistributeHandler : IRequestHandler
-    {
+    {       
         private readonly IMongoDatabase _database;
         private static DistributeHandler instance;
         public static DistributeHandler Instance

@@ -34,5 +34,17 @@ namespace DiplomApp.Properties {
                 this["ServerDomain"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:10")]
+        public global::System.TimeSpan BroadcastDelay {
+            get {
+                return ((global::System.TimeSpan)(this["BroadcastDelay"]));
+            }
+            set {
+                this["BroadcastDelay"] = value;
+            }
+        }
     }
 }
