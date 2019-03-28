@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Controllers
 {
-    static class ControllerManager
+    static class ControllerFactory
     {
+        private static readonly ControllerDbContext database;
         private static readonly List<Controller> controllers;
         private static readonly Logger logger;
 
-        static ControllerManager()
+        static ControllerFactory()
         {
+            database = new ControllerDbContext();
             controllers = new List<Controller>();
             logger = LogManager.GetCurrentClassLogger();
         }
-        
-        public static void Add(Controller controller)
+
+        public static void Create(Controller controller)
         {
             controllers.Add(controller);
             logger.Debug($"Добавлен новый контроллер. Общее количество: {controllers.Count}");
@@ -34,6 +36,6 @@ namespace DiplomApp.Controllers
         public static IEnumerable<Controller> GetControllers()
         {
             return controllers.AsReadOnly();
-        }
+        }        
     }
 }

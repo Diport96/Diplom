@@ -39,13 +39,13 @@ namespace DiplomApp.Server.Requsests
             pairs.TryGetValue("Class", out string classData);           
             var type = GetDeviceType(t);
             var controller = JsonConvert.DeserializeObject(classData, type) as Controller;
-            ControllerManager.Add(controller);
+            ControllerFactory.Create(controller);
             var res = new Dictionary<string, string>
             {
                 {"Message_Type", MessageTypes.PERMIT_TO_CONNECT },
                 {"ID", controller.ID }
             };
-            ServerDevice.Instance.SendMessage(res, topic).GetAwaiter();
+            ServerDevice.Instance.SendMessage(res, topic).GetAwaiter(); //Wait()
         }
 
         private Type GetDeviceType(string Type)

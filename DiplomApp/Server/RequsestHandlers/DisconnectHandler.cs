@@ -26,7 +26,7 @@ namespace DiplomApp.Server.RequsestHandlers
         public void Execute(Dictionary<string, string> pairs)
         {
             pairs.TryGetValue("ID", out string id);
-            ControllerManager.Remove(id);
+            ControllerFactory.Remove(id);
         }
     }
 }
