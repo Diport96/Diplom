@@ -18,6 +18,8 @@ namespace DiplomApp
             InitializeComponent();
             Exit += App_Exit;
             Startup += App_Startup;
+            //Путь к локальному директорию приложения
+            AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
         }
 
         private void App_Startup(object sender, StartupEventArgs e)

@@ -1,4 +1,5 @@
-﻿using DiplomApp.Server;
+﻿using DiplomApp.Controllers;
+using DiplomApp.Server;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace DiplomApp
 
             server = ServerDevice.Instance;
             Task.Run(() => server.RunAsync());
-            Closed += MainWindow_Closed;
+            Closed += MainWindow_Closed;          
         }
 
         private void MainWindow_Closed(object sender, EventArgs e)

@@ -9,8 +9,14 @@ namespace DiplomApp.Controllers
 {
     class ControllerDbContext : DbContext
     {
-        DbSet<Controller> Controllers { get; set; }
+        public DbSet<Controller> Controllers { get; set; }
 
         public ControllerDbContext() : base("SqlDatabaseConnection") { }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Controller>().HasKey(pk => pk.ID);
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

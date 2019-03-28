@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -12,6 +13,7 @@ namespace DiplomApp.Controllers
     class Termometer : Controller
     {
         private double value;
+        [NotMapped]
         public double Value
         {
             get { return value; }

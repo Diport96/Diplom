@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -13,8 +15,10 @@ namespace DiplomApp.Controllers
     abstract class Controller : INotifyPropertyChanged
     {
         private string name;
-
-        public string ID { get; }        
+                
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public string ID { get; set; }          
+        [Required]
         public string Name
         {
             get { return name; }
