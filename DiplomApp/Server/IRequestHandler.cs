@@ -8,6 +8,6 @@ namespace DiplomApp.Server
 {
     interface IRequestHandler
     {
-        void Execute(Dictionary<string,string> pairs);
+        void Run(Dictionary<string,string> pairs);
     }
 }

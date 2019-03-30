@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiplomApp.Controllers
+namespace DiplomApp.Controllers.Models
 {
     class Switch : Controller
     {

@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using DiplomApp.Controllers.Models;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,22 +8,23 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Controllers
 {
-    static class ControllerFactory
+    static class ControllersFactory
     {
         private static readonly ControllerDbContext database;
         private static readonly List<Controller> controllers;
         private static readonly Logger logger;
 
-        static ControllerFactory()
+        static ControllersFactory()
         {
-            database = new ControllerDbContext();
+            database = ControllerDbContext.Instance;
             controllers = new List<Controller>();
             logger = LogManager.GetCurrentClassLogger();
         }
 
         public static void Create(Controller controller)
         {
-            controllers.Add(controller);
+            //if (!database.Controllers.Contains(controller)) database.Controllers.Add(controller);
+            controllers.Add(controller);            
             logger.Debug($"Добавлен новый контроллер. Общее количество: {controllers.Count}");
         }
         public static void Remove(string id)

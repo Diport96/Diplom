@@ -99,7 +99,7 @@ namespace DiplomApp.Server
             };
             Action<CancellationToken> broadcastAction = (x) =>
             {
-                logger.Debug("Запущен асинхронный поток для сервера");
+                logger.Debug("Запуск асинхронного потока для сервера");
                 while (!x.IsCancellationRequested)
                 {
                     Task.Run(() => sendBroadcast());
@@ -207,7 +207,7 @@ namespace DiplomApp.Server
                 throw new NotImplementedException($"В классе {type.Name} не реализован паттерн Singleton");
             var getClass = prop.GetMethod.Invoke(null, null) as IRequestHandler;
             keyValuePairs.Remove("Message_Type");
-            getClass.Execute(keyValuePairs);
+            getClass.Run(keyValuePairs);
         }
     }
 }

@@ -30,10 +30,8 @@ namespace DiplomApp.Server.RequsestHandlers
             _database = client.GetDatabase("DevicesData");           
         }
 
-        public void Execute(Dictionary<string, string> pairs)
+        public void Run(Dictionary<string, string> pairs)
         {
-            //!!! Доделать проверку на соответствие id с зарегестириованным устройством (SQL registered devices)
-
             pairs.Remove("Topic");
             BsonDocument element = new BsonDocument(pairs);
             _database.GetCollection<BsonDocument>("Termometers").InsertOneAsync(element).Wait();

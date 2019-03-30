@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10">
+            <Button Height="40" Background="#FFB0B0BF">               
+                    <Image Source="Resources/Settings_Icon.png"/>                
+            </Button>
+        </Grid>
     </Grid>
 </Window>

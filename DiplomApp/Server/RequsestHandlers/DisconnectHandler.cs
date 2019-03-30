@@ -23,10 +23,10 @@ namespace DiplomApp.Server.RequsestHandlers
 
         private DisconnectHandler() { }
 
-        public void Execute(Dictionary<string, string> pairs)
+        public void Run(Dictionary<string, string> pairs)
         {
             pairs.TryGetValue("ID", out string id);
-            ControllerFactory.Remove(id);
+            ControllersFactory.Remove(id);
         }
     }
 }

@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using NLog;
 using System.Reflection;
 using DiplomApp.Controllers;
+using DiplomApp.Controllers.Models;
 
 namespace DiplomApp.Server.Requsests
 {
@@ -32,20 +33,20 @@ namespace DiplomApp.Server.Requsests
             Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.BaseType == typeof(Controller));
         }
 
-        public void Execute(Dictionary<string, string> pairs)
+        public void Run(Dictionary<string, string> pairs)
         {
             pairs.TryGetValue("Type", out string t);
             pairs.TryGetValue("Topic", out string topic);
             pairs.TryGetValue("Class", out string classData);           
             var type = GetDeviceType(t);
             var controller = JsonConvert.DeserializeObject(classData, type) as Controller;
-            ControllerFactory.Create(controller);
+            ControllersFactory.Create(controller);
             var res = new Dictionary<string, string>
             {
                 {"Message_Type", MessageTypes.PERMIT_TO_CONNECT },
                 {"ID", controller.ID }
             };
-            ServerDevice.Instance.SendMessage(res, topic).GetAwaiter(); //Wait()
+            ServerDevice.Instance.SendMessage(res, topic).Wait();
         }
 
         private Type GetDeviceType(string Type)
