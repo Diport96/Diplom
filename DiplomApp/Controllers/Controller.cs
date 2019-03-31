@@ -10,14 +10,14 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiplomApp.Controllers.Models
+namespace DiplomApp.Controllers
 {
     abstract class Controller : INotifyPropertyChanged
     {
         private string name;
                 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string ID { get; set; }          
+        public string ID { get; private set; }          
         [Required]
         public string Name
         {

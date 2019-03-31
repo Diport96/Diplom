@@ -114,7 +114,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controllers\ConstollersFactory.cs" />
-    <Compile Include="Controllers\ControllerDbContext.cs" />
+    <Compile Include="Controllers\RegisteredDeviceContext.cs" />
     <Compile Include="Controllers\InvalidControllerTypeException.cs" />
     <Compile Include="Controllers\Models\Switch.cs" />
     <Compile Include="Controllers\Models\Termometer.cs" />
@@ -126,9 +126,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Migrations\201903281906543_Initialization_db_state.cs" />
-    <Compile Include="Migrations\201903281906543_Initialization_db_state.Designer.cs">
-      <DependentUpon>201903281906543_Initialization_db_state.cs</DependentUpon>
+    <Compile Include="Controllers\RegisteredDeviceInfo.cs" />
+    <Compile Include="Migrations\201903311922248_Initialization_db_state.cs" />
+    <Compile Include="Migrations\201903311922248_Initialization_db_state.Designer.cs">
+      <DependentUpon>201903311922248_Initialization_db_state.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Server\HandlerNotFindException.cs" />
@@ -138,7 +139,7 @@
     <Compile Include="Server\RequsestHandlers\DisconnectHandler.cs" />
     <Compile Include="Server\RequsestHandlers\DistributeHandler.cs" />
     <Compile Include="Server\ServerDevice.cs" />
-    <Compile Include="Controllers\Models\Controller.cs" />
+    <Compile Include="Controllers\Controller.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -159,8 +160,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Resource Include="Resources\Settings_Icon.png" />
-    <EmbeddedResource Include="Migrations\201903281906543_Initialization_db_state.resx">
-      <DependentUpon>201903281906543_Initialization_db_state.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903311922248_Initialization_db_state.resx">
+      <DependentUpon>201903311922248_Initialization_db_state.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

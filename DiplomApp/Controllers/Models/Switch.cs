@@ -9,8 +9,7 @@ namespace DiplomApp.Controllers.Models
 {
     class Switch : Controller
     {
-        private bool value;
-        [NotMapped]
+        private bool value;       
         public bool Value
         {
             get { return value; }

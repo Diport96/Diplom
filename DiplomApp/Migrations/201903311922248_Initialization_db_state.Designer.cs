@@ -13,7 +13,7 @@ namespace DiplomApp.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201903281906543_Initialization_db_state"; }
+            get { return "201903311922248_Initialization_db_state"; }
         }
         
         string IMigrationMetadata.Source

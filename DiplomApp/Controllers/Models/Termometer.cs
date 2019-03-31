@@ -12,8 +12,7 @@ namespace DiplomApp.Controllers.Models
 {
     class Termometer : Controller
     {
-        private double value;
-        [NotMapped]
+        private double value;        
         public double Value
         {
             get { return value; }

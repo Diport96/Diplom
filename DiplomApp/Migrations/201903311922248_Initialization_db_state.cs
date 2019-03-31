@@ -8,12 +8,13 @@ namespace DiplomApp.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.Controllers",
+                "dbo.RegisteredDeviceInfoes",
                 c => new
                     {
                         ID = c.String(nullable: false, maxLength: 128),
+                        DeviceType = c.String(nullable: false),
+                        RegisteredDate = c.DateTime(nullable: false),
                         Name = c.String(nullable: false),
-                        Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.ID);
             
@@ -21,7 +22,7 @@ namespace DiplomApp.Migrations
         
         public override void Down()
         {
-            DropTable("dbo.Controllers");
+            DropTable("dbo.RegisteredDeviceInfoes");
         }
     }
 }

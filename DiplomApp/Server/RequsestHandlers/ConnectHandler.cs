@@ -40,7 +40,7 @@ namespace DiplomApp.Server.Requsests
             pairs.TryGetValue("Class", out string classData);           
             var type = GetDeviceType(t);
             var controller = JsonConvert.DeserializeObject(classData, type) as Controller;
-            ControllersFactory.Create(controller);
+            ControllersFactory.Create(controller, t);
             var res = new Dictionary<string, string>
             {
                 {"Message_Type", MessageTypes.PERMIT_TO_CONNECT },

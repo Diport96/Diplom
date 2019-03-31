@@ -5,14 +5,14 @@ namespace DiplomApp.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<DiplomApp.Controllers.ControllerDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<DiplomApp.Controllers.RegisteredDeviceContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(DiplomApp.Controllers.ControllerDbContext context)
+        protected override void Seed(DiplomApp.Controllers.RegisteredDeviceContext context)
         {
             //  This method will be called after migrating to the latest version.
 
