@@ -24,7 +24,7 @@ namespace SetOfConstants
         /// <summary>
         ///  Тип запроса на рассылку сообщений микроконтроллерам с последующим откликом 
         /// </summary>
-        public const string BROADCAST_CONNECTION_REQUSET = "HELLO";
+        public const string BROADCAST_CONNECTION = "HELLO";
 
         /// <summary>
         /// Тип запроса на подтверждение соединения с сервером

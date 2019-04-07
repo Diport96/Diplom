@@ -76,7 +76,7 @@ namespace DiplomApp.Server
             {
                 var message = new
                 {
-                    Message_Type = SetOfConstants.MessageTypes.BROADCAST_CONNECTION_REQUSET
+                    Message_Type = SetOfConstants.MessageTypes.BROADCAST_CONNECTION
                 };
                 var res = JsonConvert.SerializeObject(message, Formatting.Indented);
                 try
@@ -182,7 +182,7 @@ namespace DiplomApp.Server
 
             message.TryGetValue("Message_Type", out string req);
             logger.Trace($"Получено сообщение из топика { e.ApplicationMessage.Topic}. Тип сообщения: {req}");
-            if (req == SetOfConstants.MessageTypes.BROADCAST_CONNECTION_REQUSET ||
+            if (req == SetOfConstants.MessageTypes.BROADCAST_CONNECTION ||
                 req == SetOfConstants.MessageTypes.PERMIT_TO_CONNECT
                 ) return;
 
