@@ -1,5 +1,3 @@
-
-
 #ifndef MqttClient_h
 #define MqttClient_h
 
@@ -7,22 +5,33 @@
 #include "Client.h"
 #include "ArduinoJson-v6.10.0.h"
 
+#define REQUEST_TO_CONNECT "CONNECTION"
+#define PERMIT_TO_CONNECT "CONNACK"
+#define REQUEST_TO_DISCONNECT "DISCONNECT"
+#endif
+
+class MqttClientSensor {
+private:    
+    const char* ID;
+	const char* Name;
+	const char* Type;
+	double Value;    
+    bool connected;
+    PubSubClient* _client;    
+
+    //Json параметры
+    const int capacity = JSON_OBJECT_SIZE(12);
+    StaticJsonDocument<capacity> sensorDoc; // Данные об подключаемом усторйстве
+    StaticJsonDocument<capacity> resultDoc;
 
 
+public:     
+    MqttClientSensor(const char*, const char*, Client& client, double&, const char*, IPAddress, uint16_t); 
+        
 
-class MqttClient
-{
-private:
-    Client* _client;
-
-public:
-    MqttClient(); //Not implemented
-    MqttClient(Client& client); //Not implemented
-    MqttClient(Client& client, double& sensorValue); //Not implemented
-    MqttClient(Client& client, bool& switchValue); //Not implemented
-    MqttClient(Client& client, double& sensorValue, const char * sensorType); //Not implemented
-    MqttClient(Client& client, bool& switchValue, const char * switchType); //Not implemented
-    
     bool Connect(); //Not implemented
     void Run(); //Not implemented
-}
+};
+
+
+
