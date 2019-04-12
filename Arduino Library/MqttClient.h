@@ -8,11 +8,13 @@
 #define REQUEST_TO_CONNECT "CONNECT"
 #define PERMIT_TO_CONNECT "CONNACK"
 #define REQUEST_TO_DISCONNECT "DISCONNECT"
-#define DISTRIBUTION_OF_VALUES = "DISTRIBUTE"
+#define DISTRIBUTION_OF_VALUES "DISTRIBUTE"
 
-#define TOPIC_FOR_CONNECTION = "Connection"
-#define TOPIC_FOR_SENSORS = "Devices/Sensors"
+#define TOPIC_FOR_CONNECTION "Connection"
+#define TOPIC_FOR_SENSORS "Devices/Sensors"
 #endif
+
+const int CAPACITY = JSON_OBJECT_SIZE(12);
 
 class MqttClientSensor {
 private:    
@@ -23,12 +25,7 @@ private:
     bool connected;
     const char* topic;
     PubSubClient* _client;    
-
-    //Json параметры
-    const int capacity = JSON_OBJECT_SIZE(12);
-    StaticJsonDocument<capacity> sensorObj;
-    StaticJsonDocument<capacity> resultObj;
-    
+       
     //Методы
     void callback(char* topic, byte* payload, unsigned int length);
 
