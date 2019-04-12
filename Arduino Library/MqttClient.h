@@ -3,13 +3,15 @@
 
 #include "PubSubClient.h"
 #include "Client.h"
-#include "ArduinoJson-v5.13.4.h"
+#include "ArduinoJson-v6.10.0.h"
 
 #define REQUEST_TO_CONNECT "CONNECT"
 #define PERMIT_TO_CONNECT "CONNACK"
 #define REQUEST_TO_DISCONNECT "DISCONNECT"
+#define DISTRIBUTION_OF_VALUES = "DISTRIBUTE"
 
 #define TOPIC_FOR_CONNECTION = "Connection"
+#define TOPIC_FOR_SENSORS = "Devices/Sensors"
 #endif
 
 class MqttClientSensor {
@@ -24,17 +26,16 @@ private:
 
     //Json параметры
     const int capacity = JSON_OBJECT_SIZE(12);
-    StaticJsonBuffer<capacity> jb;
-    JsonObject& sensorObj = jb.createObject();
-	JsonObject& resultObj = jb.createObject();
-
+    StaticJsonDocument<capacity> sensorObj;
+    StaticJsonDocument<capacity> resultObj;
+    
     //Методы
     void callback(char* topic, byte* payload, unsigned int length);
-    bool distributeValues(); // Not implemented
 
 public:     
     MqttClientSensor(const char*, const char*, Client& client, double&, const char*, IPAddress, uint16_t, const char*); 
     bool Connect();   
+    bool PublishValue();    
 };
 
 
