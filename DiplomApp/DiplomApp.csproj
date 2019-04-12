@@ -118,6 +118,8 @@
     <Compile Include="Controllers\InvalidControllerTypeException.cs" />
     <Compile Include="Controllers\Models\Switch.cs" />
     <Compile Include="Controllers\Models\Termometer.cs" />
+    <Compile Include="Server\SetOfConstants\MessageTypes.cs" />
+    <Compile Include="Server\SetOfConstants\Topics.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -183,12 +185,6 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SetOfConstants\SetOfConstants.csproj">
-      <Project>{b710b932-92f7-4802-994f-d8e0179e4b6a}</Project>
-      <Name>SetOfConstants</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7">

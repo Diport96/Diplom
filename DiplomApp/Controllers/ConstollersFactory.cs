@@ -24,6 +24,7 @@ namespace DiplomApp.Controllers
         public static void Create(Controller controller, string controllerType)
         {
             //!!! Найти способ оптимизации запроса
+            //!!! Exception hanle
             if (!database.RegisteredDevices.Any(x=>x.ID == controller.ID))
             {
                 database.RegisteredDevices.Add(new RegisteredDeviceInfo(
