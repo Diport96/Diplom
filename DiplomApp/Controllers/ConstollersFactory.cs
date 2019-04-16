@@ -1,4 +1,5 @@
 ﻿using DiplomApp.Controllers.Models;
+using DiplomApp.Data;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace DiplomApp.Controllers
         public static void Create(Controller controller, string controllerType)
         {
             //!!! Найти способ оптимизации запроса
-            //!!! Exception hanle
+            //!!! Exception handle
             if (!database.RegisteredDevices.Any(x=>x.ID == controller.ID))
             {
                 database.RegisteredDevices.Add(new RegisteredDeviceInfo(

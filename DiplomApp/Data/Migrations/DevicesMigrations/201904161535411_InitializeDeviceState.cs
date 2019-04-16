@@ -1,9 +1,9 @@
-namespace DiplomApp.Migrations
+namespace DiplomApp.Data.Migrations.DevicesMigrations
 {
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initialization_db_state : DbMigration
+    public partial class InitializeDeviceState : DbMigration
     {
         public override void Up()
         {
@@ -14,6 +14,7 @@ namespace DiplomApp.Migrations
                         ID = c.String(nullable: false, maxLength: 128),
                         DeviceType = c.String(nullable: false),
                         RegisteredDate = c.DateTime(nullable: false),
+                        PermitToConnection = c.Boolean(nullable: false),
                         Name = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.ID);

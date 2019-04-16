@@ -15,10 +15,13 @@ namespace DiplomApp.Controllers
         [Required]
         public DateTime RegisteredDate { get; private set; }
 
+        public bool PermitToConnection { get; set; }
+
         public RegisteredDeviceInfo(string id, string name, string type, DateTime registeredDate) : base(id, name)
         {
             DeviceType = type;
             RegisteredDate = registeredDate;
+            PermitToConnection = true;
         }
     }
 }

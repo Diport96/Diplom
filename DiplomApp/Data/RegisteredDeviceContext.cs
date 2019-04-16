@@ -1,4 +1,5 @@
-﻿using DiplomApp.Controllers.Models;
+﻿using DiplomApp.Controllers;
+using DiplomApp.Data;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DiplomApp.Controllers
+namespace DiplomApp.Data
 {
     class RegisteredDeviceContext : DbContext
     {
