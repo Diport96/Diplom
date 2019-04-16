@@ -12,6 +12,7 @@
 
 #define TOPIC_FOR_CONNECTION "Connection"
 #define TOPIC_FOR_SENSORS "Devices/Sensors"
+#define TOPIC_FOR_SWITCHES "Devices/Switches"
 #endif
 
 const int CAPACITY = JSON_OBJECT_SIZE(12);
@@ -22,18 +23,30 @@ private:
 	const char* name;
 	const char* type;
 	double value;    
-    bool connected;
-    const char* topic;
+    bool connected;    
     PubSubClient* _client;    
        
-    //Методы
     void callback(char* topic, byte* payload, unsigned int length);
 
 public:     
-    MqttClientSensor(const char*, const char*, Client& client, double&, const char*, IPAddress, uint16_t, const char*); 
+    MqttClientSensor(const char*, const char*, Client& client, double&, const char*, IPAddress, uint16_t); 
     bool Connect();   
     bool PublishValue();    
 };
 
+class MqttClientSwitch{
+private:    
+    const char* id;
+	const char* name;
+	const char* type;
+	bool state;    
+    bool connected;   
+    PubSubClient* _client;        
+    
+    void callback(char* topic, byte* payload, unsigned int length);
 
-
+public:     
+    MqttClientSwitch(const char*, const char*, Client& client, bool&, const char*, IPAddress, uint16_t); 
+    bool Connect();   
+    bool PublishValue();    
+};

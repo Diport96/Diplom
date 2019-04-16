@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="DiplomApp.App" Collapsed="true">
+    <Position X="0.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACQAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DiplomApp.Controllers.ControllersFactory">
+    <Position X="13" Y="7.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAABCAAAABACAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\ConstollersFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Controllers.Controller">
+    <Position X="7" Y="0.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAIAAAAAQAgAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\Controller.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DiplomApp.Controllers.InvalidControllerTypeException" Collapsed="true">
+    <Position X="4.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\InvalidControllerTypeException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Controllers.RegisteredDeviceContext">
+    <Position X="11.25" Y="3.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\RegisteredDeviceContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Controllers.RegisteredDeviceInfo">
+    <Position X="4.5" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\RegisteredDeviceInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Controllers.Models.Switch">
+    <Position X="7.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAAAA=</HashCode>
+      <FileName>Controllers\Models\Switch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Controllers.Models.Termometer">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAAAA=</HashCode>
+      <FileName>Controllers\Models\Termometer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Migrations.Initialization_db_state" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.5" Y="2.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAMAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAAI=</HashCode>
+      <FileName>Migrations\201903311922248_Initialization_db_state.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DiplomApp.Migrations.Configuration" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Migrations\Configuration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Properties.Resources" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Properties.Settings" Collapsed="true">
+    <Position X="4.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIABAEAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Server.HandlerNotFindException" Collapsed="true">
+    <Position X="0.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Server\HandlerNotFindException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Server.RequestTypeAttribute">
+    <Position X="11.25" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Server\RequestTypeAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Server.ServerDevice">
+    <Position X="0.5" Y="4" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAUAAgAAAgAFCACgAAAAAAABACAAAQAAARABAAAI=</HashCode>
+      <FileName>Server\ServerDevice.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Server.Requsests.ConnectHandler" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="7.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAgAAAABAAAAAQAAAAAAAAAI=</HashCode>
+      <FileName>Server\RequsestHandlers\ConnectHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DiplomApp.Server.RequsestHandlers.DisconnectHandler" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAI=</HashCode>
+      <FileName>Server\RequsestHandlers\DisconnectHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DiplomApp.Server.RequsestHandlers.DistributeHandler" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAQAQAAAAAAAAAI=</HashCode>
+      <FileName>Server\RequsestHandlers\DistributeHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SetOfConstants.MessageTypes">
+    <Position X="13.25" Y="0.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAABAAAAAAAAAAAAAAAAAAoAAAAAACAAAAAA=</HashCode>
+      <FileName>Server\SetOfConstants\MessageTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SetOfConstants.Topics">
+    <Position X="11" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAABAAIACAA=</HashCode>
+      <FileName>Server\SetOfConstants\Topics.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="DiplomApp.Server.IRequestHandler">
+    <Position X="14" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Server\IRequestHandler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
