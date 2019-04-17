@@ -17,10 +17,10 @@ namespace DiplomApp.Accounts
             database = new UserAccountContext();
         }
 
-        public static bool CreateAccount(string login, string password)
+        public static CreateAccountState CreateAccount(string login, string password)
         {
             if (database.UserAccounts.Any(x => x.Login == login))
-                return false;
+                return CreateAccountState.UserAlreadyExists;
 
             using (var deriveBytes = new Rfc2898DeriveBytes(password, 20))
             {
@@ -36,7 +36,7 @@ namespace DiplomApp.Accounts
                 database.SaveChanges();
             }
 
-            return true;
+            return CreateAccountState.OK;
         }
 
         public static UserAccount GetUserAccount(string login, string password)
@@ -57,5 +57,11 @@ namespace DiplomApp.Accounts
 
             return null;
         }
+    }
+
+    enum CreateAccountState
+    {
+        OK,
+        UserAlreadyExists       
     }
 }

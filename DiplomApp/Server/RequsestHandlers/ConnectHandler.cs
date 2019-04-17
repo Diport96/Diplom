@@ -37,20 +37,16 @@ namespace DiplomApp.Server.Requsests
         {
             pairs.TryGetValue("Type", out string t);
             pairs.TryGetValue("Topic", out string topic);
-            pairs.TryGetValue("Class", out string classData);           
+            pairs.TryGetValue("Class", out string classData);
             var type = GetDeviceType(t);
             var controller = JsonConvert.DeserializeObject(classData, type) as Controller;
             ControllersFactory.Create(controller, t);
-            var res = new Dictionary<string, string>
-            {
-                {"Message_Type", MessageTypes.PERMIT_TO_CONNECT },
-                {"ID", controller.ID }
-            };
+            var res = ResponseManager.ConnackToDictionary(controller.ID);
             ServerDevice.Instance.SendMessage(res, topic).Wait();
         }
 
         private Type GetDeviceType(string Type)
-        {            
+        {
             foreach (var t in Types)
             {
                 if (t.Name == Type)

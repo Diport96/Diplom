@@ -20,8 +20,13 @@ namespace DiplomApp
             Startup += App_Startup;
             //Путь к локальному директорию приложения
             AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;            
         }
 
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            logger.Fatal(e.ExceptionObject.ToString());
+        }
         private void App_Startup(object sender, StartupEventArgs e)
         {
             logger.Info("Запуск приложения");            

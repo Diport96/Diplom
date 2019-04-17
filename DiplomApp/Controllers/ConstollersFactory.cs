@@ -51,5 +51,10 @@ namespace DiplomApp.Controllers
         {
             return controllers.AsReadOnly();
         }
+        public static Controller GetController(string id)
+        {
+            //!!!
+            return controllers.Find(x => x.ID == id);
+        }
     }
 }

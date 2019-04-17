@@ -116,6 +116,7 @@
     <Compile Include="Accounts\AccountManager.cs" />
     <Compile Include="Accounts\UserAccount.cs" />
     <Compile Include="Controllers\ConstollersFactory.cs" />
+    <Compile Include="Controllers\Models\Sensor.cs" />
     <Compile Include="Data\Migrations\AccountsMigrations\201904161558524_InitializeUserAccountState.cs" />
     <Compile Include="Data\Migrations\AccountsMigrations\201904161558524_InitializeUserAccountState.Designer.cs">
       <DependentUpon>201904161558524_InitializeUserAccountState.cs</DependentUpon>
@@ -131,6 +132,7 @@
     <Compile Include="Controllers\Models\Switch.cs" />
     <Compile Include="Controllers\Models\Termometer.cs" />
     <Compile Include="Data\UserAccountContext.cs" />
+    <Compile Include="Server\ResponseManager.cs" />
     <Compile Include="Server\SetOfConstants\MessageTypes.cs" />
     <Compile Include="Server\SetOfConstants\Topics.cs" />
     <Page Include="MainWindow.xaml">

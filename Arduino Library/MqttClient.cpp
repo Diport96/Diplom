@@ -14,6 +14,7 @@ MqttClientSensor::MqttClientSensor(const char* id, const char* name, Client& cli
     this->connected = false;    
     this->_client = new PubSubClient(ip, port, client);      
 }
+
 bool MqttClientSensor::Connect()
 {
     // Попытка подключения
@@ -45,6 +46,7 @@ bool MqttClientSensor::Connect()
 
     return true;
 }
+
 void MqttClientSensor::callback(char* topic, byte* payload, unsigned int length)
 {    
     if(topic == TOPIC_FOR_CONNECTION)
@@ -68,6 +70,7 @@ void MqttClientSensor::callback(char* topic, byte* payload, unsigned int length)
         }
     }
 }
+
 bool MqttClientSensor::PublishValue()
 {
     DynamicJsonDocument doc(CAPACITY);
@@ -92,6 +95,8 @@ MqttClientSwitch::MqttClientSwitch(const char* id, const char* name, Client& cli
     this->connected = false;    
     this->_client = new PubSubClient(ip, port, client);      
 }
+
+
 bool MqttClientSwitch::Connect()
 {
     // Попытка подключения
@@ -124,6 +129,7 @@ bool MqttClientSwitch::Connect()
 
     return true;
 }
+
 void MqttClientSwitch::callback(char* topic, byte* payload, unsigned int length)
 {    
     if(topic == TOPIC_FOR_CONNECTION)
@@ -145,8 +151,27 @@ void MqttClientSwitch::callback(char* topic, byte* payload, unsigned int length)
                _client->subscribe(TOPIC_FOR_SWITCHES);
             }
         }
+    }
+    else if(topic == TOPIC_FOR_SWITCHES)
+    {
+        char message[length];
+        for(int i = 0; i < length; i++)
+        {
+            message[i] = (char)payload[i];
+        }
+
+        DynamicJsonDocument doc(CAPACITY);
+        deserializeJson(doc, message);
+        if(doc["Message_Type"] == CHANGE_SWITCH_STATE)
+        {
+            if(doc["ID"] == this->id)
+            {   
+               this->state = doc["Value"];
+            }
+        }
     }    
 }
+
 bool MqttClientSwitch::PublishValue()
 {
     DynamicJsonDocument doc(CAPACITY);

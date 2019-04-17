@@ -71,41 +71,7 @@ namespace DiplomApp.Server
         }
 
         public async Task RunAsync()
-        {
-            Func<Task> sendBroadcast = async () =>
-            {
-                var message = new
-                {
-                    Message_Type = SetOfConstants.MessageTypes.BROADCAST_CONNECTION
-                };
-                var res = JsonConvert.SerializeObject(message, Formatting.Indented);
-                try
-                {
-                    await client.PublishAsync(SetOfConstants.Topics.CONNECTION, res);
-                }
-                catch (MqttCommunicationException e)
-                {
-                    logger.Warn(e, e.Message);
-                    if (!client.IsConnected)
-                    {
-                        await client.ConnectAsync(clientOptions);
-                    }
-                }
-                catch (Exception e)
-                {
-                    logger.Error(e, e.Message);
-                    throw;
-                }
-            };
-            Action<CancellationToken> broadcastAction = (x) =>
-            {
-                logger.Debug("Запуск асинхронного потока для сервера");
-                while (!x.IsCancellationRequested)
-                {
-                    Task.Run(() => sendBroadcast());
-                    Thread.Sleep(Properties.Settings.Default.BroadcastDelay);
-                }
-            };
+        {           
             Func<Task<bool>> tryConnect = async () =>
             {
                 logger.Debug("Попытка подключения к mqtt серверу");
@@ -138,8 +104,7 @@ namespace DiplomApp.Server
             {
                 logger.Debug("Закрытие асинхронного потока для сервера");
             });
-            IsRun = true;
-            new Task(() => broadcastAction(cancellationSource.Token), cancellationSource.Token).Start();
+            IsRun = true;           
         }
         public async Task StopAsync()
         {
