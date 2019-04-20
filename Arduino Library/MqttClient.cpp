@@ -5,37 +5,37 @@
 #include "Time.h"
 
 // MqttClientSensor
-MqttClientSensor::MqttClientSensor(const char* id, const char* name, Client& client, double& sensorVal, const char* sensorType, IPAddress ip, uint16_t port)
-{    
+MqttClientSensor::MqttClientSensor(const char *id, const char *name, Client &client, double &sensorVal, const char *sensorType, IPAddress ip, uint16_t port)
+{
     this->id = id;
     this->name = name;
-    this->value = sensorVal;  
+    this->value = sensorVal;
     this->type = sensorType;
-    this->connected = false;    
-    this->_client = new PubSubClient(ip, port, client);      
+    this->connected = false;
+    this->_client = new PubSubClient(ip, port, client);
 }
-
 bool MqttClientSensor::Connect()
 {
     // Попытка подключения
-    if(!_client->connect(this->id)) return false;
+    if (!_client->connect(this->id))
+        return false;
     _client->subscribe(TOPIC_FOR_CONNECTION);
 
-    // JSON параметры    
+    // JSON параметры
     StaticJsonDocument<CAPACITY> sensorObj;
     StaticJsonDocument<CAPACITY> resultObj;
 
     // Формироваие JSON документа
     sensorObj["ID"] = this->id;
     sensorObj["Name"] = this->name;
-	sensorObj["Value"] = this->value;
+    sensorObj["Value"] = this->value;
 
     char sensorObjToJson[64];
     serializeJson(sensorObj, sensorObjToJson);
 
     resultObj["Message_Type"] = REQUEST_TO_CONNECT;
-	resultObj["Type"] = this->type;
-	resultObj["Class"] = sensorObjToJson;
+    resultObj["Type"] = this->type;
+    resultObj["Class"] = sensorObjToJson;
 
     // Конвертирование в строку
     char res[128]; // !!! Оптимизировать
@@ -46,31 +46,29 @@ bool MqttClientSensor::Connect()
 
     return true;
 }
-
-void MqttClientSensor::callback(char* topic, byte* payload, unsigned int length)
-{    
-    if(topic == TOPIC_FOR_CONNECTION)
+void MqttClientSensor::callback(char *topic, byte *payload, unsigned int length)
+{
+    if (topic == TOPIC_FOR_CONNECTION)
     {
         char message[length];
-        for(int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++)
         {
             message[i] = (char)payload[i];
         }
 
         DynamicJsonDocument doc(CAPACITY);
         deserializeJson(doc, message);
-        
-        if(doc["Message_Type"] == PERMIT_TO_CONNECT)
+
+        if (doc["Message_Type"] == PERMIT_TO_CONNECT)
         {
-            if(doc["ID"] == MqttClientSensor::id)
-            {   
+            if (doc["ID"] == MqttClientSensor::id)
+            {
                 connected = true;
                 _client->subscribe(TOPIC_FOR_SENSORS);
             }
         }
     }
 }
-
 bool MqttClientSensor::PublishValue()
 {
     DynamicJsonDocument doc(CAPACITY);
@@ -84,41 +82,39 @@ bool MqttClientSensor::PublishValue()
     _client->publish(TOPIC_FOR_SENSORS, res);
 }
 
-
 // MqttClientSwitch
-MqttClientSwitch::MqttClientSwitch(const char* id, const char* name, Client& client, bool& switchState, const char* switchType, IPAddress ip, uint16_t port)
-{    
+MqttClientSwitch::MqttClientSwitch(const char *id, const char *name, Client &client, bool &switchState, const char *switchType, IPAddress ip, uint16_t port)
+{
     this->id = id;
     this->name = name;
-    this->state = switchState;  
+    this->state = switchState;
     this->type = switchType;
-    this->connected = false;    
-    this->_client = new PubSubClient(ip, port, client);      
+    this->connected = false;
+    this->_client = new PubSubClient(ip, port, client);
 }
-
-
 bool MqttClientSwitch::Connect()
 {
     // Попытка подключения
-    if(!_client->connect(this->id)) return false;
+    if (!_client->connect(this->id))
+        return false;
     _client->subscribe(TOPIC_FOR_CONNECTION);
     _client->subscribe(TOPIC_FOR_SWITCHES);
 
-    // JSON параметры    
+    // JSON параметры
     StaticJsonDocument<CAPACITY> switchObj;
     StaticJsonDocument<CAPACITY> resultObj;
 
     // Формироваие JSON документа
     switchObj["ID"] = this->id;
     switchObj["Name"] = this->name;
-	switchObj["Value"] = this->state;
+    switchObj["Value"] = this->state;
 
     char switchObjToJson[64];
     serializeJson(switchObj, switchObjToJson);
 
     resultObj["Message_Type"] = REQUEST_TO_CONNECT;
-	resultObj["Type"] = this->type;
-	resultObj["Class"] = switchObjToJson;
+    resultObj["Type"] = this->type;
+    resultObj["Class"] = switchObjToJson;
 
     // Конвертирование в строку
     char res[128]; // !!! Оптимизировать
@@ -129,49 +125,69 @@ bool MqttClientSwitch::Connect()
 
     return true;
 }
-
-void MqttClientSwitch::callback(char* topic, byte* payload, unsigned int length)
-{    
-    if(topic == TOPIC_FOR_CONNECTION)
+void MqttClientSwitch::callback(char *topic, byte *payload, unsigned int length)
+{
+    if (topic == TOPIC_FOR_CONNECTION)
     {
         char message[length];
-        for(int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++)
         {
             message[i] = (char)payload[i];
         }
 
         DynamicJsonDocument doc(CAPACITY);
         deserializeJson(doc, message);
-        
-        if(doc["Message_Type"] == PERMIT_TO_CONNECT)
+
+        if (doc["Message_Type"] == PERMIT_TO_CONNECT)
         {
-            if(doc["ID"] == MqttClientSwitch::id)
-            {   
-               connected = true;
-               _client->subscribe(TOPIC_FOR_SWITCHES);
+            if (doc["ID"] == MqttClientSwitch::id)
+            {
+                SwitchOptions *_options;
+                //!!!
+                const char *controlType = doc["Control"];
+                if (controlType == "No")
+                {
+                    _options = new SwitchOptions();
+                }
+                else if (controlType == "SwitchToDelay")
+                {
+                    int delayVal = doc["Delay"];
+                    _options = new SwitchOptions(delayVal);
+                }
+                else if (controlType == "SwitchToSignal")
+                {
+                    const char *_id = doc["ID"];
+                    _options = new SwitchOptions(_id);
+                }
+                else
+                {
+                }
+
+                this->options = _options;
+                connected = true;
+                _client->subscribe(TOPIC_FOR_SWITCHES);
             }
         }
     }
-    else if(topic == TOPIC_FOR_SWITCHES)
+    else if (topic == TOPIC_FOR_SWITCHES)
     {
         char message[length];
-        for(int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++)
         {
             message[i] = (char)payload[i];
         }
 
         DynamicJsonDocument doc(CAPACITY);
         deserializeJson(doc, message);
-        if(doc["Message_Type"] == CHANGE_SWITCH_STATE)
+        if (doc["Message_Type"] == CHANGE_SWITCH_STATE)
         {
-            if(doc["ID"] == this->id)
-            {   
-               this->state = doc["Value"];
+            if (doc["ID"] == this->id)
+            {
+                this->state = doc["Value"];
             }
         }
-    }    
+    }
 }
-
 bool MqttClientSwitch::PublishValue()
 {
     DynamicJsonDocument doc(CAPACITY);
@@ -183,4 +199,20 @@ bool MqttClientSwitch::PublishValue()
     char res[128]; // !!! Оптимизировать
     serializeJson(doc, res);
     _client->publish(TOPIC_FOR_SWITCHES, res);
+}
+
+// SwitchOptions
+SwitchOptions::SwitchOptions()
+{
+    this->control = No;
+}
+SwitchOptions::SwitchOptions(int switchDelay)
+{
+    this->delayToSwitch = switchDelay;
+    this->control = SwitchToDelay;
+}
+SwitchOptions::SwitchOptions(const char *id)
+{
+    this->sensorId = id;
+    this->control = SwitchToSignal;
 }

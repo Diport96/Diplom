@@ -14,8 +14,7 @@ namespace DiplomApp.Server.Requsests
 {
     [RequestType(MessageTypes.REQUSET_TO_CONNECT)]
     class ConnectHandler : IRequestHandler
-    {
-        private static readonly IEnumerable<Type> Types;
+    {       
         private static ConnectHandler instance;
         public static ConnectHandler Instance
         {
@@ -27,32 +26,18 @@ namespace DiplomApp.Server.Requsests
             }
         }
 
-        private ConnectHandler() { }
-        static ConnectHandler()
-        {
-            Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.BaseType == typeof(Controller));
-        }
+        private ConnectHandler() { }        
 
         public void Run(Dictionary<string, string> pairs)
         {
             pairs.TryGetValue("Type", out string t);
             pairs.TryGetValue("Topic", out string topic);
             pairs.TryGetValue("Class", out string classData);
-            var type = GetDeviceType(t);
+            var type = ControllersFactory.GetType(t);
             var controller = JsonConvert.DeserializeObject(classData, type) as Controller;
             ControllersFactory.Create(controller, t);
             var res = ResponseManager.ConnackToDictionary(controller.ID);
             ServerDevice.Instance.SendMessage(res, topic).Wait();
-        }
-
-        private Type GetDeviceType(string Type)
-        {
-            foreach (var t in Types)
-            {
-                if (t.Name == Type)
-                    return t;
-            }
-            throw new InvalidControllerTypeException("Не удалось определить тип контроллера, возможно название класса не совпадает с названием типа контроллера");
-        }
+        }       
     }
 }

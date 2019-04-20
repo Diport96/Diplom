@@ -10,10 +10,10 @@ namespace DiplomApp.Controllers
     class RegisteredDeviceInfo : Controller
     {
         [Required]
-        public string DeviceType { get; private set; }
+        public string DeviceType { get; set; }
 
         [Required]
-        public DateTime RegisteredDate { get; private set; }
+        public DateTime RegisteredDate { get; set; }
 
         public bool PermitToConnection { get; set; }
 

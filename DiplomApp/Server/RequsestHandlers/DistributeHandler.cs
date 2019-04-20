@@ -9,14 +9,16 @@ using System.Configuration;
 using SetOfConstants;
 using DiplomApp.Controllers;
 using DiplomApp.Controllers.Models;
+using NLog;
 
 namespace DiplomApp.Server.RequsestHandlers
 {
     [RequestType(SetOfConstants.MessageTypes.DISTRIBUTION_OF_VALUES)]
     class DistributeHandler : IRequestHandler
     {
-        private readonly IMongoDatabase _database;
+        private readonly IMongoDatabase database;
         private static DistributeHandler instance;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public static DistributeHandler Instance
         {
             get
@@ -30,34 +32,52 @@ namespace DiplomApp.Server.RequsestHandlers
         private DistributeHandler()
         {
             var client = new MongoClient(ConfigurationManager.ConnectionStrings["MongoDb"].ConnectionString);
-            _database = client.GetDatabase("DevicesData");
+            database = client.GetDatabase("DevicesData");
         }
 
         public void Run(Dictionary<string, string> pairs)
-        {            
-            switch (pairs["Topic"])
+        {
+            var info = ControllersFactory.GetControllerInfo(pairs["ID"]);
+            if (info == null)
             {
-                case Topics.SENSORS:
+                logger.Error("В базе данных отсутствует информация о контроллере");
+                return;
+            }
+            string deviceType = info.DeviceType;            
+            switch (deviceType)
+            {
+                case "Sensor":
                     {
-                        var controller = ControllersFactory.GetController(pairs["ID"]) as Sensor;
+                        var controller = ControllersFactory.GetById(pairs["ID"]) as Sensor;
                         double.TryParse(pairs["Value"], out double value); //!!! Handle Exception
-                        controller.Value = value;
+                        controller.Value = value;                        
                         break;
                     }
-                case Topics.SWITCHES:
+                case "Switch":
                     {
-                        var controller = ControllersFactory.GetController(pairs["ID"]) as Switch;
+                        var controller = ControllersFactory.GetById(pairs["ID"]) as Switch;
                         bool.TryParse(pairs["Value"], out bool value); //!!! Handle Exception
-                        controller.Value = value;
+                        controller.Value = value;                        
                         break;
                     }
                 default:
-                    break;
+                    {
+                        logger.Error("Не удалось определить тип контроллера");
+                        return;
+                    }                    
             }
-            string topic = pairs["Topic"];
+
+            //var deviceInfo = ControllersFactory.GetControllerInfo(pairs["ID"]);
+            //if(deviceInfo == null)
+            //{
+            //    logger.Error("В базе данных отсутствует информация о контроллере");
+            //}
+            //ControllersFactory.GetType(deviceInfo.DeviceType);
+
+           
             pairs.Remove("Topic");
             BsonDocument element = new BsonDocument(pairs);
-            _database.GetCollection<BsonDocument>(topic).InsertOneAsync(element).Wait(); //!!!
+            database.GetCollection<BsonDocument>(deviceType).InsertOneAsync(element).Wait(); //!!!
         }
     }
 }

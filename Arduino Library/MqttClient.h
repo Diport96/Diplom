@@ -17,37 +17,59 @@
 #endif
 
 const int CAPACITY = JSON_OBJECT_SIZE(12);
-
-class MqttClientSensor {
-private:    
-    const char* id;
-	const char* name;
-	const char* type;
-	double value;    
-    bool connected;    
-    PubSubClient* _client;    
-       
-    void callback(char* topic, byte* payload, unsigned int length);
-
-public:     
-    MqttClientSensor(const char*, const char*, Client& client, double&, const char*, IPAddress, uint16_t); 
-    bool Connect();   
-    bool PublishValue();    
+enum SwitchControl
+{
+  No,
+  SwitchToDelay,
+  SwitchToSignal
 };
 
-class MqttClientSwitch{
-private:    
-    const char* id;
-	const char* name;
-	const char* type;
-	bool state;    
-    bool connected;   
-    PubSubClient* _client;        
-    
-    void callback(char* topic, byte* payload, unsigned int length);
+class MqttClientSensor
+{
+private:
+  const char *id;
+  const char *name;
+  const char *type;
+  double value;
+  bool connected;
+  PubSubClient *_client;
 
-public:     
-    MqttClientSwitch(const char*, const char*, Client& client, bool&, const char*, IPAddress, uint16_t); 
-    bool Connect();   
-    bool PublishValue();    
+  void callback(char *topic, byte *payload, unsigned int length);
+
+public:
+  MqttClientSensor(const char *, const char *, Client &client, double &, const char *, IPAddress, uint16_t);
+  bool Connect();
+  bool PublishValue();
+};
+
+// Not implemented
+struct SwitchOptions
+{
+private:
+  const char *sensorId;  // Мдентификатор переключателя
+  int delayToSwitch;     // Задержка
+  SwitchControl control; // Каким образом осуществляется переключение
+public:
+  SwitchOptions();
+  SwitchOptions(int);
+  SwitchOptions(const char *);
+};
+
+class MqttClientSwitch
+{
+private:
+  const char *id;
+  const char *name;
+  const char *type;
+  bool state;
+  bool connected;
+  PubSubClient *_client;
+  SwitchOptions *options;
+
+  void callback(char *topic, byte *payload, unsigned int length);
+
+public:
+  MqttClientSwitch(const char *, const char *, Client &client, bool &, const char *, IPAddress, uint16_t);
+  bool Connect();
+  bool PublishValue();
 };

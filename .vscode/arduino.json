@@ -1,4 +1,5 @@
 {
-    "programmer": "Arduino as ISP",
-    "port": "COM1"
+    "programmer": "AVRISP mkII",
+    "port": "COM1",
+    "board": "arduino:avr:unowifi"
 }

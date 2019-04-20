@@ -1,5 +1,6 @@
 ﻿using DiplomApp.Controllers;
 using DiplomApp.Server;
+using DiplomApp.Views;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,10 @@ namespace DiplomApp
         private void MainWindow_Closed(object sender, EventArgs e)
         {
             server.StopAsync().Wait();
+        }
+        private void _SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            new SettingsWindow().Show();
         }
 
         ~MainWindow()
