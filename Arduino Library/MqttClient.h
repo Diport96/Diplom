@@ -40,6 +40,7 @@ private:
 public:
   MqttClientSensor(const char *, const char *, Client &client, double &, const char *, IPAddress, uint16_t);
   bool Connect();
+  void Disconnect();
   bool PublishValue();
 };
 
@@ -80,6 +81,7 @@ private:
 public:
   MqttClientSwitch(const char *, const char *, Client &client, bool &, const char *, IPAddress, uint16_t);
   bool Connect();
+  void Disconnect();
   bool PublishValue();
   void SetOptions(SwitchOptions *);
 };

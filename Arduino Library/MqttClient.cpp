@@ -46,6 +46,13 @@ bool MqttClientSensor::Connect()
 
     return true;
 }
+void MqttClientSensor::Disconnect()
+{
+    _client->unsubscribe(TOPIC_FOR_SENSORS);
+    _client->unsubscribe(TOPIC_FOR_CONNECTION);    
+    _client->disconnect();
+    connected = false;
+}
 void MqttClientSensor::callback(char *topic, byte *payload, unsigned int length)
 {
     if (topic == TOPIC_FOR_CONNECTION)
@@ -134,6 +141,25 @@ bool MqttClientSwitch::Connect()
     _client->publish(REQUEST_TO_CONNECT, res);
 
     return true;
+}
+void MqttClientSwitch::Disconnect()
+{
+    _client->unsubscribe(TOPIC_FOR_SWITCHES);
+    _client->unsubscribe(TOPIC_FOR_CONNECTION);
+    if (options->GetControl() == SwitchToSignal)
+    {
+        if (options->GetSensorId())
+        {
+            char *topicConcat;
+            strcat(topicConcat, TOPIC_FOR_CONNECTION);
+            strcat(topicConcat, "/");
+            strcat(topicConcat, options->GetSensorId());
+            _client->unsubscribe(topicConcat);
+        }
+    }
+    running = false;
+    _client->disconnect();
+    connected = false;
 }
 void MqttClientSwitch::callback(char *topic, byte *payload, unsigned int length)
 {
@@ -285,7 +311,7 @@ void MqttClientSwitch::SetOptions(SwitchOptions *_options)
 // Запускать в цикле
 void MqttClientSwitch::Run()
 {
-    if (!this->options)
+    if (!this->options || !this->connected)
         return;
 
     switch (this->options->GetControl())
