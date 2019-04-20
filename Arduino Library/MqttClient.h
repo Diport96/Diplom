@@ -10,6 +10,7 @@
 #define REQUEST_TO_DISCONNECT "DISCONNECT"
 #define DISTRIBUTION_OF_VALUES "DISTRIBUTE"
 #define CHANGE_SWITCH_STATE "STATE"
+#define SET_NEW_SWITCH_OPTIONS "SETOPTIONS"
 
 #define TOPIC_FOR_CONNECTION "Connection"
 #define TOPIC_FOR_SENSORS "Devices/Sensors"
@@ -42,17 +43,22 @@ public:
   bool PublishValue();
 };
 
-// Not implemented
 struct SwitchOptions
 {
 private:
   const char *sensorId;  // Мдентификатор переключателя
   int delayToSwitch;     // Задержка
   SwitchControl control; // Каким образом осуществляется переключение
+  bool valueTo;          // На какое значение переключать: true/fale
 public:
   SwitchOptions();
-  SwitchOptions(int);
-  SwitchOptions(const char *);
+  SwitchOptions(int, bool);
+  SwitchOptions(const char *, bool);
+
+  SwitchControl GetControl();
+  int GetDelay();
+  bool GetValueTo();
+  const char *GetSensorId();
 };
 
 class MqttClientSwitch
@@ -62,14 +68,18 @@ private:
   const char *name;
   const char *type;
   bool state;
+  bool running;
   bool connected;
+  long unsigned int timestamp;
   PubSubClient *_client;
   SwitchOptions *options;
 
   void callback(char *topic, byte *payload, unsigned int length);
+  void Run();
 
 public:
   MqttClientSwitch(const char *, const char *, Client &client, bool &, const char *, IPAddress, uint16_t);
   bool Connect();
   bool PublishValue();
+  void SetOptions(SwitchOptions *);
 };

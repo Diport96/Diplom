@@ -63,14 +63,16 @@ void MqttClientSensor::callback(char *topic, byte *payload, unsigned int length)
         {
             if (doc["ID"] == MqttClientSensor::id)
             {
-                connected = true;
                 _client->subscribe(TOPIC_FOR_SENSORS);
+                connected = true;
             }
         }
     }
 }
 bool MqttClientSensor::PublishValue()
 {
+    if (!this->connected)
+        return false;
     DynamicJsonDocument doc(CAPACITY);
     doc["Message_Type"] = DISTRIBUTION_OF_VALUES;
     doc["ID"] = MqttClientSensor::id;
@@ -79,7 +81,15 @@ bool MqttClientSensor::PublishValue()
 
     char res[128]; // !!! Оптимизировать
     serializeJson(doc, res);
+
+    char *publishConcat;
+    strcat(publishConcat, TOPIC_FOR_CONNECTION);
+    strcat(publishConcat, "/");
+    strcat(publishConcat, this->id);
+
     _client->publish(TOPIC_FOR_SENSORS, res);
+    _client->publish(publishConcat, res);
+    return true;
 }
 
 // MqttClientSwitch
@@ -91,6 +101,7 @@ MqttClientSwitch::MqttClientSwitch(const char *id, const char *name, Client &cli
     this->type = switchType;
     this->connected = false;
     this->_client = new PubSubClient(ip, port, client);
+    this->timestamp = millis();
 }
 bool MqttClientSwitch::Connect()
 {
@@ -98,7 +109,6 @@ bool MqttClientSwitch::Connect()
     if (!_client->connect(this->id))
         return false;
     _client->subscribe(TOPIC_FOR_CONNECTION);
-    _client->subscribe(TOPIC_FOR_SWITCHES);
 
     // JSON параметры
     StaticJsonDocument<CAPACITY> switchObj;
@@ -143,7 +153,6 @@ void MqttClientSwitch::callback(char *topic, byte *payload, unsigned int length)
             if (doc["ID"] == MqttClientSwitch::id)
             {
                 SwitchOptions *_options;
-                //!!!
                 const char *controlType = doc["Control"];
                 if (controlType == "No")
                 {
@@ -152,20 +161,19 @@ void MqttClientSwitch::callback(char *topic, byte *payload, unsigned int length)
                 else if (controlType == "SwitchToDelay")
                 {
                     int delayVal = doc["Delay"];
-                    _options = new SwitchOptions(delayVal);
+                    bool to = doc["ValueTo"];
+                    _options = new SwitchOptions(delayVal, to);
                 }
                 else if (controlType == "SwitchToSignal")
                 {
                     const char *_id = doc["ID"];
-                    _options = new SwitchOptions(_id);
-                }
-                else
-                {
+                    bool to = doc["ValueTo"];
+                    _options = new SwitchOptions(_id, to);
                 }
 
-                this->options = _options;
+                this->SetOptions(_options);
+                this->_client->subscribe(TOPIC_FOR_SWITCHES);
                 connected = true;
-                _client->subscribe(TOPIC_FOR_SWITCHES);
             }
         }
     }
@@ -186,10 +194,65 @@ void MqttClientSwitch::callback(char *topic, byte *payload, unsigned int length)
                 this->state = doc["Value"];
             }
         }
+        else if (doc["Message_Type"] == SET_NEW_SWITCH_OPTIONS)
+        {
+            if (doc["ID"] == MqttClientSwitch::id)
+            {
+                SwitchOptions *_options;
+                const char *controlType = doc["Control"];
+                if (controlType == "No")
+                {
+                    _options = new SwitchOptions();
+                }
+                else if (controlType == "SwitchToDelay")
+                {
+                    int delayVal = doc["Delay"];
+                    bool to = doc["ValueTo"];
+                    _options = new SwitchOptions(delayVal, to);
+                }
+                else if (controlType == "SwitchToSignal")
+                {
+                    const char *_id = doc["ID"];
+                    bool to = doc["ValueTo"];
+                    _options = new SwitchOptions(_id, to);
+                }
+
+                this->SetOptions(_options);
+            }
+        }
+    }
+    else
+    {
+        if (this->options)
+        {
+            char *topicConcat;
+            strcat(topicConcat, TOPIC_FOR_CONNECTION);
+            strcat(topicConcat, "/");
+            strcat(topicConcat, this->options->GetSensorId());
+            if (topic == topicConcat)
+            {
+                char message[length];
+                for (int i = 0; i < length; i++)
+                {
+                    message[i] = (char)payload[i];
+                }
+
+                DynamicJsonDocument doc(CAPACITY);
+                deserializeJson(doc, message);
+
+                const char *value = doc["Value"];
+                if (value == "1" || value == "true")
+                {
+                    this->state = this->options->GetValueTo();
+                }
+            }
+        }
     }
 }
 bool MqttClientSwitch::PublishValue()
 {
+    if (!this->connected)
+        return false;
     DynamicJsonDocument doc(CAPACITY);
     doc["Message_Type"] = DISTRIBUTION_OF_VALUES;
     doc["ID"] = MqttClientSwitch::id;
@@ -199,6 +262,67 @@ bool MqttClientSwitch::PublishValue()
     char res[128]; // !!! Оптимизировать
     serializeJson(doc, res);
     _client->publish(TOPIC_FOR_SWITCHES, res);
+    return true;
+}
+void MqttClientSwitch::SetOptions(SwitchOptions *_options)
+{
+    if (options)
+    {
+        if (options->GetControl() == SwitchToSignal)
+        {
+            if (options->GetSensorId())
+            {
+                char *topicConcat;
+                strcat(topicConcat, TOPIC_FOR_CONNECTION);
+                strcat(topicConcat, "/");
+                strcat(topicConcat, options->GetSensorId());
+                _client->unsubscribe(topicConcat);
+            }
+        }
+    }
+    options = _options;
+}
+// Запускать в цикле
+void MqttClientSwitch::Run()
+{
+    if (!this->options)
+        return;
+
+    switch (this->options->GetControl())
+    {
+    case No:
+    {
+        if (!this->running)
+        {
+            _client->subscribe(TOPIC_FOR_SWITCHES);
+            this->running = true;
+        }
+        break;
+    }
+    case SwitchToDelay:
+    {
+        if (millis() - timestamp > this->options->GetDelay())
+        {
+            this->state = this->options->GetValueTo();
+            timestamp = millis();
+        }
+        break;
+    }
+    case SwitchToSignal:
+    {
+        if (!this->running)
+        {
+            char *topicConcat;
+            strcat(topicConcat, TOPIC_FOR_CONNECTION);
+            strcat(topicConcat, "/");
+            strcat(topicConcat, this->options->GetSensorId());
+            this->_client->subscribe(topicConcat);
+            this->running = true;
+        }
+    }
+    default:
+        break;
+    }
 }
 
 // SwitchOptions
@@ -206,13 +330,31 @@ SwitchOptions::SwitchOptions()
 {
     this->control = No;
 }
-SwitchOptions::SwitchOptions(int switchDelay)
+SwitchOptions::SwitchOptions(int switchDelay, bool _valueTo)
 {
     this->delayToSwitch = switchDelay;
+    this->valueTo = _valueTo;
     this->control = SwitchToDelay;
 }
-SwitchOptions::SwitchOptions(const char *id)
+SwitchOptions::SwitchOptions(const char *id, bool _valueTo)
 {
     this->sensorId = id;
+    this->valueTo = _valueTo;
     this->control = SwitchToSignal;
+}
+SwitchControl SwitchOptions::GetControl()
+{
+    return this->control;
+}
+int SwitchOptions::GetDelay()
+{
+    return this->delayToSwitch;
+}
+bool SwitchOptions::GetValueTo()
+{
+    return this->valueTo;
+}
+const char *SwitchOptions::GetSensorId()
+{
+    return this->sensorId;
 }
