@@ -14,7 +14,7 @@ namespace DiplomApp.Data
     class RegisteredDeviceContext : DbContext
     {
         public DbSet<RegisteredDeviceInfo> RegisteredDevices { get; set; }
-
+       
         public RegisteredDeviceContext() : base("SqlDatabaseConnection") { }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

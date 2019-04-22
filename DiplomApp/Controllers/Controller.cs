@@ -17,7 +17,7 @@ namespace DiplomApp.Controllers
         private string name;
                 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string ID { get; private set; }          
+        public string ID { get; set; }          
         [Required]
         public string Name
         {
@@ -27,8 +27,9 @@ namespace DiplomApp.Controllers
                 name = value;
                 OnPropertyChanged("Name");
             }
-        }       
+        }
 
+        public Controller() { }
         public Controller(string id, string name)
         {
             ID = id;            

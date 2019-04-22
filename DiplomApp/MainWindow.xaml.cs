@@ -30,7 +30,7 @@ namespace DiplomApp
             InitializeComponent();
 
             server = ServerDevice.Instance;
-            Task.Run(() => server.RunAsync());
+           // Task.Run(() => server.RunAsync());
             Closed += MainWindow_Closed;          
         }
 
@@ -40,7 +40,7 @@ namespace DiplomApp
         }
         private void _SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            new SettingsWindow().Show();
+            
         }
 
         ~MainWindow()

@@ -3,7 +3,7 @@ namespace DiplomApp.Data.Migrations.DevicesMigrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitializeDeviceState : DbMigration
+    public partial class SwitchOptionsCreated : DbMigration
     {
         public override void Up()
         {
@@ -19,10 +19,27 @@ namespace DiplomApp.Data.Migrations.DevicesMigrations
                     })
                 .PrimaryKey(t => t.ID);
             
+            CreateTable(
+                "dbo.SwitchOptions",
+                c => new
+                    {
+                        ID = c.String(nullable: false, maxLength: 128),
+                        Control = c.Int(nullable: false),
+                        SensorId = c.String(),
+                        DelayToSwitch = c.Int(),
+                        ValueTo = c.Boolean(),
+                    })
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("dbo.RegisteredDeviceInfoes", t => t.ID)
+                .Index(t => t.ID);
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.SwitchOptions", "ID", "dbo.RegisteredDeviceInfoes");
+            DropIndex("dbo.SwitchOptions", new[] { "ID" });
+            DropTable("dbo.SwitchOptions");
             DropTable("dbo.RegisteredDeviceInfoes");
         }
     }

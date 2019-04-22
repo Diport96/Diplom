@@ -18,9 +18,13 @@ namespace DiplomApp
             InitializeComponent();
             Exit += App_Exit;
             Startup += App_Startup;
-            //Путь к локальному директорию приложения
+            // Путь к локальному директорию приложения
             AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;            
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+            // Test
+            new Views.DeviceSettingsWindow().Show();
+            // Test
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

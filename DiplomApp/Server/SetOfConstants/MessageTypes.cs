@@ -9,7 +9,7 @@ namespace SetOfConstants
     /// <summary>
     /// Класс, предоставляющий набор констант предназначенных для отправки\получения сообщений.
     /// </summary>
-    public static class MessageTypes 
+    public static class MessageTypes
     {
         /// <summary>
         ///  Тип запроса на соединение с сервером
@@ -20,11 +20,6 @@ namespace SetOfConstants
         ///  Тип запроса на закрытие соединения с сервером
         /// </summary>
         public const string REQUSET_TO_DISCONNECT = "DISCONNECT";
-
-        /// <summary>
-        ///  Тип запроса на рассылку сообщений микроконтроллерам с последующим откликом 
-        /// </summary>
-        public const string BROADCAST_CONNECTION = "HELLO";
 
         /// <summary>
         /// Тип запроса на подтверждение соединения с сервером
@@ -40,5 +35,10 @@ namespace SetOfConstants
         /// Тип запроса на изменение состояния переключателя
         /// </summary>
         public const string CHANGE_SWITCH_STATE = "STATE";
-    }      
+
+        /// <summary>
+        /// Тип запроса на изменение опций переключателя
+        /// </summary>
+        public const string SET_NEW_SWITCH_OPTIONS = "SETOPTIONS";
+    }
 }

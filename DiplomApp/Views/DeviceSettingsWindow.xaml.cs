@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace DiplomApp.Views
 {
     /// <summary>
-    /// Логика взаимодействия для SettingsWindow.xaml
+    /// Логика взаимодействия для DeviceSettingsWindow.xaml
     /// </summary>
-    public partial class SettingsWindow : Window
+    public partial class DeviceSettingsWindow : Window
     {
-        public SettingsWindow()
+        public DeviceSettingsWindow()
         {
             InitializeComponent();
         }

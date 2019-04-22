@@ -7,13 +7,13 @@ namespace DiplomApp.Data.Migrations.DevicesMigrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class InitializeDeviceState : IMigrationMetadata
+    public sealed partial class SwitchOptionsCreated : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitializeDeviceState));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(SwitchOptionsCreated));
         
         string IMigrationMetadata.Id
         {
-            get { return "201904161535411_InitializeDeviceState"; }
+            get { return "201904221648122_SwitchOptionsCreated"; }
         }
         
         string IMigrationMetadata.Source
