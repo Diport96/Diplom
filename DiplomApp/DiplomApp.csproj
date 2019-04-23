@@ -136,6 +136,12 @@
     <Compile Include="Server\ResponseManager.cs" />
     <Compile Include="Server\SetOfConstants\MessageTypes.cs" />
     <Compile Include="Server\SetOfConstants\Topics.cs" />
+    <Compile Include="Views\ApplicationSettingsWindow.xaml.cs">
+      <DependentUpon>ApplicationSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AuthentificationWindow.xaml.cs">
+      <DependentUpon>AuthentificationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DeviceSettingsWindow.xaml.cs">
       <DependentUpon>DeviceSettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -160,7 +166,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\ApplicationSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AuthentificationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DeviceSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Resources\ApplicationVisualResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Resources\ButtonStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -11,30 +11,32 @@ namespace DiplomApp.Server
     {
         public static Dictionary<string, string> ConnackToDictionary(string id)
         {
-            var regOptions = Controllers.ControllersFactory.GetControllerInfo(id).Options;
-            var control = regOptions.Control;
-
             var res = new Dictionary<string, string>
             {
                 { "Message_Type", MessageTypes.PERMIT_TO_CONNECT },
                 { "ID", id },
-                {"Control", control.ToString() }
             };
-
-            switch (control)
+            var regOptions = Controllers.ControllersFactory.GetControllerInfo(id).Options;
+            if (regOptions != null)
             {
-                case Controllers.SwitchOptions.SwitchControl.No:
-                    break;
-                case Controllers.SwitchOptions.SwitchControl.SwitchToDelay:
-                    res.Add("Delay", regOptions.DelayToSwitch.Value.ToString());
-                    res.Add("ValueTo", regOptions.ValueTo.Value.ToString());
-                    break;
-                case Controllers.SwitchOptions.SwitchControl.SwitchToSignal:
-                    res.Add("SensorId", regOptions.SensorId);
-                    res.Add("ValueTo", regOptions.ValueTo.Value.ToString());
-                    break;
-                default:
-                    break;
+                var control = regOptions.Control;
+                res.Add("Control", control.ToString());
+
+                switch (control)
+                {
+                    case Controllers.SwitchOptions.SwitchControl.No:
+                        break;
+                    case Controllers.SwitchOptions.SwitchControl.SwitchToDelay:
+                        res.Add("Delay", regOptions.DelayToSwitch.Value.ToString());
+                        res.Add("ValueTo", regOptions.ValueTo.Value.ToString());
+                        break;
+                    case Controllers.SwitchOptions.SwitchControl.SwitchToSignal:
+                        res.Add("SensorId", regOptions.SensorId);
+                        res.Add("ValueTo", regOptions.ValueTo.Value.ToString());
+                        break;
+                    default:
+                        break;
+                }
             }
 
             return res;
@@ -50,7 +52,7 @@ namespace DiplomApp.Server
 
             return res;
         }
-        public static Dictionary<string,string> SetSwitchOptionsToDictionary(string id, Controllers.SwitchOptions newOptions)
+        public static Dictionary<string, string> SetSwitchOptionsToDictionary(string id, Controllers.SwitchOptions newOptions)
         {
             var res = new Dictionary<string, string>
             {
@@ -76,6 +78,6 @@ namespace DiplomApp.Server
             }
 
             return res;
-        }        
+        }
     }
 }

@@ -8,55 +8,61 @@
         Title="Опции устройства" Height="450" Width="800">
     <Grid ScrollViewer.CanContentScroll="True">
         <Grid.RowDefinitions>
-            <RowDefinition/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <GroupBox Header="Управление переключателем" Grid.Row="0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <RadioButton Content="По умолчанию" Grid.Row="0" Grid.Column="0" IsChecked="True" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
-                <RadioButton Content="Интервал времени" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
-                <RadioButton Content="По датчику" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,10,0,10"/>
-                <Grid Grid.Row="1" Grid.Column="1" Margin="5,0" IsEnabled="False">
-                    <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-                        <ComboBox/>
-                        <Label Content="Часов"/>
-                    </WrapPanel>
-                    <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ComboBox/>
-                        <Label Content="Минут"/>
-                    </WrapPanel>
-                    <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <ComboBox/>
-                        <Label Content="Секунд"/>
-                    </WrapPanel>
-                </Grid>
-                <Grid Grid.Row="2" Grid.Column="1" Margin="5,0" IsEnabled="False">
+        <Grid Grid.Row="0">
+            <StackPanel HorizontalAlignment="Left">
+                <Label Content="Название устройства"/>
+                <TextBox Width="120"/>
+            </StackPanel>
+        </Grid>
+        <GroupBox Header="Управление переключателем" Grid.Row="1">
+            <Border CornerRadius="1" BorderThickness="1" BorderBrush="Black">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="Выберите устройство" Grid.Column="0" VerticalAlignment="Center"/>
-                    <Label Visibility="Hidden" Grid.Column="1" HorizontalAlignment="Center"/>
-                    <Button Content="..." Grid.Column="2" Height="20" Width="30" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <RadioButton Content="По умолчанию" Grid.Row="0" Grid.Column="0" IsChecked="True" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
+                    <RadioButton Content="Интервал времени" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
+                    <RadioButton Content="По датчику" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,10,0,10"/>
+                    <Grid Grid.Row="1" Grid.Column="1" Margin="5,0">
+                        <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <ComboBox/>
+                            <Label Content="Часов"/>
+                        </WrapPanel>
+                        <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ComboBox/>
+                            <Label Content="Минут"/>
+                        </WrapPanel>
+                        <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <ComboBox/>
+                            <Label Content="Секунд"/>
+                        </WrapPanel>
+                    </Grid>
+                    <Grid Grid.Row="2" Grid.Column="1" Margin="5,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Выберите устройство" Grid.Column="0" VerticalAlignment="Center"/>
+                        <Label Visibility="Hidden" Grid.Column="1" HorizontalAlignment="Center"/>
+                        <Button Content="..." Grid.Column="2" Height="20" Width="30" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    </Grid>
+                    <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gray" BorderThickness="0.5"/>
+                    <Border Grid.Row="2" Grid.Column="1" BorderBrush="Gray" BorderThickness="0.5"/>
                 </Grid>
-                <Border Grid.Row="0" Grid.Column="0" BorderBrush="Black" BorderThickness="0.5"/>
-                <Border Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="0.5"/>
-                <Border Grid.Row="2" Grid.Column="0" BorderBrush="Black" BorderThickness="0.5"/>
-                <Border Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="0.5"/>
-                <Border Grid.Row="2" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="0.5"/>
-            </Grid>
+            </Border>
         </GroupBox>
-        <Grid VerticalAlignment="Bottom" Grid.Row="1" HorizontalAlignment="Right" Margin="10">
+        <Grid VerticalAlignment="Bottom" Grid.Row="2" HorizontalAlignment="Right" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

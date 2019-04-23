@@ -6,14 +6,29 @@
         xmlns:local="clr-namespace:DiplomApp"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <ResourceDictionary Source="Views/Resources/ApplicationVisualResources.xaml" />        
+    </Window.Resources>
     <Grid>
-        <Grid VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10">
-            <Button Name="_SettingsButton"
-                Height="40" 
-                Background="#FFB0B0BF"
-                Click="_SettingsButton_Click">               
-                    <Image Source="Resources/Settings_Icon.png"/>                
-            </Button>
-        </Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
+            <Label x:Name="HelloLabel" Content="Здравствуйте"/>
+            <Button Content="Выход" Template="{DynamicResource ButtonStyleControlTemplate}" Height="30" Width="60"/>
+        </StackPanel>
+        <TabControl Grid.Row="1">            
+            <TabItem Header="Устройства">
+                <Grid Background="AliceBlue">
+                    <ScrollViewer>
+                        <StackPanel Name="StackOfDevices" CanVerticallyScroll="True"/>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Статистика">
+                <Grid Background="AliceBlue"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
