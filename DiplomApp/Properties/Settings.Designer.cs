@@ -46,5 +46,17 @@ namespace DiplomApp.Properties {
                 this["BroadcastDelay"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44381")]
+        public string WebAppDomain {
+            get {
+                return ((string)(this["WebAppDomain"]));
+            }
+            set {
+                this["WebAppDomain"] = value;
+            }
+        }
     }
 }

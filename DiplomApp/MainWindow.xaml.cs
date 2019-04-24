@@ -1,4 +1,5 @@
-﻿using DiplomApp.Controllers;
+﻿using ClientApp;
+using DiplomApp.Controllers;
 using DiplomApp.Server;
 using DiplomApp.Views;
 using NLog;
@@ -22,10 +23,19 @@ using System.Windows.Shapes;
 namespace DiplomApp
 {
     public partial class MainWindow : Window
-    {   
+    {
         public MainWindow()
         {
-            InitializeComponent();                
-        }      
+            InitializeComponent();            
+        }
+
+        async Task Test()
+        {
+            var username = "Test@bk.ru";
+            var password = "9293055Dd";
+
+            var res = await API.LoginAsync(username, password);
+        }
     }
+
 }

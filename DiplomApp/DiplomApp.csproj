@@ -115,6 +115,7 @@
     </ApplicationDefinition>
     <Compile Include="Accounts\AccountManager.cs" />
     <Compile Include="Accounts\UserAccount.cs" />
+    <Compile Include="API.cs" />
     <Compile Include="Controllers\ConstollersFactory.cs" />
     <Compile Include="Controllers\SwitchOptions.cs" />
     <Compile Include="Controllers\Models\Sensor.cs" />

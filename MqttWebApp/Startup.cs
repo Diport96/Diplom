@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using MqttWebApp.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using MqttWebApp.Models.JwtSecurity;
 
 namespace MqttWebApp
 {
@@ -35,12 +38,57 @@ namespace MqttWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = true;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            // валидация ключа безопасности
+                            ValidateIssuerSigningKey = true,
+                            // установка ключа безопасности
+                            IssuerSigningKey = TokenAuthOptions.GetSymmetricSecurityKey(),
+
+                            // укзывает, будет ли валидироваться издатель при валидации токена
+                            ValidateIssuer = true,
+                            // строка, представляющая издателя
+                            ValidIssuer = TokenAuthOptions.ISSUER,
+
+                            // будет ли валидироваться потребитель токена
+                            ValidateAudience = true,
+                            // установка потребителя токена
+                            ValidAudience = TokenAuthOptions.AUDIENCE,
+
+                            // будет ли валидироваться время существования
+                            ValidateLifetime = true,                            
+                        };
+                    });
+
+            // Настройки аутентификации пользователей
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Параметры пароля
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 6;
+                
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // Параметры пользователя
+                options.User.RequireUniqueEmail = true;
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>();          
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
