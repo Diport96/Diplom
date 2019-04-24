@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:DiplomApp.Views"
         mc:Ignorable="d"
         Title="Автортизация" 
+        MinHeight="450" MinWidth="250"
         Height="450" Width="250"
         MaxHeight="450" MaxWidth="250">
     <Window.Resources>
@@ -19,15 +20,16 @@
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0">
             <StackPanel Margin="10">
                 <Label Content="Логин:"/>
-                <TextBox Width="120"/>
+                <TextBox Name="UsernameTextBox" Width="120"/>
             </StackPanel>
             <StackPanel Margin="10">
                 <Label Content="Пароль:"/>
-                <TextBox Width="120"/>
+                <PasswordBox Name="PasswordTextBox" Width="120"/>
             </StackPanel>
         </StackPanel>
-        <Button Content="Вход" Grid.Row="1" Width="80" Margin="10"
+        <Button Name="SignInButton" Content="Вход" Grid.Row="1" Width="80" Margin="10"
                 HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                Template="{DynamicResource ButtonStyleControlTemplate}"/>
+                Template="{DynamicResource ButtonStyleControlTemplate}"
+                Click="SignInButton_Click"/>
     </Grid>
 </Window>

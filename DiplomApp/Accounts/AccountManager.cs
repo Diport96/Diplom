@@ -38,7 +38,6 @@ namespace DiplomApp.Accounts
 
             return CreateAccountState.OK;
         }
-
         public static UserAccount GetUserAccount(string login, string password)
         {
             UserAccount userAccount = database.UserAccounts.FirstOrDefault(x => x.Login == login);
@@ -56,6 +55,17 @@ namespace DiplomApp.Accounts
             }
 
             return null;
+        }
+        public static bool CheckIfAccountExists(string login)
+        {
+            return database.UserAccounts.Any(x => x.Login == login);
+        }
+        public static bool Login(string login, string password)
+        {
+            if (GetUserAccount(login, password) != null)
+                return true;
+            else
+                return false;                            
         }
     }
 

@@ -13,7 +13,7 @@ namespace DiplomApp.Data.Migrations.AccountsMigrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201904161558524_InitializeUserAccountState"; }
+            get { return "201904241827593_InitializeUserAccountState"; }
         }
         
         string IMigrationMetadata.Source

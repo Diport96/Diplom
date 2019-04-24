@@ -20,13 +20,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DiplomApp
+namespace DiplomApp.Views
 {
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
-            InitializeComponent();            
+            InitializeComponent();         
         }
 
         async Task Test()

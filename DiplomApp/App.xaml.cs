@@ -12,7 +12,7 @@ namespace DiplomApp
 {
     public partial class App : Application
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static ServerDevice server;
 
         App()
@@ -23,11 +23,7 @@ namespace DiplomApp
 
             // Путь к локальному директорию приложения
             AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-
-            // Test
-            new Views.DeviceSettingsWindow().Show();
-            // Test
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;           
 
             server = ServerDevice.Instance;
            // Task.Run(() => server.RunAsync());

@@ -13,12 +13,13 @@ namespace DiplomApp.Accounts
         [Key]
         public int ID { get; set; }
 
-        [Required]
-        [Index(IsUnique = true)]
+        [Required]        
         public string Login { get; set; }
 
+        [Required]
         public byte[] Salt { get; set; }
 
+        [Required]
         public byte[] Key { get; set; }
     }
 }

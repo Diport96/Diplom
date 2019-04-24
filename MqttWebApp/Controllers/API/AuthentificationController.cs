@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +42,7 @@ namespace MqttWebApp.Controllers.API
                 await Response.WriteAsync("Invalid username.");
                 return;
             }
-            // !!!
+            
             var loginCornfirm = await _signInManager.CheckPasswordSignInAsync(identity, password, false);
             if (!loginCornfirm.Succeeded)
             {
@@ -50,10 +51,15 @@ namespace MqttWebApp.Controllers.API
                 return;
             }
 
+            var claims = new Claim[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, username)
+        };
+
             var jwt = new JwtSecurityToken(
                    issuer: TokenAuthOptions.ISSUER,
                    audience: TokenAuthOptions.AUDIENCE,
-                   claims: null,
+                   claims: claims,
                    expires: DateTime.Now.AddMinutes(TokenAuthOptions.LIFETIME),
                    signingCredentials: new SigningCredentials(TokenAuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);

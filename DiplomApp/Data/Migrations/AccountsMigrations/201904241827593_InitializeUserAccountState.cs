@@ -13,17 +13,15 @@ namespace DiplomApp.Data.Migrations.AccountsMigrations
                     {
                         ID = c.Int(nullable: false, identity: true),
                         Login = c.String(nullable: false),
-                        Salt = c.Binary(),
-                        Key = c.Binary(),
+                        Salt = c.Binary(nullable: false),
+                        Key = c.Binary(nullable: false),
                     })
-                .PrimaryKey(t => t.ID)
-                .Index(t => t.Login, unique: true);
+                .PrimaryKey(t => t.ID);
             
         }
         
         public override void Down()
         {
-            DropIndex("dbo.UserAccounts", new[] { "Login" });
             DropTable("dbo.UserAccounts");
         }
     }
