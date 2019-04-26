@@ -9,11 +9,29 @@
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <CheckBox Grid.Row="0">
-            Включить отладочную информацию
-        </CheckBox>
+        <StackPanel>
+            <WrapPanel>
+                <Label Content="URL адрес веб-сервера"/>
+                <TextBox Width="180"/>
+            </WrapPanel>
+            <Border Padding="3" Margin="3" BorderBrush="LightGray" BorderThickness="1">
+                <StackPanel>
+                    <CheckBox>
+                        Выполнять синхронизацию автоматически
+                    </CheckBox>
+                    <WrapPanel>
+                        <Label Content="Каждые"/>
+                        <ComboBox/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <CheckBox>
+                Включить отладочную информацию
+            </CheckBox>
+        </StackPanel>
         <Grid VerticalAlignment="Bottom" Grid.Row="2" HorizontalAlignment="Right" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

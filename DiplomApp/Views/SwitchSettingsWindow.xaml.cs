@@ -13,13 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace DiplomApp.Views
-{
-    /// <summary>
-    /// Логика взаимодействия для DeviceSettingsWindow.xaml
-    /// </summary>
-    public partial class DeviceSettingsWindow : Window
+{    
+    public partial class SwitchSettingsWindow : Window
     {
-        public DeviceSettingsWindow()
+        public SwitchSettingsWindow()
         {
             InitializeComponent();
         }

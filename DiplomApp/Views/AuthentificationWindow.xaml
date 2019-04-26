@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DiplomApp.Views"
         mc:Ignorable="d"
-        Title="Автортизация" 
+        Title="Вход" 
         MinHeight="450" MinWidth="250"
         Height="450" Width="250"
         MaxHeight="450" MaxWidth="250">
@@ -26,6 +26,9 @@
                 <Label Content="Пароль:"/>
                 <PasswordBox Name="PasswordTextBox" Width="120"/>
             </StackPanel>
+            <Popup Name="Attempt" StaysOpen="False" AllowsTransparency="True">
+                <TextBlock Name="AttemptBox" Foreground="Red"/>
+            </Popup>
         </StackPanel>
         <Button Name="SignInButton" Content="Вход" Grid.Row="1" Width="80" Margin="10"
                 HorizontalAlignment="Center" VerticalAlignment="Bottom"

@@ -28,32 +28,37 @@ namespace DiplomApp.Views
         {
             string name = UsernameTextBox.Text, pass = PasswordTextBox.Password;
 
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(pass))
             {
-                // Handle
-            }
+                AttemptBox.Text = "Поля логина и пароля не должны быть пустыми";
+            }           
 
-            if (string.IsNullOrWhiteSpace(pass))
-            {
-                // Handle
-            }
-
+            
+            //!!! Await exception handle
             if (await API.LoginAsync(name, pass))
             {
                 if (!AccountManager.CheckIfAccountExists(name))
                     AccountManager.CreateAccount(name, pass);
-                new MainWindow().Show();
-                Close();
+                RedirectToMainWindow(name);
             }
             else
             {
                 if(AccountManager.Login(name,pass))
                 {
-                    new MainWindow().Show();
-                    Close();
+                    RedirectToMainWindow(name);
                 }
-                // Handle
+                else
+                {
+                    AttemptBox.Text = "Неправильные логин или пароль";
+                    Attempt.IsOpen = true;
+                }
             }
+        }
+
+        private void RedirectToMainWindow(string username)
+        {
+            new MainWindow(username).Show();
+            Close();
         }
     }
 }

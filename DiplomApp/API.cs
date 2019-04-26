@@ -23,22 +23,18 @@ namespace ClientApp
                 new KeyValuePair<string, string> ( "Password", password )
             };
             var content = new FormUrlEncodedContent(pairs);
-
-
             using (var client = new HttpClient())
             {
                 HttpResponseMessage response = default;
                 try
                 {
-                    response = await client.PostAsync(Path + "/api/Authentification", content);
+                    response = await client.PostAsync(Path + "/api/Authentification", content);                    
                 }
-
                 catch (Exception)
                 {
-                    MessageBox.Show("Ошибка запроса к серверу. Приложение будет закрыто!", "Ошибка!", MessageBoxButton.OK);
-                    Environment.Exit(1);
+                    // !!! Log
+                    return false;
                 }
-
                 if (!response.IsSuccessStatusCode) return false;
                 var result = await response.Content.ReadAsStringAsync();
 
@@ -46,6 +42,7 @@ namespace ClientApp
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
                 tokenDictionary.TryGetValue("access_token", out AccessToken);
             }
+
             return true;
         }
 

@@ -1,128 +1,110 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
-  <Class Name="DiplomApp.App" Collapsed="true">
-    <Position X="0.75" Y="2.75" Width="1.5" />
+  <Class Name="DiplomApp.Accounts.AccountManager">
+    <Position X="16.5" Y="1" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACQAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AQAAAAAAAAAAAABAAAAABAAAAAAAAAAAAAAQAAAAIAA=</HashCode>
+      <FileName>Accounts\AccountManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Accounts.UserAccount">
+    <Position X="8.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAgAQAAAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Accounts\UserAccount.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClientApp.API">
+    <Position X="12.5" Y="1" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAIAAAAEAAIAEABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>API.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.App">
+    <Position X="9" Y="1" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACQAAAACAAAAAAAAAAAAAIAAAAAAAAAAAAI=</HashCode>
       <FileName>App.xaml.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiplomApp.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="2.75" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
-      <FileName>MainWindow.xaml.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="DiplomApp.Controllers.ControllersFactory">
-    <Position X="13" Y="7.25" Width="3" />
+    <Position X="15.5" Y="3.75" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAgAAAAAAAAAABCAAAABACAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AgAgAAAAAAAAAABCAAAABACAAAABAEEAAAAAAAAAAIA=</HashCode>
       <FileName>Controllers\ConstollersFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DiplomApp.Controllers.Controller">
-    <Position X="7" Y="0.75" Width="3.75" />
+    <Position X="5.25" Y="1" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAgAAAIAAAAAQAgAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controllers\Controller.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DiplomApp.Controllers.InvalidControllerTypeException" Collapsed="true">
-    <Position X="4.75" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Controllers\InvalidControllerTypeException.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DiplomApp.Controllers.RegisteredDeviceContext">
-    <Position X="11.25" Y="3.25" Width="3.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Controllers\RegisteredDeviceContext.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="DiplomApp.Controllers.RegisteredDeviceInfo">
-    <Position X="4.5" Y="4.75" Width="2.25" />
+    <Position X="5.25" Y="4.5" Width="3" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>IAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>IAAAAAAAAAAAAAAgAAAgAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>Controllers\RegisteredDeviceInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="DiplomApp.Controllers.SwitchOptions">
+    <Position X="5.5" Y="6.25" Width="2.5" />
+    <NestedTypes>
+      <Enum Name="DiplomApp.Controllers.SwitchOptions.SwitchControl" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Controllers\SwitchOptions.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAIBAEAAAAgAAAAAAEAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Controllers\SwitchOptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Controllers.Models.Sensor">
+    <Position X="8.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAAAA=</HashCode>
+      <FileName>Controllers\Models\Sensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Class Name="DiplomApp.Controllers.Models.Switch">
-    <Position X="7.25" Y="4.5" Width="1.5" />
+    <Position X="10.25" Y="4.5" Width="1.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAAAA=</HashCode>
       <FileName>Controllers\Models\Switch.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DiplomApp.Controllers.Models.Termometer">
-    <Position X="9.25" Y="4.5" Width="1.5" />
+  <Class Name="DiplomApp.Server.ResponseManager">
+    <Position X="15.25" Y="9.5" Width="4" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAAAA=</HashCode>
-      <FileName>Controllers\Models\Termometer.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DiplomApp.Migrations.Initialization_db_state" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="2.5" Y="2.75" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAIAMAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAAI=</HashCode>
-      <FileName>Migrations\201903311922248_Initialization_db_state.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="DiplomApp.Migrations.Configuration" Collapsed="true">
-    <Position X="0.75" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Migrations\Configuration.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DiplomApp.Properties.Resources" Collapsed="true">
-    <Position X="2.75" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AgAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DiplomApp.Properties.Settings" Collapsed="true">
-    <Position X="4.75" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAIABAEAABAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DiplomApp.Server.HandlerNotFindException" Collapsed="true">
-    <Position X="0.75" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Server\HandlerNotFindException.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="DiplomApp.Server.RequestTypeAttribute">
-    <Position X="11.25" Y="5.25" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Server\RequestTypeAttribute.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAQIAAAAAAAAA=</HashCode>
+      <FileName>Server\ResponseManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DiplomApp.Server.ServerDevice">
-    <Position X="0.5" Y="4" Width="3.5" />
+    <Position X="11.75" Y="3.75" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AIAAAUAAgAAAgAFCACgAAAAAAABACAAAQAAARABAAAI=</HashCode>
       <FileName>Server\ServerDevice.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="DiplomApp.Server.Requsests.ConnectHandler" BaseTypeListCollapsed="true">
-    <Position X="4.5" Y="7.25" Width="2.75" />
+    <Position X="10.5" Y="9.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AgAAAAAAAAAAAAAAAAAAAgAAAABAAAAAQAAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAI=</HashCode>
       <FileName>Server\RequsestHandlers\ConnectHandler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="DiplomApp.Server.RequsestHandlers.DisconnectHandler" BaseTypeListCollapsed="true">
-    <Position X="10.25" Y="7.25" Width="2.25" />
+    <Position X="8" Y="9.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAI=</HashCode>
       <FileName>Server\RequsestHandlers\DisconnectHandler.cs</FileName>
@@ -130,33 +112,61 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="DiplomApp.Server.RequsestHandlers.DistributeHandler" BaseTypeListCollapsed="true">
-    <Position X="7.75" Y="7.25" Width="2.25" />
+    <Position X="5.5" Y="9.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAQAQAAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAAAABCAAAAAAAAAABAAAAAQAAAAAAAAAI=</HashCode>
       <FileName>Server\RequsestHandlers\DistributeHandler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="SetOfConstants.MessageTypes">
-    <Position X="13.25" Y="0.75" Width="2.75" />
+    <Position X="15.5" Y="7.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgAABAAAAAAAAAAAAAAAAAAoAAAAAACAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAEAAAAAoAAAAAACAAAAAA=</HashCode>
       <FileName>Server\SetOfConstants\MessageTypes.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SetOfConstants.Topics">
-    <Position X="11" Y="0.75" Width="2" />
+    <Position X="13" Y="9" Width="2" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAABAAIACAA=</HashCode>
       <FileName>Server\SetOfConstants\Topics.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="DiplomApp.Data.RegisteredDeviceContext">
+    <Position X="15.25" Y="11.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\RegisteredDeviceContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Data.UserAccountContext">
+    <Position X="8" Y="11.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\UserAccountContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DiplomApp.Server.RequestTypeAttribute">
+    <Position X="11" Y="11.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Server\RequestTypeAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="DiplomApp.Server.IRequestHandler">
-    <Position X="14" Y="5.5" Width="1.5" />
+    <Position X="10" Y="7" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>Server\IRequestHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Enum Name="DiplomApp.Accounts.CreateAccountState">
+    <Position X="13.25" Y="11.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Accounts\AccountManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

@@ -143,8 +143,8 @@
     <Compile Include="Views\AuthentificationWindow.xaml.cs">
       <DependentUpon>AuthentificationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DeviceSettingsWindow.xaml.cs">
-      <DependentUpon>DeviceSettingsWindow.xaml</DependentUpon>
+    <Compile Include="Views\SwitchSettingsWindow.xaml.cs">
+      <DependentUpon>SwitchSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -175,7 +175,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DeviceSettingsWindow.xaml">
+    <Page Include="Views\SwitchSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

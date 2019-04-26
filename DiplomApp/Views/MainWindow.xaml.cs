@@ -24,17 +24,16 @@ namespace DiplomApp.Views
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(string username)
         {
-            InitializeComponent();         
-        }
+            InitializeComponent();
+            HelloLabel.Content = $"Здравствуйте {username}";
+        }       
 
-        async Task Test()
+        private void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
-            var username = "Test@bk.ru";
-            var password = "9293055Dd";
-
-            var res = await API.LoginAsync(username, password);
+            new AuthentificationWindow().Show();
+            Close();
         }
     }
 
