@@ -11,13 +11,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <StackPanel HorizontalAlignment="Left">
-                <Label Content="Название устройства"/>
-                <TextBox Width="120"/>
-            </StackPanel>
-        </Grid>
+        </Grid.RowDefinitions>       
         <GroupBox Header="Управление переключателем" Grid.Row="1" Margin="10">
             <Grid>
                 <Grid.RowDefinitions>

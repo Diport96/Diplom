@@ -77,7 +77,14 @@ namespace DiplomApp.Server.RequsestHandlers
            
             pairs.Remove("Topic");
             BsonDocument element = new BsonDocument(pairs);
-            database.GetCollection<BsonDocument>(deviceType).InsertOneAsync(element).Wait(); //!!!
+            try
+            {
+                database.GetCollection<BsonDocument>(deviceType).InsertOneAsync(element).Wait(); //!!!
+            }
+            catch(Exception e)
+            {
+                logger.Fatal(e, e.Message);
+            }
         }
     }
 }

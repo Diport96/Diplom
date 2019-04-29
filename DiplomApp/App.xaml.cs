@@ -26,7 +26,7 @@ namespace DiplomApp
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;           
 
             server = ServerDevice.Instance;
-           // Task.Run(() => server.RunAsync());
+            Task.Run(() => server.RunAsync());
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
