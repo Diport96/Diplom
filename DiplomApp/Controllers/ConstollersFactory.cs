@@ -3,24 +3,26 @@ using DiplomApp.Data;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DiplomApp.Controllers
 {
     static class ControllersFactory
     {
         private static readonly RegisteredDeviceContext database;
-        private static readonly List<Controller> controllers;
+        private static readonly ObservableCollection<Controller> controllers;
         private static readonly IEnumerable<Type> Types;
         private static readonly Logger logger;
 
         static ControllersFactory()
         {
             database = new RegisteredDeviceContext();
-            controllers = new List<Controller>();
+            controllers = new ObservableCollection<Controller>();
             Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.BaseType == typeof(Controller));
             logger = LogManager.GetCurrentClassLogger();
         }
@@ -48,19 +50,25 @@ namespace DiplomApp.Controllers
                 throw;
             }
 
-            controllers.Add(controller);
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                controllers.Add(controller);
+            });
         }
         public static void Remove(string id)
         {
-            var control = controllers.Find(x => x.ID == id);
+            var control = controllers.SingleOrDefault(x => x.ID == id);
             if (control == null)
                 logger.Error($"Ошибка удаления экземпляра микроконтроллера: не удалось найти экземпляр с идентификатором: {id}");
             else
-                controllers.Remove(control);
+                Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                {
+                    controllers.Remove(control);
+                });
         }
         public static IEnumerable<Controller> GetControllers()
         {
-            return controllers.AsReadOnly();
+            return controllers;
         }
         public static Controller GetById(string id)
         {

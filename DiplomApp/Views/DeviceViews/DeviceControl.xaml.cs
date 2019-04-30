@@ -15,16 +15,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ClientApp.DeviceViews
-{
-    /// <summary>
-    /// Логика взаимодействия для DeviceControl.xaml
-    /// </summary>
+{   
     public partial class DeviceControl : UserControl
     {
-        public DeviceControl(string deviceName)
+        public DeviceControl()
         {
-            InitializeComponent();
-            deviceBtn.Content = new DeviceGrid(deviceName);
+            InitializeComponent();            
         }
     }
 }

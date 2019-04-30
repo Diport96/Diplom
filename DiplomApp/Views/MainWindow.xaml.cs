@@ -27,7 +27,9 @@ namespace DiplomApp.Views
         public MainWindow(string username)
         {
             InitializeComponent();
+
             HelloLabel.Content = $"Здравствуйте {username}";
+            StackOfDevices.ItemsSource = ControllersFactory.GetControllers();
         }       
 
         private void SignOutButton_Click(object sender, RoutedEventArgs e)
