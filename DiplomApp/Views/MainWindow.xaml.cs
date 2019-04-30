@@ -1,5 +1,6 @@
 ﻿using ClientApp;
 using DiplomApp.Controllers;
+using DiplomApp.Controllers.Models;
 using DiplomApp.Server;
 using DiplomApp.Views;
 using NLog;
@@ -30,12 +31,20 @@ namespace DiplomApp.Views
 
             HelloLabel.Content = $"Здравствуйте {username}";
             StackOfDevices.ItemsSource = ControllersFactory.GetControllers();
-        }       
+        }
 
-        private void SignOutButton_Click(object sender, RoutedEventArgs e)
+        private void SignOut_Click(object sender, RoutedEventArgs e)
         {
             new AuthentificationWindow().Show();
             Close();
+        }
+
+        private void DeviceItemSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var device = ((e.Source as Button).DataContext as Controller);
+
+            if (device is Switch)
+                new SwitchSettingsWindow(device.ID).ShowDialog();
         }
     }
 

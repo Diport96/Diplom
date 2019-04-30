@@ -23,7 +23,8 @@
             </WrapPanel>
             <Button Grid.Column="3"
                     Content="Настройки"
-                    Width="80" Height="25"/>
+                    Width="80" Height="25"
+                    Click="Button_Click"/>
         </Grid>
     </Button>
 </UserControl>

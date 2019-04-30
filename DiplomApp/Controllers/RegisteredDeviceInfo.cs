@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Controllers
 {
-    class RegisteredDeviceInfo : Controller
+    public class RegisteredDeviceInfo : Controller
     {
         [Required]
         public string DeviceType { get; set; }

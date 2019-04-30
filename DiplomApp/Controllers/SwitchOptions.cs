@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DiplomApp.Controllers
-{    
-    class SwitchOptions
+{
+    public class SwitchOptions
     {
         [Key]
         [ForeignKey("DeviceInfo")]

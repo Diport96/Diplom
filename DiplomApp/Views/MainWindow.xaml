@@ -22,7 +22,7 @@
         </StackPanel>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
             <Label x:Name="HelloLabel" Content="Здравствуйте"/>
-            <Button Name="SignOutButton" Content="Выход" Template="{DynamicResource ButtonStyleControlTemplate}" Height="30" Width="60" Click="SignOutButton_Click"/>
+            <Button Name="SignOutButton" Content="Выход" Template="{DynamicResource ButtonStyleControlTemplate}" Height="30" Width="60" Click="SignOut_Click"/>
         </StackPanel>
         <TabControl Grid.Row="1">
             <TabItem Header="Устройства">
@@ -47,7 +47,8 @@
                                         </WrapPanel>
                                         <Button Grid.Column="3" 
                                                 Content="Настройки" 
-                                                Width="80" Height="25"/>
+                                                Width="80" Height="25"
+                                                Click="DeviceItemSettings_Click"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>

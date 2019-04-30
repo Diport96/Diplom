@@ -1,5 +1,4 @@
-﻿using ClientApp.DeviceViews.Grids;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,21 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ClientApp.DeviceViews
-{   
-    public partial class DeviceControl : UserControl
+namespace DiplomApp.Views
+{
+    /// <summary>
+    /// Логика взаимодействия для SensorSettingsWindow.xaml
+    /// </summary>
+    public partial class SensorSettingsWindow : Window
     {
-        public DeviceControl()
+        public SensorSettingsWindow()
         {
-            InitializeComponent();            
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
+            InitializeComponent();
         }
     }
 }

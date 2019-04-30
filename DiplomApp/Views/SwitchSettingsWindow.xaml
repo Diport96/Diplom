@@ -11,7 +11,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
-        </Grid.RowDefinitions>       
+        </Grid.RowDefinitions>
+        <WrapPanel Grid.Row="0" Margin="5">
+            <Label Content="Название устройства"/>
+            <TextBox  Name="DeviceNameTextBox" Width="120"/>
+        </WrapPanel>
         <GroupBox Header="Управление переключателем" Grid.Row="1" Margin="10">
             <Grid>
                 <Grid.RowDefinitions>
@@ -23,10 +27,14 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <RadioButton Content="По умолчанию" Grid.Row="0" Grid.Column="0" IsChecked="True" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
-                <RadioButton Content="Интервал времени" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
-                <RadioButton Content="По датчику" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,10,0,10"/>
-                <Grid Grid.Row="1" Grid.Column="1" Margin="5,0">
+                <RadioButton Name="DefaultValueRadioButton"
+                    Content="По умолчанию" Grid.Row="0" Grid.Column="0" IsChecked="True" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
+                <RadioButton Name="SwitchDelayValueRadioButton"
+                    Content="Интервал времени" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
+                <RadioButton Name="SensorIdValueRadioButton"
+                    Content="По датчику" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,10,0,10"/>
+                <Grid Name="SwitchToDelayOptionsGrid"
+                    Grid.Row="1" Grid.Column="1" Margin="5,0">
                     <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center">
                         <ComboBox/>
                         <Label Content="Часов"/>
@@ -40,7 +48,8 @@
                         <Label Content="Секунд"/>
                     </WrapPanel>
                 </Grid>
-                <Grid Grid.Row="2" Grid.Column="1" Margin="5,0">
+                <Grid Name="SensorIdOptionsGrid" 
+                    Grid.Row="2" Grid.Column="1" Margin="5,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
@@ -60,7 +69,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0"/>
-            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0"/>
+            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0" Click="OK_Button_Click"/>
         </Grid>
     </Grid>
 </Window>

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Controllers
 {
-    abstract class Controller : INotifyPropertyChanged
+    public abstract class Controller : INotifyPropertyChanged
     {
         private string name;
                 
