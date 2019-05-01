@@ -16,10 +16,7 @@ namespace DiplomApp.Controllers
         public bool PermitToConnection { get; set; }
         public SwitchOptions Options { get; set; }
 
-        public RegisteredDeviceInfo()
-        {
-            Options = new SwitchOptions();
-        }
+        public RegisteredDeviceInfo() { }
         public RegisteredDeviceInfo(string id, string name, string type, DateTime registeredDate) : base(id, name)
         {
             DeviceType = type;

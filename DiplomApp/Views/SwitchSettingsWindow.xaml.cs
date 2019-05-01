@@ -2,6 +2,7 @@
 using DiplomApp.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,14 +20,15 @@ namespace DiplomApp.Views
     public partial class SwitchSettingsWindow : Window
     {
         private readonly RegisteredDeviceContext database;
-        private string deviceId;
+        private readonly RegisteredDeviceInfo device;
         public SwitchSettingsWindow(string deviceId)
         {
             InitializeComponent();
 
             database = new RegisteredDeviceContext();
             var device = database.RegisteredDevices.FirstOrDefault(x => x.ID == deviceId);
-            this.deviceId = deviceId;
+            database.SwitchOptions.First(x => x.ID == device.ID);
+            this.device = device;
 
             DeviceNameTextBox.Text = device.Name;
             if (device != null)
@@ -76,10 +78,11 @@ namespace DiplomApp.Views
         }
         private void OK_Button_Click(object sender, RoutedEventArgs e)
         {
-            var device = database.RegisteredDevices.FirstOrDefault(x => x.ID == deviceId);
             if (device != null)
             {
-                device.Name = DeviceNameTextBox.Text;                
+                device.Name = DeviceNameTextBox.Text;
+                var options = database.SwitchOptions.First(x => x.ID == device.ID);
+
                 if (DefaultValueRadioButton.IsChecked.Value)
                 {
                     device.Options.Control = SwitchOptions.SwitchControl.No;
@@ -140,9 +143,8 @@ namespace DiplomApp.Views
                     }
                 }
             }
-                      
-            database.SaveChanges(); // !!! async
 
+            database.SaveChanges();
             DialogResult = true;
         }
         private void Cancel_Button_Click(object sender, RoutedEventArgs e)

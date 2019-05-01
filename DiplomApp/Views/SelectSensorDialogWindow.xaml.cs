@@ -18,8 +18,7 @@ namespace DiplomApp.Views
 {
     public partial class SelectSensorDialogWindow : Window
     {
-        public Controller Answer { get; private set; }
-       
+        public Controller Answer { get; private set; }       
 
         public SelectSensorDialogWindow()
         {
@@ -34,12 +33,10 @@ namespace DiplomApp.Views
         {
             Answer = StackOfDevices.SelectedItem as Controller;            
         }
-
         private void OK_Button_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
         }
-
         private void Cancel_Button_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;

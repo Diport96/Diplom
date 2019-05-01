@@ -27,8 +27,7 @@ namespace DiplomApp.Controllers
         public RegisteredDeviceInfo DeviceInfo { get; set; }
 
         public SwitchOptions()
-        {
-            ID = new Guid().ToString();
+        {            
             Control = SwitchControl.No;
             SensorId = null;
             DelayToSwitch = null;
