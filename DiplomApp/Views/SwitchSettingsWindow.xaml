@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DiplomApp.Views"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Опции устройства" Height="450" Width="800">
     <Grid ScrollViewer.CanContentScroll="True">
@@ -35,17 +36,55 @@
                     Content="По датчику" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,10,0,10"/>
                 <Grid Name="SwitchToDelayOptionsGrid"
                     Grid.Row="1" Grid.Column="1" Margin="5,0">
-                    <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-                        <ComboBox/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>                    
+                    <WrapPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ComboBox Name="HoursComboBox"
+                            SelectedIndex="0">
+                            <System:Int32>0</System:Int32>
+                            <System:Int32>1</System:Int32>
+                            <System:Int32>2</System:Int32>
+                            <System:Int32>4</System:Int32>
+                            <System:Int32>6</System:Int32>
+                            <System:Int32>8</System:Int32>
+                            <System:Int32>12</System:Int32>
+                            <System:Int32>16</System:Int32>
+                        </ComboBox>
                         <Label Content="Часов"/>
                     </WrapPanel>
-                    <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ComboBox/>
+                    <WrapPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ComboBox Name="MinutesComboBox" SelectedIndex="0">
+                            <System:Int32></System:Int32>
+                            <System:Int32>10</System:Int32>
+                            <System:Int32>20</System:Int32>
+                            <System:Int32>30</System:Int32>
+                            <System:Int32>40</System:Int32>
+                            <System:Int32>50</System:Int32>
+                            <System:Int32>60</System:Int32>
+                        </ComboBox>
                         <Label Content="Минут"/>
                     </WrapPanel>
-                    <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <ComboBox/>
+                    <WrapPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ComboBox Name="SecondsComboBox" SelectedIndex="0">
+                            <System:Int32>0</System:Int32>
+                            <System:Int32>10</System:Int32>
+                            <System:Int32>20</System:Int32>
+                            <System:Int32>30</System:Int32>
+                            <System:Int32>40</System:Int32>
+                            <System:Int32>50</System:Int32>
+                            <System:Int32>60</System:Int32>
+                        </ComboBox>
                         <Label Content="Секунд"/>
+                    </WrapPanel>
+                    <WrapPanel Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">                        
+                        <ComboBox Name="SwitchToDelayComboBox" SelectedIndex="0">
+                            <System:String>Включить</System:String>
+                            <System:String>Выключить</System:String>
+                        </ComboBox>
                     </WrapPanel>
                 </Grid>
                 <Grid Name="SensorIdOptionsGrid" 
@@ -54,13 +93,21 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Выберите устройство" Grid.Column="0" VerticalAlignment="Center"/>
-                    <Label Visibility="Hidden" Grid.Column="1" HorizontalAlignment="Center"/>
-                    <Button Content="..." Grid.Column="2" Height="20" Width="30" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <Button Content="..." Grid.Column="1" Height="20" Width="30" FontWeight="Bold" HorizontalAlignment="Center" Click="SelectSensorId_Click"/>
+                    <Label Name="DeviceNameLabel"
+                           Grid.Column="2" HorizontalAlignment="Center" Margin="5"/>
+                    <WrapPanel Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">                        
+                        <ComboBox Name="SensorIdComboBox" SelectedIndex="0">
+                            <System:String>Включить</System:String>
+                            <System:String>Выключить</System:String>
+                        </ComboBox>
+                    </WrapPanel>
                 </Grid>
-                <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gray" BorderThickness="0.5"/>
-                <Border Grid.Row="2" Grid.Column="1" BorderBrush="Gray" BorderThickness="0.5"/>
+                <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gray" BorderThickness="0.6"/>
+                <Border Grid.Row="2" Grid.Column="1" BorderBrush="Gray" BorderThickness="0.6"/>
             </Grid>
         </GroupBox>
         <Grid VerticalAlignment="Bottom" Grid.Row="2" HorizontalAlignment="Right" Margin="10">
@@ -68,7 +115,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0"/>
+            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0" Click="Cancel_Button_Click"/>
             <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0" Click="OK_Button_Click"/>
         </Grid>
     </Grid>

@@ -43,8 +43,9 @@ namespace DiplomApp.Views
         {
             var device = ((e.Source as Button).DataContext as Controller);
 
-            if (device is Switch)
+            if(device is Switch)
                 new SwitchSettingsWindow(device.ID).ShowDialog();
+            
         }
     }
 

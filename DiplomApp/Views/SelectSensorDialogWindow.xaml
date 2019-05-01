@@ -1,0 +1,45 @@
+﻿<Window x:Class="DiplomApp.Views.SelectSensorDialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DiplomApp.Views"
+        mc:Ignorable="d"
+        Title="SelectSensorDialogWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="0">
+            <ListBox Name="StackOfDevices">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>                              
+                            </Grid.ColumnDefinitions>
+                            <WrapPanel Grid.Column="0">
+                                <Label Content="Название устройства:"/>
+                                <Label Content="{Binding Path=Name}"/>
+                            </WrapPanel>
+                            <WrapPanel Grid.Column="1">
+                                <Label Content="Значение:"/>
+                                <Label Content="{Binding Path=Value}"/>
+                            </WrapPanel>                           
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+        <Grid VerticalAlignment="Bottom" Grid.Row="1" HorizontalAlignment="Right" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0" Click="Cancel_Button_Click"/>
+            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0" Click="OK_Button_Click"/>
+        </Grid>
+    </Grid>
+</Window>

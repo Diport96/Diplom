@@ -20,7 +20,6 @@ namespace DiplomApp.Views
     {
         private readonly RegisteredDeviceContext database;
         private string deviceId;
-
         public SwitchSettingsWindow(string deviceId)
         {
             InitializeComponent();
@@ -52,18 +51,104 @@ namespace DiplomApp.Views
                     }
                     SetOptions();
 
-                    DefaultValueRadioButton.Checked += DefaultValueRadioButton_Checked;
-                    SwitchDelayValueRadioButton.Checked += DefaultValueRadioButton_Checked;
-                    SensorIdValueRadioButton.Checked += DefaultValueRadioButton_Checked;
+                    DefaultValueRadioButton.Checked += ValueRadioButton_Checked;
+                    SwitchDelayValueRadioButton.Checked += ValueRadioButton_Checked;
+                    SensorIdValueRadioButton.Checked += ValueRadioButton_Checked;
                 }
             }
         }
 
-        private void DefaultValueRadioButton_Checked(object sender, RoutedEventArgs e)
+        private void ValueRadioButton_Checked(object sender, RoutedEventArgs e)
         {
             SetOptions();
         }
+        private void SelectSensorId_Click(object sender, RoutedEventArgs e)
+        {
+            var dialogWindow = new SelectSensorDialogWindow();
+            if (dialogWindow.ShowDialog().Value)
+            {
+                if (dialogWindow.Answer != null)
+                {
+                    DeviceNameLabel.DataContext = dialogWindow.Answer;
+                    DeviceNameLabel.Content = dialogWindow.Answer.Name;
+                }
+            }
+        }
+        private void OK_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var device = database.RegisteredDevices.FirstOrDefault(x => x.ID == deviceId);
+            if (device != null)
+            {
+                device.Name = DeviceNameTextBox.Text;                
+                if (DefaultValueRadioButton.IsChecked.Value)
+                {
+                    device.Options.Control = SwitchOptions.SwitchControl.No;
+                    device.Options.DelayToSwitch = null;
+                    device.Options.SensorId = null;
+                    device.Options.ValueTo = null;
+                }
+                else if (SwitchDelayValueRadioButton.IsChecked.Value)
+                {
+                    TimeSpan timeSpan = new TimeSpan((int)HoursComboBox.SelectedItem, (int)MinutesComboBox.SelectedItem, (int)SecondsComboBox.SelectedItem);
+                    bool? switchTo = null;
+                    switch (SwitchToDelayComboBox.SelectedIndex)
+                    {
+                        case 0:
+                            switchTo = true;
+                            break;
+                        case 1:
+                            switchTo = false;
+                            break;
+                        default:
+                            break;
+                    }
 
+                    device.Options.Control = SwitchOptions.SwitchControl.SwitchToDelay;
+                    device.Options.DelayToSwitch = (int)timeSpan.TotalMilliseconds;
+                    if (switchTo.HasValue)
+                    {
+                        device.Options.ValueTo = switchTo.Value;
+                    }
+
+                    device.Options.SensorId = null;
+                }
+                else if (SensorIdValueRadioButton.IsChecked.Value)
+                {
+                    if (DeviceNameLabel.DataContext != null)
+                    {
+                        bool? switchTo = null;
+                        switch (SwitchToDelayComboBox.SelectedIndex)
+                        {
+                            case 0:
+                                switchTo = true;
+                                break;
+                            case 1:
+                                switchTo = false;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        device.Options.Control = SwitchOptions.SwitchControl.SwitchToSignal;
+                        device.Options.SensorId = (DeviceNameLabel.DataContext as Controller).ID;
+                        if (switchTo.HasValue)
+                        {
+                            device.Options.ValueTo = switchTo.Value;
+                        }
+
+                        device.Options.DelayToSwitch = null;
+                    }
+                }
+            }
+                      
+            database.SaveChanges(); // !!! async
+
+            DialogResult = true;
+        }
+        private void Cancel_Button_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+        }
         private void SetOptions()
         {
             if (DefaultValueRadioButton.IsChecked.Value)
@@ -83,30 +168,5 @@ namespace DiplomApp.Views
             }
         }
 
-        private void OK_Button_Click(object sender, RoutedEventArgs e)
-        {
-            var device = database.RegisteredDevices.FirstOrDefault(x => x.ID == deviceId);
-            if (device != null)
-            {
-                device.Name = DeviceNameTextBox.Text;
-
-                if (DefaultValueRadioButton.IsChecked.Value)
-                {
-                    device.Options.Control = SwitchOptions.SwitchControl.No;
-                    device.Options.DelayToSwitch = null;
-                    device.Options.SensorId = null;
-                    device.Options.ValueTo = null;
-                }
-                else if (SwitchDelayValueRadioButton.IsChecked.Value)
-                {
-                    device.Options.Control = SwitchOptions.SwitchControl.SwitchToDelay;
-                    
-                }
-                else if (SensorIdValueRadioButton.IsChecked.Value)
-                {
-                   
-                }
-            }
-        }
     }
 }

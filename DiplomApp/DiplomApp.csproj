@@ -155,6 +155,9 @@
     <Compile Include="Views\DeviceViews\DeviceControl.xaml.cs">
       <DependentUpon>DeviceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SelectSensorDialogWindow.xaml.cs">
+      <DependentUpon>SelectSensorDialogWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SensorSettingsWindow.xaml.cs">
       <DependentUpon>SensorSettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -207,6 +210,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AuthentificationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SelectSensorDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
