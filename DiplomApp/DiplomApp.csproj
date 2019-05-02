@@ -143,15 +143,6 @@
     <Compile Include="Views\AuthentificationWindow.xaml.cs">
       <DependentUpon>AuthentificationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DeviceViews\ContentTemolates\DeviceGrid.xaml.cs">
-      <DependentUpon>DeviceGrid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DeviceViews\ContentTemolates\SensorGrid.xaml.cs">
-      <DependentUpon>SensorGrid.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DeviceViews\ContentTemolates\SwitchGrid.xaml.cs">
-      <DependentUpon>SwitchGrid.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\DeviceViews\DeviceControl.xaml.cs">
       <DependentUpon>DeviceControl.xaml</DependentUpon>
     </Compile>
@@ -164,18 +155,6 @@
     <Compile Include="Views\SwitchSettingsWindow.xaml.cs">
       <DependentUpon>SwitchSettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\DeviceViews\ContentTemolates\DeviceGrid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\DeviceViews\ContentTemolates\SensorGrid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\DeviceViews\ContentTemolates\SwitchGrid.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\DeviceViews\DeviceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -290,8 +269,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

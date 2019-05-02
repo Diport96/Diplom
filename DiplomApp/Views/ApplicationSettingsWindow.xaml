@@ -4,8 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DiplomApp.Views"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="ApplicationSettingsWindow" Height="450" Width="800">
+        Title="Настройки программы"
+        Height="250" Width="500">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,20 +17,31 @@
         <StackPanel>
             <WrapPanel>
                 <Label Content="URL адрес веб-сервера"/>
-                <TextBox Width="180"/>
+                <TextBox Name="WebAppAddressTextBox"
+                    Width="180"/>
             </WrapPanel>
             <Border Padding="3" Margin="3" BorderBrush="LightGray" BorderThickness="1">
                 <StackPanel>
-                    <CheckBox>
-                        Выполнять синхронизацию автоматически
+                    <CheckBox Name="AutoSendDataCheckBox">
+                        Выполнять отправку данных автоматически
                     </CheckBox>
-                    <WrapPanel>
+                    <WrapPanel Name="AutoSendDataSettings">
                         <Label Content="Каждые"/>
-                        <ComboBox/>
+                        <ComboBox Name="AutoSendDataComboBox"
+                            SelectedIndex="0">
+                            <system:String>30 минут</system:String>
+                            <system:String>1 час</system:String>
+                            <system:String>2 часа</system:String>
+                            <system:String>5 часов</system:String>
+                            <system:String>16 часов</system:String>
+                            <system:String>1 день</system:String>
+                            <system:String>3 дня</system:String>
+                            <system:String>1 неделя</system:String>
+                        </ComboBox>
                     </WrapPanel>
                 </StackPanel>
             </Border>
-            <CheckBox>
+            <CheckBox Name="EnableDebugInfoCheckBox">
                 Включить отладочную информацию
             </CheckBox>
         </StackPanel>
@@ -37,8 +50,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0"/>
-            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0"/>
+            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0" Click="Cancel_Button_Click"/>
+            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0" Click="OK_Button_Click"/>
         </Grid>
     </Grid>
 </Window>

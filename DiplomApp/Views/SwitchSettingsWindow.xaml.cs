@@ -1,5 +1,6 @@
 ﻿using DiplomApp.Controllers;
 using DiplomApp.Data;
+using DiplomApp.Server;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -145,6 +146,9 @@ namespace DiplomApp.Views
             }
 
             database.SaveChanges();
+            var response = ResponseManager.SetSwitchOptionsToDictionary(device.ID, device.Options);
+            ServerDevice.Instance.SendMessage(response, SetOfConstants.Topics.SWITCHES).GetAwaiter().GetResult();
+
             DialogResult = true;
         }
         private void Cancel_Button_Click(object sender, RoutedEventArgs e)

@@ -49,6 +49,7 @@ namespace DiplomApp.Server
             //Инициализация сервера
             server = mqttFactory.CreateMqttServer();
             serverOptions = new MqttServerOptions();
+            server.Stopped += Server_Stopped;
 
             //Инициализация MQTT клиента
             client = mqttFactory.CreateMqttClient();
@@ -57,10 +58,22 @@ namespace DiplomApp.Server
                 .WithTcpServer(Properties.Settings.Default.ServerDomain)
                 .Build();
             client.ApplicationMessageReceived += MqttMsgPublishReceived;
+            client.Disconnected += Client_Disconnected;
 
             //Создание токена отмены асинхронной задачи для остановки работы сервера
             cancellationSource = new CancellationTokenSource();
         }
+
+        private void Client_Disconnected(object sender, MQTTnet.Client.MqttClientDisconnectedEventArgs e)
+        {
+            logger.Error("Client was disconnected");
+        }
+        private void Server_Stopped(object sender, EventArgs e)
+        {
+            logger.Fatal("Serever was stopped");
+        }
+
+
         static ServerDevice()
         {
             var interfaceName = typeof(IRequestHandler).Name;
@@ -123,12 +136,14 @@ namespace DiplomApp.Server
         }
         public async Task SendMessage(string jsonMessage, string topic)
         {
-            await client.PublishAsync(topic, jsonMessage);
+            await client.PublishAsync(topic, jsonMessage)
+                .ConfigureAwait(false);
         }
         public async Task SendMessage(Dictionary<string, string> keyValuePairs, string topic)
         {
             var str = JsonConvert.SerializeObject(keyValuePairs);
-            await client.PublishAsync(topic, str);
+            await client.PublishAsync(topic, str)
+                .ConfigureAwait(false);                
         }
 
         private void MqttMsgPublishReceived(object sender, MqttApplicationMessageReceivedEventArgs e)

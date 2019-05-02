@@ -38,15 +38,18 @@ namespace DiplomApp.Views
             new AuthentificationWindow().Show();
             Close();
         }
-
         private void DeviceItemSettings_Click(object sender, RoutedEventArgs e)
         {
             var device = ((e.Source as Button).DataContext as Controller);
 
-            if(device is Switch)
+            if (device is Switch)
                 new SwitchSettingsWindow(device.ID).ShowDialog();
-            
+            else if (device is Sensor)
+                new SensorSettingsWindow(device.ID).ShowDialog();
+        }
+        private void Application_Settings_Click(object sender, RoutedEventArgs e)
+        {
+            new ApplicationSettingsWindow().ShowDialog();
         }
     }
-
 }

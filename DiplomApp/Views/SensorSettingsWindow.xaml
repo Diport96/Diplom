@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DiplomApp.Views"
         mc:Ignorable="d"
-        Title="SensorSettingsWindow" Height="150" Width="500">
+        Title="Опции устройства" Height="150" Width="500">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -20,8 +20,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0"/>
-            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0"/>
+            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0" Click="Cancel_Button_Click"/>
+            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0" Click="OK_Button_Click"/>
         </Grid>
     </Grid>
 </Window>

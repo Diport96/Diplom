@@ -23,27 +23,12 @@ namespace DiplomApp.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
         public string ServerDomain {
             get {
                 return ((string)(this["ServerDomain"]));
-            }
-            set {
-                this["ServerDomain"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:00:10")]
-        public global::System.TimeSpan BroadcastDelay {
-            get {
-                return ((global::System.TimeSpan)(this["BroadcastDelay"]));
-            }
-            set {
-                this["BroadcastDelay"] = value;
             }
         }
         
@@ -56,6 +41,54 @@ namespace DiplomApp.Properties {
             }
             set {
                 this["WebAppDomain"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoSendDataToWebApp {
+            get {
+                return ((bool)(this["AutoSendDataToWebApp"]));
+            }
+            set {
+                this["AutoSendDataToWebApp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableDebugInfo {
+            get {
+                return ((bool)(this["EnableDebugInfo"]));
+            }
+            set {
+                this["EnableDebugInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
+        public global::System.TimeSpan AutoSendDataEvery {
+            get {
+                return ((global::System.TimeSpan)(this["AutoSendDataEvery"]));
+            }
+            set {
+                this["AutoSendDataEvery"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Параметр {
+            get {
+                return ((string)(this["Параметр"]));
+            }
+            set {
+                this["Параметр"] = value;
             }
         }
     }
