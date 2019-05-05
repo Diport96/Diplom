@@ -1,0 +1,10 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="navbar-header">       
+        <a asp-area="" asp-controller="UserMenu" asp-action="Index" class="navbar-brand">Ваши устройства</a>
+    </div>
+}
