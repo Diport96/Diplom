@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 using MqttWebApp.Data;
 using MqttWebApp.Models.JwtSecurity;
 using Newtonsoft.Json;
@@ -42,7 +43,7 @@ namespace MqttWebApp.Controllers.API
                 await Response.WriteAsync("Invalid username.");
                 return;
             }
-            
+
             var loginCornfirm = await _signInManager.CheckPasswordSignInAsync(identity, password, false);
             if (!loginCornfirm.Succeeded)
             {
@@ -73,5 +74,31 @@ namespace MqttWebApp.Controllers.API
             Response.ContentType = "application/json";
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
+
+        public async Task<bool> SubmitDeviceData([FromBody] string connectionString)
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null)
+            {
+                Response.StatusCode = 400;
+                await Response.WriteAsync("User is not exists");
+                return false;
+            }
+
+            var client = new MongoClient(connectionString);
+            var database = client.GetDatabase("DevicesData");
+
+            using (var collections = database.ListCollectionNames())
+            {
+                while (await collections.MoveNextAsync())
+                {
+
+                }
+            }
+
+            return true;
+        }
+
+        private Task<IdentityUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

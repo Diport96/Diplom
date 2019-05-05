@@ -45,11 +45,16 @@ namespace ClientApp
 
             return true;
         }
-
         public static void Logout()
         {
             AccessToken = null;
         }
+
+        public static void SubmitDevicesData()
+        {
+
+        }
+
 
         public static async Task<List<Dictionary<string, string>>> GetDevices(string userName)
         {
