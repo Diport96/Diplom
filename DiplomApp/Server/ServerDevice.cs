@@ -15,7 +15,7 @@ using MQTTnet.Exceptions;
 
 namespace DiplomApp.Server
 {
-    class ServerDevice
+    public class ServerDevice
     {
         private static ServerDevice instance;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -26,6 +26,9 @@ namespace DiplomApp.Server
         private readonly IMqttClientOptions clientOptions;
         private readonly IMqttServer server;
         private readonly IMqttClient client;
+
+        public event EventHandler ServerStarted;
+        public event EventHandler ServerStoped;
 
         public static ServerDevice Instance
         {
@@ -63,17 +66,6 @@ namespace DiplomApp.Server
             //Создание токена отмены асинхронной задачи для остановки работы сервера
             cancellationSource = new CancellationTokenSource();
         }
-
-        private void Client_Disconnected(object sender, MQTTnet.Client.MqttClientDisconnectedEventArgs e)
-        {
-            logger.Error("Client was disconnected");
-        }
-        private void Server_Stopped(object sender, EventArgs e)
-        {
-            logger.Fatal("Serever was stopped");
-        }
-
-
         static ServerDevice()
         {
             var interfaceName = typeof(IRequestHandler).Name;
@@ -84,7 +76,7 @@ namespace DiplomApp.Server
         }
 
         public async Task RunAsync()
-        {           
+        {
             Func<Task<bool>> tryConnect = async () =>
             {
                 logger.Debug("Попытка подключения к mqtt серверу");
@@ -117,7 +109,8 @@ namespace DiplomApp.Server
             {
                 logger.Debug("Закрытие асинхронного потока для сервера");
             });
-            IsRun = true;           
+            IsRun = true;
+            ServerStarted?.Invoke(this, new EventArgs());
         }
         public async Task StopAsync()
         {
@@ -133,6 +126,7 @@ namespace DiplomApp.Server
                     .ConfigureAwait(false);
             await server.StopAsync()
                 .ConfigureAwait(false);
+            ServerStoped?.Invoke(this, new EventArgs());
         }
         public async Task SendMessage(string jsonMessage, string topic)
         {
@@ -143,12 +137,21 @@ namespace DiplomApp.Server
         {
             var str = JsonConvert.SerializeObject(keyValuePairs);
             await client.PublishAsync(topic, str)
-                .ConfigureAwait(false);                
+                .ConfigureAwait(false);
+        }
+
+        private void Client_Disconnected(object sender, MQTTnet.Client.MqttClientDisconnectedEventArgs e)
+        {
+            logger.Error("Client was disconnected");
+        }
+        private void Server_Stopped(object sender, EventArgs e)
+        {
+            logger.Fatal("Serever was stopped");
         }
 
         private void MqttMsgPublishReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
-        {            
-            Dictionary<string, string> message = null;
+        {
+            Dictionary<string, string> message;
             try
             {
                 var jsonMessage = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
@@ -158,7 +161,7 @@ namespace DiplomApp.Server
             {
                 logger.Error(w, "Не удалось распарсить данные, возможно нарушение структуры данных");
                 return;
-            }           
+            }
 
             message.TryGetValue("Message_Type", out string req);
             logger.Trace($"Получено сообщение из топика { e.ApplicationMessage.Topic}. Тип сообщения: {req}");

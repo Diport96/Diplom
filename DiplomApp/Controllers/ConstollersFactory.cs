@@ -25,6 +25,15 @@ namespace DiplomApp.Controllers
             controllers = new ObservableCollection<Controller>();
             Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.BaseType == typeof(Controller));
             logger = LogManager.GetCurrentClassLogger();
+            App.Server.ServerStoped += Server_ServerStoped;
+        }
+
+        private static void Server_ServerStoped(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                controllers.Clear();
+            });
         }
 
         public static void Create(Controller controller, string controllerType)

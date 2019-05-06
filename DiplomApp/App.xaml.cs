@@ -14,7 +14,7 @@ namespace DiplomApp
     public partial class App : Application
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static ServerDevice server;
+        public static ServerDevice Server { get; private set; }
 
         App()
         {
@@ -26,7 +26,7 @@ namespace DiplomApp
             AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            server = ServerDevice.Instance;                     
+            Server = ServerDevice.Instance;                     
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -39,8 +39,9 @@ namespace DiplomApp
         }
         private void App_Exit(object sender, ExitEventArgs e)
         {
-            server.StopAsync().Wait();
+            Server.StopAsync().Wait();
             logger.Info("Завершение работы приложения");
         }
+        
     }
 }

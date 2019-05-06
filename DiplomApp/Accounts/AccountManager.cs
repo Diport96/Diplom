@@ -40,6 +40,7 @@ namespace DiplomApp.Accounts
         }
         public static UserAccount GetUserAccount(string login, string password)
         {
+            // Exception of create database
             UserAccount userAccount = database.UserAccounts.FirstOrDefault(x => x.Login == login);
             if (userAccount != null)
             {

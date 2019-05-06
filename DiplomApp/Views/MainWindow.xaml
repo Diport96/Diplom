@@ -18,7 +18,7 @@
             <Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Width="30" Click="Application_Settings_Click">
                 <Image Source="../Resources/Settings_Icon.png"/>
             </Button>
-            <Button Content="Запуск сервера" Template="{DynamicResource ButtonStyleControlTemplate}" Click="Server_Start_Stop_Click"/>
+            <Button Name="serverStartStopButton" Content="Запуск сервера" Template="{DynamicResource ButtonStyleControlTemplate}" Click="Server_Start_Stop_Click"/>
         </StackPanel>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
             <Label x:Name="HelloLabel" Content="Здравствуйте"/>

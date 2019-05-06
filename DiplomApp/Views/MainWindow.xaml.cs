@@ -25,14 +25,22 @@ namespace DiplomApp.Views
 {
     public partial class MainWindow : Window
     {
+        private readonly ServerDevice server;
         public MainWindow(string username)
         {
             InitializeComponent();
 
+            server = App.Server;
             HelloLabel.Content = $"Здравствуйте {username}";
             StackOfDevices.ItemsSource = ControllersFactory.GetControllers();
+            SetServerStartStopButtonState(server, serverStartStopButton);
+            Closed += MainWindow_Closed;
         }
 
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            server.StopAsync().Wait();
+        }
         private void SignOut_Click(object sender, RoutedEventArgs e)
         {
             new AuthentificationWindow().Show();
@@ -51,19 +59,24 @@ namespace DiplomApp.Views
         {
             new ApplicationSettingsWindow().ShowDialog();
         }
-
         private async void Server_Start_Stop_Click(object sender, RoutedEventArgs e)
-        {
-            var server = ServerDevice.Instance;            
-            if(server.IsRun)
-            {
-                (sender as Button).Content = "Запуск сервера";
+        {            
+            var btn = (sender as Button);
+            btn.IsEnabled = false;
+            if (server.IsRun)
                 await server.StopAsync();
-            }
             else
-            {
-                (sender as Button).Content = "Остановка сервера";
-            }
+                await server.RunAsync();
+            SetServerStartStopButtonState(server, btn);
+            btn.IsEnabled = true;
+        }
+
+        private void SetServerStartStopButtonState(ServerDevice server, Button button)
+        {
+            if (server.IsRun)
+                button.Content = "Остановить сервер";
+            else
+                button.Content = "Запустить сервер";
         }
     }
 }

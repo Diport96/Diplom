@@ -147,7 +147,7 @@ namespace DiplomApp.Views
 
             database.SaveChanges();
             var response = ResponseManager.SetSwitchOptionsToDictionary(device.ID, device.Options);
-            ServerDevice.Instance.SendMessage(response, SetOfConstants.Topics.SWITCHES).GetAwaiter().GetResult();
+            App.Server.SendMessage(response, SetOfConstants.Topics.SWITCHES).GetAwaiter().GetResult();
 
             DialogResult = true;
         }
