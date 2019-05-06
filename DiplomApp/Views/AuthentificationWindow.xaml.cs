@@ -32,8 +32,7 @@ namespace DiplomApp.Views
             {
                 AttemptBox.Text = "Поля логина и пароля не должны быть пустыми";
             }           
-
-            
+                        
             //!!! Await exception handle
             if (await API.LoginAsync(name, pass))
             {

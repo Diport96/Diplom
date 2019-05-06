@@ -38,7 +38,7 @@ namespace DiplomApp.Accounts
 
             return CreateAccountState.OK;
         }
-        public static UserAccount GetUserAccount(string login, string password)
+        public static UserAccount AuthenticateUser(string login, string password)
         {
             // Exception of create database
             UserAccount userAccount = database.UserAccounts.FirstOrDefault(x => x.Login == login);
@@ -63,10 +63,14 @@ namespace DiplomApp.Accounts
         }
         public static bool Login(string login, string password)
         {
-            if (GetUserAccount(login, password) != null)
+            if (AuthenticateUser(login, password) != null)
                 return true;
             else
                 return false;                            
+        }
+        public static UserAccount GetUser(string login)
+        {
+            return database.UserAccounts.FirstOrDefault(x => x.Login == login);
         }
     }
 

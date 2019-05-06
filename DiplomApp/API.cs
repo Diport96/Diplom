@@ -6,11 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json;
+using NLog;
 
 namespace ClientApp
 {
     public static class API
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public static string Path = DiplomApp.Properties.Settings.Default.WebAppDomain;
         private static string AccessToken;
 
@@ -30,9 +32,9 @@ namespace ClientApp
                 {
                     response = await client.PostAsync(Path + "/api/Authentification", content);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    // !!! Log
+                    logger.Error(e, "Ошибка запроса на аутентификацию пользователя");
                     return false;
                 }
                 if (!response.IsSuccessStatusCode) return false;
@@ -64,7 +66,7 @@ namespace ClientApp
             }
         }
 
-
+        
         public static async Task<List<Dictionary<string, string>>> GetDevices(string userName)
         {
             using (var client = CreateClientWithToken(AccessToken))

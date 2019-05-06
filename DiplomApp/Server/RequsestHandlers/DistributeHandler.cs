@@ -43,47 +43,40 @@ namespace DiplomApp.Server.RequsestHandlers
                 logger.Error("В базе данных отсутствует информация о контроллере");
                 return;
             }
-            string deviceType = info.DeviceType;            
+            string deviceType = info.DeviceType;
             switch (deviceType)
             {
                 case "Sensor":
                     {
                         var controller = ControllersFactory.GetById(pairs["ID"]) as Sensor;
-                        double.TryParse(pairs["Value"], out double value); //!!! Handle Exception
-                        controller.Value = value;                        
+                        double.TryParse(pairs["Value"], out double value);
+                        controller.Value = value;
                         break;
                     }
                 case "Switch":
                     {
                         var controller = ControllersFactory.GetById(pairs["ID"]) as Switch;
-                        bool.TryParse(pairs["Value"], out bool value); //!!! Handle Exception
-                        controller.Value = value;                        
+                        bool.TryParse(pairs["Value"], out bool value);
+                        controller.Value = value;
                         break;
                     }
                 default:
                     {
                         logger.Error("Не удалось определить тип контроллера");
                         return;
-                    }                    
+                    }
             }
 
-            //var deviceInfo = ControllersFactory.GetControllerInfo(pairs["ID"]);
-            //if(deviceInfo == null)
-            //{
-            //    logger.Error("В базе данных отсутствует информация о контроллере");
-            //}
-            //ControllersFactory.GetType(deviceInfo.DeviceType);
-
-           
             pairs.Remove("Topic");
             BsonDocument element = new BsonDocument(pairs);
             try
             {
                 database.GetCollection<BsonDocument>(deviceType).InsertOneAsync(element).Wait(); //!!!
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Fatal(e, e.Message);
+                throw;
             }
         }
     }
