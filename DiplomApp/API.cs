@@ -28,7 +28,7 @@ namespace ClientApp
                 HttpResponseMessage response = default;
                 try
                 {
-                    response = await client.PostAsync(Path + "/api/Authentification", content);                    
+                    response = await client.PostAsync(Path + "/api/Authentification", content);
                 }
                 catch (Exception)
                 {
@@ -50,9 +50,18 @@ namespace ClientApp
             AccessToken = null;
         }
 
-        public static void SubmitDevicesData()
+        public static async Task SubmitDevicesDataAsync()
         {
+            var pairs = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("connectionString", "mongodb://localhost/DevicesData")
+            };
 
+            var content = new FormUrlEncodedContent(pairs);
+            using (var client = CreateClientWithToken(AccessToken))
+            {
+                var response = await client.PostAsync(Path + "/api/Authentification/SubmitDeviceData", content);
+            }
         }
 
 

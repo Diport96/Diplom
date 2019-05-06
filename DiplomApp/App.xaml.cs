@@ -1,4 +1,5 @@
-﻿using DiplomApp.Server;
+﻿using ClientApp;
+using DiplomApp.Server;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -23,10 +24,9 @@ namespace DiplomApp
 
             // Путь к локальному директорию приложения
             AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;           
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            server = ServerDevice.Instance;
-            Task.Run(() => server.RunAsync());
+            server = ServerDevice.Instance;                     
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

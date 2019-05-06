@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MqttWebApp.Data;
 using MqttWebApp.Models.JwtSecurity;
@@ -54,6 +55,7 @@ namespace MqttWebApp.Controllers.API
 
             var claims = new Claim[]
         {
+            new Claim(ClaimTypes.Name, identity.UserName),
             new Claim(ClaimTypes.NameIdentifier, username)
         };
 
@@ -75,30 +77,40 @@ namespace MqttWebApp.Controllers.API
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
 
-        public async Task<bool> SubmitDeviceData([FromBody] string connectionString)
+        [HttpPost("SubmitDeviceData")]
+        public async Task SubmitDeviceData()
         {
-            var user = await GetCurrentUserAsync();
+            var connectionString = Request.Form["connectionString"];
+            var user = User.Identity.Name;
             if (user == null)
             {
                 Response.StatusCode = 400;
                 await Response.WriteAsync("User is not exists");
-                return false;
+                return;
             }
 
             var client = new MongoClient(connectionString);
             var database = client.GetDatabase("DevicesData");
 
-            using (var collections = database.ListCollectionNames())
+            using (var collectionNames = database.ListCollectionNames())
             {
-                while (await collections.MoveNextAsync())
+                while (await collectionNames.MoveNextAsync())
                 {
-
+                    var currentCollectionsNames = collectionNames.Current;
+                    foreach (var collectionName in currentCollectionsNames)
+                    {
+                        var collection = database.GetCollection<BsonDocument>(collectionName);
+                        var cursor = await collection.FindAsync(new BsonDocument());
+                        await cursor.ForEachAsync((x) =>
+                        {
+                            BsonDocument doc = new BsonDocument(x);
+                            doc.Add("UserName", user);
+                            // Next
+                        }
+                        );
+                    }
                 }
             }
-
-            return true;
         }
-
-        private Task<IdentityUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
     }
 }

@@ -51,5 +51,19 @@ namespace DiplomApp.Views
         {
             new ApplicationSettingsWindow().ShowDialog();
         }
+
+        private async void Server_Start_Stop_Click(object sender, RoutedEventArgs e)
+        {
+            var server = ServerDevice.Instance;            
+            if(server.IsRun)
+            {
+                (sender as Button).Content = "Запуск сервера";
+                await server.StopAsync();
+            }
+            else
+            {
+                (sender as Button).Content = "Остановка сервера";
+            }
+        }
     }
 }
