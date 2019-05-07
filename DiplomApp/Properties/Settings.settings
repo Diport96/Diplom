@@ -5,7 +5,7 @@
     <Setting Name="ServerDomain" Type="System.String" Scope="Application">
       <Value Profile="(Default)">localhost</Value>
     </Setting>
-    <Setting Name="WebAppDomain" Type="System.String" Scope="User">
+    <Setting Name="WebAppDomain" Type="(Web Service URL)" Scope="User">
       <Value Profile="(Default)">https://localhost:44381</Value>
     </Setting>
     <Setting Name="AutoSendDataToWebApp" Type="System.Boolean" Scope="User">
@@ -15,10 +15,10 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="AutoSendDataEvery" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:00:00</Value>
+      <Value Profile="(Default)">20:00:00</Value>
     </Setting>
-    <Setting Name="Параметр" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="MongoDbConnectionString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">mongodb://localhost/DevicesData</Value>
     </Setting>
   </Settings>
 </SettingsFile>

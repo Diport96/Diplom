@@ -11,6 +11,7 @@ using DiplomApp.Controllers;
 using DiplomApp.Controllers.Models;
 using NLog;
 using DiplomApp.Accounts;
+using DiplomApp.Data;
 
 namespace DiplomApp.Server.RequsestHandlers
 {
@@ -32,8 +33,7 @@ namespace DiplomApp.Server.RequsestHandlers
 
         private DistributeHandler()
         {
-            var client = new MongoClient(ConfigurationManager.ConnectionStrings["MongoDb"].ConnectionString);
-            database = client.GetDatabase("DevicesData");
+            database = MongoDbInstance.Instance.Database;
         }
 
         public void Run(Dictionary<string, string> pairs)

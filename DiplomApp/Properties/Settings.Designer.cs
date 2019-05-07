@@ -34,6 +34,7 @@ namespace DiplomApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
         [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44381")]
         public string WebAppDomain {
             get {
@@ -70,7 +71,7 @@ namespace DiplomApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("20:00:00")]
         public global::System.TimeSpan AutoSendDataEvery {
             get {
                 return ((global::System.TimeSpan)(this["AutoSendDataEvery"]));
@@ -80,15 +81,12 @@ namespace DiplomApp.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Параметр {
+        [global::System.Configuration.DefaultSettingValueAttribute("mongodb://localhost/DevicesData")]
+        public string MongoDbConnectionString {
             get {
-                return ((string)(this["Параметр"]));
-            }
-            set {
-                this["Параметр"] = value;
+                return ((string)(this["MongoDbConnectionString"]));
             }
         }
     }

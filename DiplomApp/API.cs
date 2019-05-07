@@ -51,7 +51,24 @@ namespace ClientApp
         {
             AccessToken = null;
         }
-
+        public static async Task<string> GetConnectionStringAsync()
+        {
+            using (var client = CreateClientWithToken(AccessToken))
+            {                
+                var response = await client.GetAsync(Path + "/api/Authentification/GetConnectionString");
+                if(response.IsSuccessStatusCode)
+                {
+                    var message = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<string>(message);
+                    return result;
+                }
+                else
+                {
+                    // !!!
+                    return default;
+                }
+            }
+        }
         public static async Task SubmitDevicesDataAsync()
         {
             var pairs = new List<KeyValuePair<string, string>>
@@ -66,7 +83,7 @@ namespace ClientApp
             }
         }
 
-        
+
         public static async Task<List<Dictionary<string, string>>> GetDevices(string userName)
         {
             using (var client = CreateClientWithToken(AccessToken))

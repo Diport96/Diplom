@@ -132,6 +132,7 @@
       <DependentUpon>201904221648122_SwitchOptionsCreated.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Migrations\DevicesMigrations\Configuration.cs" />
+    <Compile Include="Data\MongoDbInstance.cs" />
     <Compile Include="Data\RegisteredDeviceContext.cs" />
     <Compile Include="Controllers\InvalidControllerTypeException.cs" />
     <Compile Include="Controllers\Models\Switch.cs" />

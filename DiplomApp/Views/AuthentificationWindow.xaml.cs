@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,14 +42,16 @@ namespace DiplomApp.Views
                     var acc = AccountManager.CreateAccount(name, pass);
                     AccountManager.CurrentUser = acc;
                 }
-                RedirectToMainWindow(name);
+
+                RedirectToMainWindow(name, false);
             }
             else
             {
                 if (AccountManager.Login(name, pass))
                 {
+                    async Task<bool> connectToWebApp() => await API.LoginAsync(name, pass);
                     AccountManager.CurrentUser = AccountManager.GetUser(name);
-                    RedirectToMainWindow(name);
+                    RedirectToMainWindow(name, true, connectToWebApp);
                 }
                 else
                 {
@@ -58,9 +61,9 @@ namespace DiplomApp.Views
             }
         }
 
-        private void RedirectToMainWindow(string username)
+        private void RedirectToMainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp = null)
         {
-            new MainWindow(username).Show();
+            new MainWindow(username, isLocalSession, connectToWebApp).Show();
             Close();
         }
     }
