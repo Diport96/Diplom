@@ -10,6 +10,7 @@ using SetOfConstants;
 using DiplomApp.Controllers;
 using DiplomApp.Controllers.Models;
 using NLog;
+using DiplomApp.Accounts;
 
 namespace DiplomApp.Server.RequsestHandlers
 {
@@ -68,6 +69,7 @@ namespace DiplomApp.Server.RequsestHandlers
             }
 
             pairs.Remove("Topic");
+            pairs.Add("User", AccountManager.CurrentUser.Login);
             BsonDocument element = new BsonDocument(pairs);
             try
             {

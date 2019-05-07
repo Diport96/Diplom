@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace DiplomApp.Views
-{   
+{
     public partial class AuthentificationWindow : Window
     {
         public AuthentificationWindow()
@@ -31,19 +31,23 @@ namespace DiplomApp.Views
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(pass))
             {
                 AttemptBox.Text = "Поля логина и пароля не должны быть пустыми";
-            }           
-                        
+            }
+
             //!!! Await exception handle
             if (await API.LoginAsync(name, pass))
             {
                 if (!AccountManager.CheckIfAccountExists(name))
-                    AccountManager.CreateAccount(name, pass);
+                {
+                    var acc = AccountManager.CreateAccount(name, pass);
+                    AccountManager.CurrentUser = acc;
+                }
                 RedirectToMainWindow(name);
             }
             else
             {
-                if(AccountManager.Login(name,pass))
+                if (AccountManager.Login(name, pass))
                 {
+                    AccountManager.CurrentUser = AccountManager.GetUser(name);
                     RedirectToMainWindow(name);
                 }
                 else

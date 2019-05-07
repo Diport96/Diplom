@@ -11,32 +11,36 @@ namespace DiplomApp.Accounts
     static class AccountManager
     {
         private static readonly UserAccountContext database;
+        public static UserAccount CurrentUser { get; set; }
 
         static AccountManager()
         {
             database = new UserAccountContext();
         }
 
-        public static CreateAccountState CreateAccount(string login, string password)
+        public static UserAccount CreateAccount(string login, string password)
         {
-            if (database.UserAccounts.Any(x => x.Login == login))
-                return CreateAccountState.UserAlreadyExists;
+            var result = database.UserAccounts.FirstOrDefault(x => x.Login == login);
+            if (result != null)
+                return result;
 
             using (var deriveBytes = new Rfc2898DeriveBytes(password, 20))
             {
                 byte[] salt = deriveBytes.Salt;
                 byte[] key = deriveBytes.GetBytes(20);
 
-                database.UserAccounts.Add(new UserAccount()
+                var user = new UserAccount()
                 {
                     Login = login,
                     Key = key,
                     Salt = salt
-                });
-                database.SaveChanges();
-            }
+                };
 
-            return CreateAccountState.OK;
+                database.UserAccounts.Add(user);
+                database.SaveChanges();
+
+                return user;
+            }
         }
         public static UserAccount AuthenticateUser(string login, string password)
         {
@@ -66,17 +70,15 @@ namespace DiplomApp.Accounts
             if (AuthenticateUser(login, password) != null)
                 return true;
             else
-                return false;                            
+                return false;
+        }
+        public static void Logout()
+        {
+            CurrentUser = null;
         }
         public static UserAccount GetUser(string login)
         {
             return database.UserAccounts.FirstOrDefault(x => x.Login == login);
         }
-    }
-
-    enum CreateAccountState
-    {
-        OK,
-        UserAlreadyExists       
-    }
+    }   
 }

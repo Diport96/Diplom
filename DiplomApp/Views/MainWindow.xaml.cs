@@ -1,4 +1,5 @@
 ﻿using ClientApp;
+using DiplomApp.Accounts;
 using DiplomApp.Controllers;
 using DiplomApp.Controllers.Models;
 using DiplomApp.Server;
@@ -43,6 +44,7 @@ namespace DiplomApp.Views
         }
         private void SignOut_Click(object sender, RoutedEventArgs e)
         {
+            AccountManager.Logout();
             new AuthentificationWindow().Show();
             Close();
         }
