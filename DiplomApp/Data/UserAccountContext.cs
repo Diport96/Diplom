@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Data
 {
-
     class UserAccountContext : DbContext
     {
         public DbSet<UserAccount> UserAccounts { get; set; }

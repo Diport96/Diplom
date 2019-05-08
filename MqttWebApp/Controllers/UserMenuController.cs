@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MqttWebApp.Data;
+using MqttWebApp.Models.MongoDbDataModels;
 
 namespace MqttWebApp.Controllers
 {
@@ -14,15 +16,23 @@ namespace MqttWebApp.Controllers
 
         public UserMenuController()
         {
-            var client = new MongoClient("mongodb://localhost/DevicesData");
-            database = client.GetDatabase("DevicesData");
+            database = MongoDbInstance.Instance.Database;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var collection = database.GetCollection<BsonDocument>("Sensor");
-            var filter = new BsonDocument();
-            var data = collection.Find(filter).ToList();
+            List<SensorDataModel> sensorDataForCurrentMonth = new List<SensorDataModel>();
+            var currentMonth = DateTime.Today.Month;
+            var collection = database.GetCollection<SensorDataModel>("Sensor");
+            string user = "Test@bk.ru";
+            using (var cursor = await collection.FindAsync(x => x.User == user))
+            {
+                await cursor.ForEachAsync((x) =>
+                {
+                    if (x.Date.Month == currentMonth)
+                        sensorDataForCurrentMonth.Add(x);
+                });
+            }
 
             return View();
         }
