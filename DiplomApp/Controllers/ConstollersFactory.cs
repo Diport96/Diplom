@@ -23,35 +23,16 @@ namespace DiplomApp.Controllers
         {
             database = new RegisteredDeviceContext();
             controllers = new ObservableCollection<Controller>();
-            Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.BaseType == typeof(Controller));
+            Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Controller)));
             logger = LogManager.GetCurrentClassLogger();
             App.Server.ServerStoped += Server_ServerStoped;
-        }
-
-        private static void Server_ServerStoped(object sender, EventArgs e)
-        {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
-            {
-                controllers.Clear();
-            });
         }
 
         public static void Create(Controller controller, string controllerType)
         {
             try
             {
-                //!!! Найти способ оптимизации запроса            
-                if (!database.RegisteredDevices.Any(x => x.ID == controller.ID))
-                {
-                    database.RegisteredDevices.Add(new RegisteredDeviceInfo(
-                        controller.ID,
-                        controller.Name,
-                        controllerType,
-                        DateTime.Now
-                        ));
-
-                    database.SaveChanges();
-                }
+                RegisterDeviceInfoInDatabase(controller, controllerType, database);
             }
             catch (Exception e)
             {
@@ -97,6 +78,29 @@ namespace DiplomApp.Controllers
                     return t;
             }
             throw new InvalidControllerTypeException("Не удалось определить тип контроллера, возможно название класса не совпадает с названием типа контроллера");
+        }
+
+        private static void RegisterDeviceInfoInDatabase(Controller controller, string controllerType, RegisteredDeviceContext database)
+        {
+            //!!! Найти способ оптимизации запроса  
+            if (!database.RegisteredDevices.Any(x => x.ID == controller.ID))
+            {
+                database.RegisteredDevices.Add(new RegisteredDeviceInfo(
+                    controller.ID,
+                    controller.Name,
+                    controllerType,
+                    DateTime.Now
+                    ));
+
+                database.SaveChanges();
+            }
+        }
+        private static void Server_ServerStoped(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                controllers.Clear();
+            });
         }
     }
 }

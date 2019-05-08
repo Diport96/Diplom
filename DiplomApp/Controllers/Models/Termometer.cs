@@ -10,22 +10,13 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Controllers.Models
 {
-    class Termometer : Controller
+    class Termometer : Sensor
     {
-        private double value;        
-        public double Value
-        {
-            get { return value; }
-            set
-            {
-                this.value = value;
-                OnPropertyChanged("Value");
-            }
-        }
 
-        public Termometer(string id, string name, double value) : base(id, name)
+
+        public Termometer(string id, string name, double value) : base(id, name, value)
         {
-            this.value = value;
+
         }
     }
 }
