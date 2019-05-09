@@ -13,11 +13,33 @@
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     </div>
     <div id="statistic" class="tab-pane fade">
-       <asp:Chart id="StatisticChart">
-           <ChartAreas>
-               <asp:ChartArea Name = "DataByMonth"/>
-           </ChartAreas>
-       </asp:Chart>
+        <h4 style="margin-left:200px">Simple Pie Chart</h4>
+        <div id="chart1"></div>
+
+        @section scripts{
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script>
+            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+
+            function callback() {
+                drawChart();
+            }
+
+            function drawChart() {
+                $.get('UserMenu/GetJsonData', function (jsonData) {
+                    var option = {
+                        title: 'Company Performance',
+                        hAxis: { title: 'Year', titleTextStyle: { color: '#333' } },
+                        vAxis: { minValue: 0 }
+                    };
+                    var chart = new google.visualization.AreaChart(document.getElementById('chart1'));
+                    var data = google.visualization.arrayToDataTable(jsonData, false);
+                    chart.draw(data, option);
+                });
+            }
+        </script>
+        }
     </div>
 </div>
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -10,6 +11,7 @@ using MqttWebApp.Models.MongoDbDataModels;
 
 namespace MqttWebApp.Controllers
 {
+    [Authorize]
     public class UserMenuController : Controller
     {
         private readonly IMongoDatabase database;
@@ -19,22 +21,31 @@ namespace MqttWebApp.Controllers
             database = MongoDbInstance.Instance.Database;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<SensorDataModel> sensorDataForCurrentMonth = new List<SensorDataModel>();
-            var currentMonth = DateTime.Today.Month;
-            var collection = database.GetCollection<SensorDataModel>("Sensor");
-            string user = "Test@bk.ru";
+            return View();
+        }
+
+        public JsonResult GetJsonData()
+        {
+            var user = User.Identity.Name;
+            return Json(GetStatisticUserTermometersData(user, database).Result);
+        }
+        private async Task<List<object>> GetStatisticUserTermometersData(string user, IMongoDatabase database)
+        {
+            List<object> resultData = new List<object>
+            {
+                new[] { "Date", "Value" }
+            };
+            var collection = database.GetCollection<SensorDataModel>("Termometer", new MongoCollectionSettings());
             using (var cursor = await collection.FindAsync(x => x.User == user))
             {
                 await cursor.ForEachAsync((x) =>
-                {
-                    if (x.Date.Month == currentMonth)
-                        sensorDataForCurrentMonth.Add(x);
+                {                    
+                    resultData.Add(new dynamic[] { x.Date.ToString(), x.GetValue });
                 });
             }
-
-            return View();
+            return resultData;
         }
     }
 }
