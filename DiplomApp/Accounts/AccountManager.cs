@@ -1,6 +1,8 @@
 ﻿using DiplomApp.Data;
+using NLog;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,6 +12,7 @@ namespace DiplomApp.Accounts
 {
     static class AccountManager
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly UserAccountContext database;
         public static UserAccount CurrentUser { get; set; }
 
@@ -44,7 +47,7 @@ namespace DiplomApp.Accounts
         }
         public static UserAccount AuthenticateUser(string login, string password)
         {
-            // Exception of create database
+            // Exception of create database error code: -2146232060
             UserAccount userAccount = database.UserAccounts.FirstOrDefault(x => x.Login == login);
             if (userAccount != null)
             {
@@ -67,10 +70,18 @@ namespace DiplomApp.Accounts
         }
         public static bool Login(string login, string password)
         {
-            if (AuthenticateUser(login, password) != null)
-                return true;
-            else
-                return false;
+            UserAccount result;
+            try
+            {
+                result = AuthenticateUser(login, password);
+            }
+            catch (SqlException e)
+            {
+                logger.Error(e, e.Message);
+                result = AuthenticateUser(login, password);
+            }
+
+            return result != null ? true : false;
         }
         public static void Logout()
         {
@@ -80,5 +91,5 @@ namespace DiplomApp.Accounts
         {
             return database.UserAccounts.FirstOrDefault(x => x.Login == login);
         }
-    }   
+    }
 }

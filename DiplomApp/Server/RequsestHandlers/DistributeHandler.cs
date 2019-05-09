@@ -44,29 +44,21 @@ namespace DiplomApp.Server.RequsestHandlers
                 logger.Error("В базе данных отсутствует информация о контроллере");
                 return;
             }
-            string deviceType = info.DeviceType;
-            switch (deviceType)
+            var deviceType = info.DeviceType;
+            var type = ControllersFactory.GetType(deviceType);
+
+            if (type == typeof(Sensor) || type.IsSubclassOf(typeof(Sensor)))
             {
-                case "Sensor":
-                    {
-                        var controller = ControllersFactory.GetById(pairs["ID"]) as Sensor;
-                        double.TryParse(pairs["Value"], out double value);
-                        controller.Value = value;
-                        break;
-                    }
-                case "Switch":
-                    {
-                        var controller = ControllersFactory.GetById(pairs["ID"]) as Switch;
-                        bool.TryParse(pairs["Value"], out bool value);
-                        controller.Value = value;
-                        break;
-                    }
-                default:
-                    {
-                        logger.Error("Не удалось определить тип контроллера");
-                        return;
-                    }
+                var controller = ControllersFactory.GetById(pairs["ID"]) as Sensor;
+                double.TryParse(pairs["Value"], out double value);
+                controller.Value = value;
             }
+            else if(type == typeof(Switch) || type.IsSubclassOf(typeof(Switch)))
+            {
+                var controller = ControllersFactory.GetById(pairs["ID"]) as Switch;
+                bool.TryParse(pairs["Value"], out bool value);
+                controller.Value = value;
+            }         
 
             pairs.Remove("Topic");
             pairs.Add("User", AccountManager.CurrentUser.Login);
