@@ -15,5 +15,6 @@ namespace MqttWebApp.Models.MongoDbDataModels
         public string Value { get; set; }
         public string User { get; set; }
         public double GetValue => double.Parse(Value);
+        public long DateToMilliseconds => (long)Date.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds; 
     }
 }

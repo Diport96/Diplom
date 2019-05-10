@@ -1,9 +1,9 @@
 ﻿using DiplomApp.Controllers;
+using DiplomApp.Controllers.Models;
 using DiplomApp.Data;
 using DiplomApp.Server;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +22,7 @@ namespace DiplomApp.Views
     {
         private readonly RegisteredDeviceContext database;
         private readonly RegisteredDeviceInfo device;
+        private readonly Switch @switch;
         public SwitchSettingsWindow(string deviceId)
         {
             InitializeComponent();
@@ -30,6 +31,7 @@ namespace DiplomApp.Views
             var device = database.RegisteredDevices.FirstOrDefault(x => x.ID == deviceId);
             database.SwitchOptions.First(x => x.ID == device.ID);
             this.device = device;
+            @switch = ControllersFactory.GetById(deviceId) as Switch;
 
             DeviceNameTextBox.Text = device.Name;
             if (device != null)
@@ -53,6 +55,7 @@ namespace DiplomApp.Views
                             break;
                     }
                     SetOptions();
+                    SetEnableDisableSwitchButtonState(EnableDisableSwitchButton, @switch);
 
                     DefaultValueRadioButton.Checked += ValueRadioButton_Checked;
                     SwitchDelayValueRadioButton.Checked += ValueRadioButton_Checked;
@@ -155,24 +158,43 @@ namespace DiplomApp.Views
         {
             DialogResult = false;
         }
+        private async void EnableDisableSwitchButton_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = (sender as Button);
+            btn.IsEnabled = false;
+            @switch.Value = !@switch.Value;
+            SetEnableDisableSwitchButtonState(EnableDisableSwitchButton, @switch);
+            var response = ResponseManager.SetSwitchStateToDictionary(@switch.ID, @switch.Value);
+            await App.Server.SendMessage(response, SetOfConstants.Topics.SWITCHES);
+            btn.IsEnabled = true;
+        }
         private void SetOptions()
         {
             if (DefaultValueRadioButton.IsChecked.Value)
             {
+                DefaultOptionsGrid.IsEnabled = true;
                 SwitchToDelayOptionsGrid.IsEnabled = false;
                 SensorIdOptionsGrid.IsEnabled = false;
             }
             else if (SwitchDelayValueRadioButton.IsChecked.Value)
             {
+                DefaultOptionsGrid.IsEnabled = false;
                 SwitchToDelayOptionsGrid.IsEnabled = true;
                 SensorIdOptionsGrid.IsEnabled = false;
             }
             else if (SensorIdValueRadioButton.IsChecked.Value)
             {
+                DefaultOptionsGrid.IsEnabled = false;
                 SwitchToDelayOptionsGrid.IsEnabled = false;
                 SensorIdOptionsGrid.IsEnabled = true;
             }
         }
-
+        private void SetEnableDisableSwitchButtonState(Button button, Switch @switch)
+        {
+            if (@switch.Value)
+                button.Content = "Выключить";
+            else
+                button.Content = "Включить";
+        }
     }
 }

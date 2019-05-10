@@ -35,14 +35,24 @@ namespace MqttWebApp.Controllers
         {
             List<object> resultData = new List<object>
             {
-                new[] { "Date", "Value" }
+                new[] {
+                    new {
+                    label = "Date",
+                    type = "datetime"
+                    },
+
+                    new {
+                    label = "Значение температуры",
+                    type = "number"
+                    }
+                }
             };
             var collection = database.GetCollection<SensorDataModel>("Termometer", new MongoCollectionSettings());
             using (var cursor = await collection.FindAsync(x => x.User == user))
             {
                 await cursor.ForEachAsync((x) =>
-                {                    
-                    resultData.Add(new dynamic[] { x.Date.ToString(), x.GetValue });
+                {
+                    resultData.Add(new dynamic[] { $"Date({x.DateToMilliseconds})", x.GetValue });
                 });
             }
             return resultData;

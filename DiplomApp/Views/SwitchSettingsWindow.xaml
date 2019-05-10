@@ -34,6 +34,11 @@
                     Content="Интервал времени" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
                 <RadioButton Name="SensorIdValueRadioButton"
                     Content="По датчику" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,10,0,10"/>
+                <Grid Name="DefaultOptionsGrid"
+                      Grid.Row="0" Grid.Column="1">
+                    <Button Name="EnableDisableSwitchButton" HorizontalAlignment="Left" 
+                            Height="25" Width="80"  Margin="5" Click="EnableDisableSwitchButton_Click"/>
+                </Grid>
                 <Grid Name="SwitchToDelayOptionsGrid"
                     Grid.Row="1" Grid.Column="1" Margin="5,0">
                     <Grid.ColumnDefinitions>

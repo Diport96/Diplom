@@ -77,7 +77,7 @@ namespace DiplomApp.Accounts
             }
             catch (SqlException e)
             {
-                logger.Error(e, e.Message);
+                logger.Fatal(e, e.Message);
                 result = AuthenticateUser(login, password);
             }
 
