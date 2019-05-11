@@ -62,6 +62,7 @@ namespace DiplomApp.Server.RequsestHandlers
 
             pairs.Remove("Topic");
             pairs.Add("User", AccountManager.CurrentUser.Login);
+            pairs.Add("Name", info.Name);
             BsonDocument element = new BsonDocument(pairs);
             try
             {

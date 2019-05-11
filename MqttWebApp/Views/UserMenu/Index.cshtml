@@ -13,27 +13,45 @@
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     </div>
     <div id="statistic" class="tab-pane fade">
-        <div id="temperature_chart"></div>
+        <div id="dashboard_div">
+            <div id="filter_div"></div>
+            <div id="temperature_chart"></div>
+        </div>
 
         @section scripts{
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript">
-            google.charts.load('current', { 'packages': ['corechart'] });
+            google.charts.load('current', { 'packages': ['corechart', 'controls'] });
             google.charts.setOnLoadCallback(drawChart);
             function drawChart() {
                 $.get('UserMenu/GetJsonData', function (jsonData) {
-                    var option = {
-                        title: 'Температура',
-                        width: 1080,
-                        hAxis: {
-                            baselineColor: '#fff',
-                            gridlineColor: '#fff',
-                            textPosition: 'none'
-                        },                            
-                    };
-                    var chart = new google.visualization.AreaChart(document.getElementById('temperature_chart'));
                     var data = google.visualization.arrayToDataTable(jsonData, false);
-                    chart.draw(data, option);
+                    var dashboard = new google.visualization.Dashboard(
+                        document.getElementById('dashboard_div'));
+                    var donutRangeSlider = new google.visualization.ControlWrapper({
+                        'controlType': 'DateRangeFilter',
+                        'containerId': 'filter_div',
+                        'options': {
+                            filterColumnLabel: 'Date',
+                            ui: { label: "Дата" }
+                        }
+                    });
+                    var chart = new google.visualization.ChartWrapper({
+                        'chartType': 'AreaChart',
+                        'containerId': 'temperature_chart',
+                        'options': {
+                            title: 'Температура',
+                            width: 1080,
+                            hAxis: {
+                                baselineColor: '#fff',
+                                gridlineColor: '#fff',
+                                textPosition: 'none'
+                            }
+                        }
+                    });
+
+                    dashboard.bind(donutRangeSlider, chart);
+                    dashboard.draw(data);
                 });
             }
         </script>
