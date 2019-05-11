@@ -12,7 +12,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="EnableDebugInfo" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="AutoSendDataEvery" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">20:00:00</Value>

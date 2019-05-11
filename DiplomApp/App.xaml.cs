@@ -26,6 +26,13 @@ namespace DiplomApp
             AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
+            if(DiplomApp.Properties.Settings.Default.EnableDebugInfo)            
+                LogManager.Configuration.LoggingRules[0].EnableLoggingForLevels(LogLevel.Trace, LogLevel.Debug);
+            else
+                LogManager.Configuration.LoggingRules[0].DisableLoggingForLevels(LogLevel.Trace, LogLevel.Debug);
+
+
+
             Server = ServerDevice.Instance;                     
         }
 
@@ -41,7 +48,6 @@ namespace DiplomApp
         {
             Server.StopAsync().Wait();
             logger.Info("Завершение работы приложения");
-        }
-        
+        }        
     }
 }
