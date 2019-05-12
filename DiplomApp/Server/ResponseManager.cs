@@ -1,4 +1,4 @@
-﻿using SetOfConstants;
+﻿using DiplomApp.Server.SetOfConstants;
 using System;
 using System.Collections.Generic;
 using System.Linq;

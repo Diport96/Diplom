@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SetOfConstants;
+using DiplomApp.Server.SetOfConstants;
 using Newtonsoft.Json;
 using NLog;
 using System.Reflection;
 using DiplomApp.Controllers;
 using DiplomApp.Controllers.Models;
 
-namespace DiplomApp.Server.Requsests
+namespace DiplomApp.Server.RequsestHandlers
 {
     [RequestType(MessageTypes.REQUSET_TO_CONNECT)]
     class ConnectHandler : IRequestHandler

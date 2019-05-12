@@ -13,7 +13,7 @@ namespace ClientApp
     public static class API
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        public static string Path = DiplomApp.Properties.Settings.Default.WebAppDomain;
+        public static string Path = DiplomApp.Properties.Settings.Default.WebAppUrl;
         private static string AccessToken;
 
         public static async Task<bool> LoginAsync(string userName, string password)

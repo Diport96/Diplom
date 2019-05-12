@@ -36,12 +36,12 @@ namespace DiplomApp.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
         [global::System.Configuration.DefaultSettingValueAttribute("https://localhost:44381")]
-        public string WebAppDomain {
+        public string WebAppUrl {
             get {
-                return ((string)(this["WebAppDomain"]));
+                return ((string)(this["WebAppUrl"]));
             }
             set {
-                this["WebAppDomain"] = value;
+                this["WebAppUrl"] = value;
             }
         }
         

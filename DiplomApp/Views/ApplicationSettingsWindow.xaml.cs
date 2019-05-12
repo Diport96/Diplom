@@ -20,7 +20,7 @@ namespace DiplomApp.Views
         {
             InitializeComponent();
 
-            WebAppAddressTextBox.Text = Properties.Settings.Default.WebAppDomain;
+            WebAppAddressTextBox.Text = Properties.Settings.Default.WebAppUrl;
             AutoSendDataCheckBox.IsChecked = Properties.Settings.Default.AutoSendDataToWebApp;
             EnableDebugInfoCheckBox.IsChecked = Properties.Settings.Default.EnableDebugInfo;
 
@@ -41,7 +41,7 @@ namespace DiplomApp.Views
         }
         private void OK_Button_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.WebAppDomain = WebAppAddressTextBox.Text;
+            Properties.Settings.Default.WebAppUrl = WebAppAddressTextBox.Text;
             Properties.Settings.Default.AutoSendDataToWebApp = AutoSendDataCheckBox.IsChecked.Value;
             Properties.Settings.Default.AutoSendDataEvery = CalculateTimeToAutoSendData();
             Properties.Settings.Default.EnableDebugInfo = EnableDebugInfoCheckBox.IsChecked.Value;

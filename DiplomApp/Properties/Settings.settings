@@ -5,7 +5,7 @@
     <Setting Name="ServerDomain" Type="System.String" Scope="Application">
       <Value Profile="(Default)">localhost</Value>
     </Setting>
-    <Setting Name="WebAppDomain" Type="(Web Service URL)" Scope="User">
+    <Setting Name="WebAppUrl" Type="(Web Service URL)" Scope="User">
       <Value Profile="(Default)">https://localhost:44381</Value>
     </Setting>
     <Setting Name="AutoSendDataToWebApp" Type="System.Boolean" Scope="User">

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SetOfConstants
+namespace DiplomApp.Server.SetOfConstants
 {
     /// <summary>
     /// Класс, предоставляющий набор констант предназначенных для отправки\получения сообщений.

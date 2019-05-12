@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SetOfConstants
+namespace DiplomApp.Server.SetOfConstants
 {
     /// <summary>
     /// Предоставляет набор констант с названиями топиков

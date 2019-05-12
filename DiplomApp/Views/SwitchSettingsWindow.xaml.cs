@@ -150,7 +150,7 @@ namespace DiplomApp.Views
 
             database.SaveChanges();
             var response = ResponseManager.SetSwitchOptionsToDictionary(device.ID, device.Options);
-            App.Server.SendMessage(response, SetOfConstants.Topics.SWITCHES).GetAwaiter().GetResult();
+            App.Server.SendMessage(response, Server.SetOfConstants.Topics.SWITCHES).GetAwaiter().GetResult();
 
             DialogResult = true;
         }
@@ -165,7 +165,7 @@ namespace DiplomApp.Views
             @switch.Value = !@switch.Value;
             SetEnableDisableSwitchButtonState(EnableDisableSwitchButton, @switch);
             var response = ResponseManager.SetSwitchStateToDictionary(@switch.ID, @switch.Value);
-            await App.Server.SendMessage(response, SetOfConstants.Topics.SWITCHES);
+            await App.Server.SendMessage(response, Server.SetOfConstants.Topics.SWITCHES);
             btn.IsEnabled = true;
         }
         private void SetOptions()

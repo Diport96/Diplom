@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Configuration;
-using SetOfConstants;
+using DiplomApp.Server.SetOfConstants;
 using DiplomApp.Controllers;
 using DiplomApp.Controllers.Models;
 using NLog;
