@@ -3,6 +3,7 @@
 #include "Client.h"
 #include "ArduinoJson-v6.10.0.h"
 #include "Time.h"
+#include <TimeLib.h>
 
 // MqttClientSensor
 MqttClientSensor::MqttClientSensor(const char *id, const char *name, Client &client, double &sensorVal, const char *sensorType, IPAddress ip, uint16_t port)
@@ -49,7 +50,7 @@ bool MqttClientSensor::Connect()
 void MqttClientSensor::Disconnect()
 {
     _client->unsubscribe(TOPIC_FOR_SENSORS);
-    _client->unsubscribe(TOPIC_FOR_CONNECTION);    
+    _client->unsubscribe(TOPIC_FOR_CONNECTION);
     _client->disconnect();
     connected = false;
 }
@@ -108,6 +109,16 @@ MqttClientSwitch::MqttClientSwitch(const char *id, const char *name, Client &cli
     this->type = switchType;
     this->connected = false;
     this->_client = new PubSubClient(ip, port, client);
+    this->timestamp = millis();
+}
+MqttClientSwitch::MqttClientSwitch(const char *id, const char *name, bool &switchState, const char *switchType)
+{
+    this->id = id;
+    this->name = name;
+    this->state = switchState;
+    this->type = switchType;
+    this->connected = false;
+    this->_client = new PubSubClient();
     this->timestamp = millis();
 }
 bool MqttClientSwitch::Connect()
@@ -192,7 +203,7 @@ void MqttClientSwitch::callback(char *topic, byte *payload, unsigned int length)
                 }
                 else if (controlType == "SwitchToSignal")
                 {
-                    const char *_id = doc["ID"];
+                    const char *_id = doc["SensorId"];
                     bool to = doc["ValueTo"];
                     _options = new SwitchOptions(_id, to);
                 }
@@ -238,7 +249,7 @@ void MqttClientSwitch::callback(char *topic, byte *payload, unsigned int length)
                 }
                 else if (controlType == "SwitchToSignal")
                 {
-                    const char *_id = doc["ID"];
+                    const char *_id = doc["SensorId"];
                     bool to = doc["ValueTo"];
                     _options = new SwitchOptions(_id, to);
                 }

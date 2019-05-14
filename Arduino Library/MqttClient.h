@@ -75,13 +75,14 @@ private:
   PubSubClient *_client;
   SwitchOptions *options;
 
-  void callback(char *topic, byte *payload, unsigned int length);
-  void Run();
+  void callback(char *topic, byte *payload, unsigned int length);  
 
 public:
   MqttClientSwitch(const char *, const char *, Client &client, bool &, const char *, IPAddress, uint16_t);
+  MqttClientSwitch(const char *, const char *, bool &, const char *);
   bool Connect();
   void Disconnect();
   bool PublishValue();
   void SetOptions(SwitchOptions *);
+  void Run();
 };
