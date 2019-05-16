@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Accounts
 {
-    class UserAccount
+    public class UserAccount
     {
         [Key]
         public int ID { get; set; }
 
-        [Required]        
+        [Required]
         public string Login { get; set; }
 
         [Required]

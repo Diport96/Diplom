@@ -39,18 +39,17 @@ namespace DiplomApp.Views
             {
                 if (!AccountManager.CheckIfAccountExists(name))
                 {
-                    var acc = AccountManager.CreateAccount(name, pass);
-                    AccountManager.CurrentUser = acc;
+                    var acc = AccountManager.CreateAccount(name, pass);                    
                 }
 
-                RedirectToMainWindow(name, false);
+                if (AccountManager.Login(name, pass))
+                    RedirectToMainWindow(name, false);
             }
             else
             {
                 if (AccountManager.Login(name, pass))
                 {
-                    async Task<bool> connectToWebApp() => await API.LoginAsync(name, pass);
-                    AccountManager.CurrentUser = AccountManager.GetUser(name);
+                    async Task<bool> connectToWebApp() => await API.LoginAsync(name, pass);                    
                     RedirectToMainWindow(name, true, connectToWebApp);
                 }
                 else

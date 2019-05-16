@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Accounts
 {
-    static class AccountManager
+    public static class AccountManager
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly UserAccountContext database;
@@ -45,25 +45,6 @@ namespace DiplomApp.Accounts
                 return user;
             }
         }
-        public static UserAccount AuthenticateUser(string login, string password)
-        {
-            // Exception of create database error code: -2146232060
-            UserAccount userAccount = database.UserAccounts.FirstOrDefault(x => x.Login == login);
-            if (userAccount != null)
-            {
-                using (var deriveBytes = new Rfc2898DeriveBytes(password, userAccount.Salt))
-                {
-                    byte[] newKey = deriveBytes.GetBytes(20);
-
-                    if (!newKey.SequenceEqual(userAccount.Key))
-                        return null;
-                }
-
-                return userAccount;
-            }
-
-            return null;
-        }
         public static bool CheckIfAccountExists(string login)
         {
             return database.UserAccounts.Any(x => x.Login == login);
@@ -81,7 +62,13 @@ namespace DiplomApp.Accounts
                 result = AuthenticateUser(login, password);
             }
 
-            return result != null ? true : false;
+            if (result != null)
+            {
+                CurrentUser = result;
+                return true;
+            }
+            else return false;
+
         }
         public static void Logout()
         {
@@ -90,6 +77,25 @@ namespace DiplomApp.Accounts
         public static UserAccount GetUser(string login)
         {
             return database.UserAccounts.FirstOrDefault(x => x.Login == login);
+        }
+        private static UserAccount AuthenticateUser(string login, string password)
+        {
+            // Exception of create database error code: -2146232060
+            UserAccount userAccount = database.UserAccounts.FirstOrDefault(x => x.Login == login);
+            if (userAccount != null)
+            {
+                using (var deriveBytes = new Rfc2898DeriveBytes(password, userAccount.Salt))
+                {
+                    byte[] newKey = deriveBytes.GetBytes(20);
+
+                    if (!newKey.SequenceEqual(userAccount.Key))
+                        return null;
+                }
+
+                return userAccount;
+            }
+
+            return null;
         }
     }
 }
