@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DiplomApp.Server;
+using DiplomApp.Server.SetOfConstants;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DiplomApp.Core.Tests.Integrate_tests
@@ -22,7 +24,7 @@ namespace DiplomApp.Core.Tests.Integrate_tests
             var server = ServerDevice.Instance;
             await server.RunAsync();
             await server.StopAsync();
-            Assert.IsFalse(server.IsRun);            
-        }      
+            Assert.IsFalse(server.IsRun);
+        }       
     }
 }

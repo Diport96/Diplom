@@ -99,7 +99,7 @@ namespace DiplomApp.Server
                 {
                     await server.StartAsync(serverOptions);
                 }
-                catch(InvalidOperationException e)
+                catch (InvalidOperationException e)
                 {
                     logger.Error(e, e.Message);
                 }
@@ -169,14 +169,16 @@ namespace DiplomApp.Server
             message.Add("Topic", e.ApplicationMessage.Topic);
             try
             {
-                HandleRequest(message);
+                var handler = GetRequestHandler(message);
+                message.Remove("Message_Type");
+                handler.Run(message);
             }
             catch (HandlerNotFindException w)
             {
                 logger.Error(w.Message);
             }
         }
-        private void HandleRequest(Dictionary<string, string> keyValuePairs)
+        private IRequestHandler GetRequestHandler(Dictionary<string, string> keyValuePairs)
         {
             keyValuePairs.TryGetValue("Message_Type", out string msgType);
             var type = SupportedRequestHandlers.FirstOrDefault(x => (x.GetCustomAttribute(typeof(RequestTypeAttribute)) as RequestTypeAttribute).MessageType == msgType);
@@ -185,9 +187,8 @@ namespace DiplomApp.Server
             var prop = type.GetProperty("Instance");
             if (prop == null)
                 throw new NotImplementedException($"В классе {type.Name} не реализован паттерн Singleton");
-            var getClass = prop.GetMethod.Invoke(null, null) as IRequestHandler;
-            keyValuePairs.Remove("Message_Type");
-            getClass.Run(keyValuePairs);
+            var getClass = prop.GetMethod.Invoke(null, null) as IRequestHandler;           
+            return getClass;
         }
     }
 }
