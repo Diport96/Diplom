@@ -75,7 +75,8 @@ namespace DiplomApp.Server
 
         public async Task RunAsync()
         {
-            Func<Task<bool>> tryConnect = async () =>
+            if (IsRun) return;
+            async Task<bool> tryConnect()
             {
                 logger.Debug("Попытка подключения к mqtt серверу");
                 try
@@ -88,13 +89,20 @@ namespace DiplomApp.Server
                     return false;
                 }
                 return true;
-            };
+            }
 
             logger.Info("Подключение к удаленному серверу...");
             if (!await tryConnect())
             {
                 logger.Info("Запуск локального сервера");
-                await server.StartAsync(serverOptions);
+                try
+                {
+                    await server.StartAsync(serverOptions);
+                }
+                catch(InvalidOperationException e)
+                {
+                    logger.Error(e, e.Message);
+                }
                 await tryConnect();
             }
             var topic = new TopicFilterBuilder()

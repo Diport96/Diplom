@@ -4,7 +4,7 @@ using DiplomApp.Accounts;
 using DiplomApp.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DiplomApp.Core.Tests
+namespace DiplomApp.Core.Integrate_tests
 {
     [TestClass]
     public class AccountManagerTests
@@ -63,7 +63,7 @@ namespace DiplomApp.Core.Tests
             // Actual
             bool actual = AccountManager.Login(userName, password);
 
-            Assert.AreEqual(true, actual);
+            Assert.IsTrue(actual);
 
             using (var database = new UserAccountContext())
             {
@@ -85,7 +85,7 @@ namespace DiplomApp.Core.Tests
             // Actual
             bool actual = AccountManager.Login(userName, password);
 
-            Assert.AreEqual(false, actual);           
+            Assert.IsFalse(actual);           
         }
 
         [TestMethod]
