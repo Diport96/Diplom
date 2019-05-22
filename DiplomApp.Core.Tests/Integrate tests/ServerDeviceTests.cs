@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DiplomApp.Server;
 using DiplomApp.Server.SetOfConstants;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MQTTnet;
+using MQTTnet.Client;
+using Newtonsoft.Json;
 
 namespace DiplomApp.Core.Tests.Integrate_tests
 {

@@ -15,6 +15,10 @@ using MQTTnet.Exceptions;
 
 namespace DiplomApp.Server
 {
+    /// <summary>
+    /// Класс, предоставляющи сервре для работы по протоколу MQTT. 
+    /// Инкапуслирует MQTT брокер и клиент
+    /// </summary>
     public class ServerDevice
     {
         private static ServerDevice instance;
@@ -27,9 +31,18 @@ namespace DiplomApp.Server
         private readonly IMqttServer server;
         private readonly IMqttClient client;
 
+        /// <summary>
+        /// Событие которое вызывается при запуске сервера
+        /// </summary>
         public event EventHandler ServerStarted;
+        /// <summary>
+        /// Событие, которое вызывается при остановке сервера
+        /// </summary>
         public event EventHandler ServerStoped;
 
+        /// <summary>
+        /// Предоставляет экземпляр класса, является реализацией паттерна Singleton
+        /// </summary>
         public static ServerDevice Instance
         {
             get
@@ -38,7 +51,13 @@ namespace DiplomApp.Server
                 return instance;
             }
         }
+        /// <summary>
+        /// Предоставляет уникальный идентификатор для MQTT клиента
+        /// </summary>
         public Guid ID { get; }
+        /// <summary>
+        /// Указывает, запущен ли сервер
+        /// </summary>
         public bool IsRun { get; private set; }
 
         private ServerDevice()
@@ -73,6 +92,10 @@ namespace DiplomApp.Server
                (x => x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
         }
 
+        /// <summary>
+        /// Метод асинхронного запуска сервера
+        /// </summary>
+        /// <returns></returns>
         public async Task RunAsync()
         {
             if (IsRun) return;
@@ -119,6 +142,10 @@ namespace DiplomApp.Server
             ServerStarted?.Invoke(this, new EventArgs());
             logger.Info("Сервер запущен");
         }
+        /// <summary>
+        /// Метод асинхронной остановки сервера
+        /// </summary>
+        /// <returns></returns>
         public async Task StopAsync()
         {
             lock (_locker)
@@ -136,11 +163,23 @@ namespace DiplomApp.Server
             ServerStoped?.Invoke(this, new EventArgs());
             logger.Info("Сервер остановлен");
         }
+        /// <summary>
+        /// Отправка сообщения в формате JSON по протоколу MQTT на указанный топик
+        /// </summary>
+        /// <param name="jsonMessage">Сообщение в формате JSON</param>
+        /// <param name="topic">Топик, на который происходит отправка сообщения</param>
+        /// <returns></returns>
         public async Task SendMessage(string jsonMessage, string topic)
         {
             await client.PublishAsync(topic, jsonMessage)
                 .ConfigureAwait(false);
         }
+        /// <summary>
+        /// Отправка сообщения по протоколу MQTT на указанный топик
+        /// </summary>
+        /// <param name="keyValuePairs">Словарь, содержащий сообщение в формате "ключ": "значение"</param>
+        /// <param name="topic">Топик, на который происходит отправка сообщения</param>
+        /// <returns></returns>
         public async Task SendMessage(Dictionary<string, string> keyValuePairs, string topic)
         {
             var str = JsonConvert.SerializeObject(keyValuePairs);
@@ -187,7 +226,7 @@ namespace DiplomApp.Server
             var prop = type.GetProperty("Instance");
             if (prop == null)
                 throw new NotImplementedException($"В классе {type.Name} не реализован паттерн Singleton");
-            var getClass = prop.GetMethod.Invoke(null, null) as IRequestHandler;           
+            var getClass = prop.GetMethod.Invoke(null, null) as IRequestHandler;
             return getClass;
         }
     }

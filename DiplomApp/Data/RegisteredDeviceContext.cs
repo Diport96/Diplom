@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Data
 {
-    class RegisteredDeviceContext : DbContext
+    public class RegisteredDeviceContext : DbContext
     {
         public DbSet<RegisteredDeviceInfo> RegisteredDevices { get; set; }
         public DbSet<SwitchOptions> SwitchOptions { get; set; }

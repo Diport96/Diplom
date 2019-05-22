@@ -10,10 +10,17 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Accounts
 {
+    /// <summary>
+    /// Предоставляет менеджер аккаунтов пользователей
+    /// </summary>
     public static class AccountManager
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly UserAccountContext database;
+
+        /// <summary>
+        /// Хранит информацию об авторизованном пользователе
+        /// </summary>
         public static UserAccount CurrentUser { get; set; }
 
         static AccountManager()
@@ -21,6 +28,13 @@ namespace DiplomApp.Accounts
             database = new UserAccountContext();
         }
 
+        /// <summary>
+        /// Создает новый аккакунт и возвращает его в качестве результата.
+        /// Если такой аккаунт уже существует, возвращает его в качестве результата
+        /// </summary>
+        /// <param name="login">Логин от аккаунта</param>
+        /// <param name="password">Пароль от аккаунта</param>
+        /// <returns>Аккаунт пользователя</returns>
         public static UserAccount CreateAccount(string login, string password)
         {
             var result = database.UserAccounts.FirstOrDefault(x => x.Login == login);
@@ -45,10 +59,21 @@ namespace DiplomApp.Accounts
                 return user;
             }
         }
+        /// <summary>
+        /// Проверяет, существует ли аккаунт с указаным логином
+        /// </summary>
+        /// <param name="login">Логин от аккаунта</param>
+        /// <returns>Существует ли аккаунт с указаным логином</returns>
         public static bool CheckIfAccountExists(string login)
         {
             return database.UserAccounts.Any(x => x.Login == login);
         }
+        /// <summary>
+        /// Выполняет аутентификацию пользователя
+        /// </summary>
+        /// <param name="login">Логин от аккаунта</param>
+        /// <param name="password">Пароль от аккаунта</param>
+        /// <returns>Удалоь ли выполнить аутентификацию</returns>
         public static bool Login(string login, string password)
         {
             UserAccount result;
@@ -70,13 +95,12 @@ namespace DiplomApp.Accounts
             else return false;
 
         }
+        /// <summary>
+        /// Выполняет выход из учетной записи пользователя
+        /// </summary>
         public static void Logout()
         {
             CurrentUser = null;
-        }
-        public static UserAccount GetUser(string login)
-        {
-            return database.UserAccounts.FirstOrDefault(x => x.Login == login);
         }
         private static UserAccount AuthenticateUser(string login, string password)
         {
