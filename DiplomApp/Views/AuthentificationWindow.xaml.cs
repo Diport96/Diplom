@@ -18,8 +18,14 @@ using System.Windows.Shapes;
 
 namespace DiplomApp.Views
 {
+    /// <summary>
+    /// Представляет диалоговое окно аутентификации пользователя
+    /// </summary>
     public partial class AuthentificationWindow : Window
     {
+        /// <summary>
+        /// Конструктор класса
+        /// </summary>
         public AuthentificationWindow()
         {
             InitializeComponent();
@@ -39,7 +45,7 @@ namespace DiplomApp.Views
             {
                 if (!AccountManager.CheckIfAccountExists(name))
                 {
-                    var acc = AccountManager.CreateAccount(name, pass);                    
+                    var acc = AccountManager.CreateAccount(name, pass);
                 }
 
                 if (AccountManager.Login(name, pass))
@@ -49,7 +55,7 @@ namespace DiplomApp.Views
             {
                 if (AccountManager.Login(name, pass))
                 {
-                    async Task<bool> connectToWebApp() => await API.LoginAsync(name, pass);                    
+                    async Task<bool> connectToWebApp() => await API.LoginAsync(name, pass);
                     RedirectToMainWindow(name, true, connectToWebApp);
                 }
                 else

@@ -16,11 +16,18 @@ using System.Windows.Shapes;
 
 namespace DiplomApp.Views
 {
+    /// <summary>
+    /// Представляет диалоговое окно настроек датчика
+    /// </summary>
     public partial class SensorSettingsWindow : Window
     {
         private readonly RegisteredDeviceContext database;
         private RegisteredDeviceInfo deviceInfo;
 
+        /// <summary>
+        /// Конструктор класса
+        /// </summary>
+        /// <param name="deviceId">Идентификатор датчика для которого выполняется настройка</param>
         public SensorSettingsWindow(string deviceId)
         {
             InitializeComponent();

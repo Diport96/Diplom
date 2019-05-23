@@ -14,6 +14,9 @@ namespace DiplomApp
     public partial class App : Application
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        /// <summary>
+        /// Является экземпляром сервера, доступным на уровне всего приложения
+        /// </summary>
         public static ServerDevice Server { get; private set; }
 
         App()

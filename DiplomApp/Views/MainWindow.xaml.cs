@@ -28,10 +28,23 @@ using System.Windows.Shapes;
 
 namespace DiplomApp.Views
 {
+    /// <summary>
+    /// Предсавляет диалоговое окно главного меню приложения
+    /// </summary>
     public partial class MainWindow : Window
     {
         private readonly ServerDevice server;
+        /// <summary>
+        /// Указывает, работает ли приложение в автономном режиме
+        /// </summary>
         public bool IsLocalSession { get; private set; }
+
+        /// <summary>
+        /// Конструктор класса
+        /// </summary>
+        /// <param name="username">Имя пользователя, выполнившего аутентификацию</param>
+        /// <param name="isLocalSession">Выполнена ли аутентификация локально</param>
+        /// <param name="connectToWebApp">Функция переподключения к веб-серверу</param>
         public MainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp)
         {
             InitializeComponent();

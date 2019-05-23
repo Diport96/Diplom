@@ -16,10 +16,19 @@ using System.Windows.Shapes;
 
 namespace DiplomApp.Views
 {
+    /// <summary>
+    /// Представляет диалоговое окно выбора датчика для управления переключателем
+    /// </summary>
     public partial class SelectSensorDialogWindow : Window
     {
+        /// <summary>
+        /// Датчик, который был выбран
+        /// </summary>
         public Controller Answer { get; private set; }       
 
+        /// <summary>
+        /// Конструктор класса
+        /// </summary>
         public SelectSensorDialogWindow()
         {
             InitializeComponent();

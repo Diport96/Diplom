@@ -18,11 +18,19 @@ using System.Windows.Shapes;
 
 namespace DiplomApp.Views
 {
+    /// <summary>
+    /// Представляет диалоговое окно настроек переключателя
+    /// </summary>
     public partial class SwitchSettingsWindow : Window
     {
         private readonly RegisteredDeviceContext database;
         private readonly RegisteredDeviceInfo device;
         private readonly Switch @switch;
+
+        /// <summary>
+        /// Конструктор класса
+        /// </summary>
+        /// <param name="deviceId">Идентификатор переключателя для которого выполняется настройка</param>
         public SwitchSettingsWindow(string deviceId)
         {
             InitializeComponent();

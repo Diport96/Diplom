@@ -1,10 +1,10 @@
 namespace DiplomApp.Data.Migrations.AccountsMigrations
 {
     using System;
-    using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations;    
     
     public partial class InitializeUserAccountState : DbMigration
-    {
+    {        
         public override void Up()
         {
             CreateTable(
@@ -19,7 +19,7 @@ namespace DiplomApp.Data.Migrations.AccountsMigrations
                 .PrimaryKey(t => t.ID);
             
         }
-        
+       
         public override void Down()
         {
             DropTable("dbo.UserAccounts");

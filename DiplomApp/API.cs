@@ -10,12 +10,25 @@ using NLog;
 
 namespace ClientApp
 {
+    /// <summary>
+    /// Предоставляет набор методов для взаимодействия с API веб-приложения
+    /// </summary>
     public static class API
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        public static string Path = DiplomApp.Properties.Settings.Default.WebAppUrl;
         private static string AccessToken;
 
+        /// <summary>
+        /// URL адрес веб-приложения
+        /// </summary>
+        public static string Path = DiplomApp.Properties.Settings.Default.WebAppUrl;
+
+        /// <summary>
+        /// Аминхронный запрос на удаленную аутентификацию пользователя
+        /// </summary>
+        /// <param name="userName">Логин</param>
+        /// <param name="password">Пароль</param>
+        /// <returns>Удалось ли выполнить удаленную аутентификацию</returns>
         public static async Task<bool> LoginAsync(string userName, string password)
         {
             var pairs = new List<KeyValuePair<string, string>>
@@ -47,10 +60,19 @@ namespace ClientApp
 
             return true;
         }
+
+        /// <summary>
+        /// Производит выход из удаленного аккаунта пользователя
+        /// </summary>
         public static void Logout()
         {
             AccessToken = null;
         }
+
+        /// <summary>
+        /// Получает строку подключения к базе дыанных веб-приложения MongoDB
+        /// </summary>
+        /// <returns>Строка подключения к базе данных</returns>
         public static async Task<string> GetConnectionStringAsync()
         {
             using (var client = CreateClientWithToken(AccessToken))
@@ -68,46 +90,7 @@ namespace ClientApp
                     return default;
                 }
             }
-        }
-        public static async Task SubmitDevicesDataAsync()
-        {
-            var pairs = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("connectionString", "mongodb://localhost/DevicesData")
-            };
-
-            var content = new FormUrlEncodedContent(pairs);
-            using (var client = CreateClientWithToken(AccessToken))
-            {
-                var response = await client.PostAsync(Path + "/api/Authentification/SubmitDeviceData", content);
-            }
-        }
-
-
-        public static async Task<List<Dictionary<string, string>>> GetDevices(string userName)
-        {
-            using (var client = CreateClientWithToken(AccessToken))
-            {
-                var response =
-                   await client.GetAsync(Path + $"/api/Things/GetDevices/{userName}");
-#if DEBUG
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception("Bad Request: " + Path + $"/api/Things/GetDevices/{userName}");
-                }
-                switch (response.StatusCode)
-                {
-                    case System.Net.HttpStatusCode.BadRequest: throw new HttpRequestException();
-                    case System.Net.HttpStatusCode.Unauthorized: throw new UnauthorizedAccessException();
-                    default: break;
-                }
-#endif
-                var result =
-                  await response.Content.ReadAsStringAsync();
-
-                return JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(result);
-            }
-        }
+        }       
 
         private static HttpClient CreateClientWithToken(string accessToken = "")
         {
