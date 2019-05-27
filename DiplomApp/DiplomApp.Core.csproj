@@ -118,6 +118,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Accounts\AccountManager.cs" />
+    <Compile Include="Accounts\SignInData.cs" />
     <Compile Include="Accounts\UserAccount.cs" />
     <Compile Include="API.cs" />
     <Compile Include="Controllers\ConstollersFactory.cs" />
@@ -142,11 +143,13 @@
     <Compile Include="Server\ResponseManager.cs" />
     <Compile Include="Server\SetOfConstants\MessageTypes.cs" />
     <Compile Include="Server\SetOfConstants\Topics.cs" />
+    <Compile Include="ViewModels\AuthenticationViewModel.cs" />
+    <Compile Include="ViewModels\Commands\RelayCommand.cs" />
     <Compile Include="Views\ApplicationSettingsWindow.xaml.cs">
       <DependentUpon>ApplicationSettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\AuthentificationWindow.xaml.cs">
-      <DependentUpon>AuthentificationWindow.xaml</DependentUpon>
+    <Compile Include="Views\AuthenticationWindow.xaml.cs">
+      <DependentUpon>AuthenticationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SelectSensorDialogWindow.xaml.cs">
       <DependentUpon>SelectSensorDialogWindow.xaml</DependentUpon>
@@ -186,7 +189,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AuthentificationWindow.xaml">
+    <Page Include="Views\AuthenticationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
