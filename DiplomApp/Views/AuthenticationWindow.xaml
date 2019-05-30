@@ -20,19 +20,19 @@
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0">
             <StackPanel Margin="10">
                 <Label Content="Логин:"/>
-                <TextBox Name="UsernameTextBox" Width="120"/>
+                <TextBox Width="120" Text="{Binding Login}"/>
             </StackPanel>
             <StackPanel Margin="10">
                 <Label Content="Пароль:"/>
-                <PasswordBox Name="PasswordTextBox" Width="120"/>
+                <PasswordBox x:Name="PasswordBox" Width="120"/>
             </StackPanel>
-            <Popup Name="Attempt" StaysOpen="False" AllowsTransparency="True">
-                <TextBlock Name="AttemptBox" Foreground="Red"/>
+            <Popup StaysOpen="False" AllowsTransparency="True" IsOpen="{Binding AttemptShow}">
+                <TextBlock Foreground="Red" Text="{Binding AttemptMessage}"/>
             </Popup>
         </StackPanel>
-        <Button Name="SignInButton" Content="Вход" Grid.Row="1" Width="80" Margin="10"
+        <Button Content="Вход" Grid.Row="1" Width="80" Margin="10"
                 HorizontalAlignment="Center" VerticalAlignment="Bottom"
                 Template="{DynamicResource ButtonStyleControlTemplate}"
-                Click="SignInButton_Click"/>
+               Command="{Binding SignInCommand}" CommandParameter="{Binding ElementName=PasswordBox}" IsDefault="True"/>
     </Grid>
 </Window>

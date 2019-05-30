@@ -4,81 +4,109 @@ using DiplomApp.ViewModels.Commands;
 using DiplomApp.Views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DiplomApp.ViewModels
 {
-    class AuthenticationViewModel
+    class AuthenticationViewModel : INotifyPropertyChanged
     {
-        private RelayCommand signInCommand;
+        private AsyncRelayCommand signInCommand;
         private readonly Window owner;
+        private string login;
+        private string attemptMessage;
+        private bool attemptShow;
 
-        public string AttemptMessage { get; set; }
-        public bool AttemptShow { get; set; }
-        public SignInData SignInData { get; set; }
-
-        public RelayCommand SignInCommand
+        public string AttemptMessage
+        {
+            get { return attemptMessage; }
+            set
+            {
+                attemptMessage = value;
+                OnPropertyChanged("AttemptMessage");
+            }
+        }
+        public bool AttemptShow
+        {
+            get { return attemptShow; }
+            set
+            {
+                attemptShow = value;
+                OnPropertyChanged("AttemptShow");
+            }
+        }
+        public string Login
+        {
+            get { return login; }
+            set
+            {
+                login = value;
+                OnPropertyChanged("Login");
+            }
+        }
+        public AsyncRelayCommand SignInCommand
         {
             get
             {
                 return signInCommand ??
-                    (signInCommand = new RelayCommand(obj =>
-                    {
-                        SignInData signInData = obj as SignInData;
-                        Task.Run(SignIn(signInData));
-                    }));
+                    (signInCommand = new AsyncRelayCommand(obj => SignIn(Login, (obj as PasswordBox).Password)));
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public AuthenticationViewModel(Window owner)
         {
             this.owner = owner;
         }
 
-        private Func<Task> SignIn(SignInData signInData)
+        public void OnPropertyChanged([CallerMemberName]string prop = null)
         {
-            return async () =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private async Task SignIn(string login, string password)
+        {
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
-                if (string.IsNullOrWhiteSpace(signInData.Login) || string.IsNullOrWhiteSpace(signInData.Password))
+                AttemptMessage = "Поля логина и пароля не должны быть пустыми";
+                AttemptShow = true;
+            }
+
+            //!!! Await exception handle
+            if (await API.LoginAsync(login, password))
+            {
+                if (!AccountManager.CheckIfAccountExists(login))
                 {
-                    AttemptMessage = "Поля логина и пароля не должны быть пустыми";
-                    AttemptShow = true;
+                    var acc = AccountManager.CreateAccount(login, password);
                 }
 
-                //!!! Await exception handle
-                if (await API.LoginAsync(signInData.Login, signInData.Password))
+                if (AccountManager.Login(login, password))
+                    RedirectToMainWindow(login, false);
+            }
+            else
+            {
+                if (AccountManager.Login(login, password))
                 {
-                    if (!AccountManager.CheckIfAccountExists(signInData.Login))
-                    {
-                        var acc = AccountManager.CreateAccount(signInData.Login, signInData.Password);
-                    }
-
-                    if (AccountManager.Login(signInData.Login, signInData.Password))
-                        RedirectToMainWindow(signInData.Login, false);
+                    async Task<bool> connectToWebApp() => await API.LoginAsync(login, password);
+                    RedirectToMainWindow(login, true, connectToWebApp);
                 }
                 else
                 {
-                    if (AccountManager.Login(SignInData.Login, signInData.Password))
-                    {
-                        async Task<bool> connectToWebApp() => await API.LoginAsync(signInData.Login, signInData.Password);
-                        RedirectToMainWindow(signInData.Login, true, connectToWebApp);
-                    }
-                    else
-                    {
-                        AttemptMessage = "Неправильные логин или пароль";
-                        AttemptShow = true;
-                    }
+                    AttemptMessage = "Неправильные логин или пароль";
+                    AttemptShow = true;
                 }
-            };
+            }
         }
         private void RedirectToMainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp = null)
         {
             new MainWindow(username, isLocalSession, connectToWebApp).Show();
             owner.Close();
         }
-
     }
 }

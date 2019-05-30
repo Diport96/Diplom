@@ -118,7 +118,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Accounts\AccountManager.cs" />
-    <Compile Include="Accounts\SignInData.cs" />
     <Compile Include="Accounts\UserAccount.cs" />
     <Compile Include="API.cs" />
     <Compile Include="Controllers\ConstollersFactory.cs" />
@@ -144,6 +143,9 @@
     <Compile Include="Server\SetOfConstants\MessageTypes.cs" />
     <Compile Include="Server\SetOfConstants\Topics.cs" />
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
+    <Compile Include="ViewModels\Commands\AsyncCommandBase.cs" />
+    <Compile Include="ViewModels\Commands\AsyncRelayCommand.cs" />
+    <Compile Include="ViewModels\Commands\IAsyncCommand.cs" />
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
     <Compile Include="Views\ApplicationSettingsWindow.xaml.cs">
       <DependentUpon>ApplicationSettingsWindow.xaml</DependentUpon>

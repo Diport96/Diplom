@@ -1,6 +1,7 @@
 ﻿using ClientApp;
 using DiplomApp.Accounts;
 using DiplomApp.Data;
+using DiplomApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,47 +30,7 @@ namespace DiplomApp.Views
         public AuthentificationWindow()
         {
             InitializeComponent();
-        }
-
-        private async void SignInButton_Click(object sender, RoutedEventArgs e)
-        {
-            string name = UsernameTextBox.Text, pass = PasswordTextBox.Password;
-
-            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(pass))
-            {
-                AttemptBox.Text = "Поля логина и пароля не должны быть пустыми";
-            }
-
-            //!!! Await exception handle
-            if (await API.LoginAsync(name, pass))
-            {
-                if (!AccountManager.CheckIfAccountExists(name))
-                {
-                    var acc = AccountManager.CreateAccount(name, pass);
-                }
-
-                if (AccountManager.Login(name, pass))
-                    RedirectToMainWindow(name, false);
-            }
-            else
-            {
-                if (AccountManager.Login(name, pass))
-                {
-                    async Task<bool> connectToWebApp() => await API.LoginAsync(name, pass);
-                    RedirectToMainWindow(name, true, connectToWebApp);
-                }
-                else
-                {
-                    AttemptBox.Text = "Неправильные логин или пароль";
-                    Attempt.IsOpen = true;
-                }
-            }
-        }
-
-        private void RedirectToMainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp = null)
-        {
-            new MainWindow(username, isLocalSession, connectToWebApp).Show();
-            Close();
-        }
+            DataContext = new AuthenticationViewModel(this);
+        }      
     }
 }
