@@ -3,11 +3,8 @@ using DiplomApp.Accounts;
 using DiplomApp.ViewModels.Commands;
 using DiplomApp.Views;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,7 +14,7 @@ namespace DiplomApp.ViewModels
     class AuthenticationViewModel : INotifyPropertyChanged
     {
         private AsyncRelayCommand signInCommand;
-        private readonly Window owner;
+        private readonly Window ownerWindow;
         private string login;
         private string attemptMessage;
         private bool attemptShow;
@@ -62,7 +59,7 @@ namespace DiplomApp.ViewModels
 
         public AuthenticationViewModel(Window owner)
         {
-            this.owner = owner;
+            this.ownerWindow = owner;
         }
 
         public void OnPropertyChanged([CallerMemberName]string prop = null)
@@ -106,7 +103,7 @@ namespace DiplomApp.ViewModels
         private void RedirectToMainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp = null)
         {
             new MainWindow(username, isLocalSession, connectToWebApp).Show();
-            owner.Close();
+            ownerWindow.Close();
         }
     }
 }

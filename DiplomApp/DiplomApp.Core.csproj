@@ -143,10 +143,12 @@
     <Compile Include="Server\SetOfConstants\MessageTypes.cs" />
     <Compile Include="Server\SetOfConstants\Topics.cs" />
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
+    <Compile Include="ViewModels\Commands\ApplicationSettingsCommand.cs" />
     <Compile Include="ViewModels\Commands\AsyncCommandBase.cs" />
     <Compile Include="ViewModels\Commands\AsyncRelayCommand.cs" />
     <Compile Include="ViewModels\Commands\IAsyncCommand.cs" />
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\ApplicationSettingsWindow.xaml.cs">
       <DependentUpon>ApplicationSettingsWindow.xaml</DependentUpon>
     </Compile>

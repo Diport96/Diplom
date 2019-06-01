@@ -1,11 +1,11 @@
-﻿using System;
+﻿using DiplomApp.Views;
+using System;
 using System.Windows.Input;
 
 namespace DiplomApp.ViewModels.Commands
 {
-    class RelayCommand : ICommand
+    class ApplicationSettingsCommand : ICommand
     {
-        private readonly Action<object> execute;
         private readonly Func<object, bool> canExecute;
         public event EventHandler CanExecuteChanged
         {
@@ -13,9 +13,8 @@ namespace DiplomApp.ViewModels.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        public ApplicationSettingsCommand(Func<object, bool> canExecute = null)
         {
-            this.execute = execute;
             this.canExecute = canExecute;
         }
 
@@ -25,7 +24,7 @@ namespace DiplomApp.ViewModels.Commands
         }
         public void Execute(object parameter)
         {
-            execute(parameter);
+            new ApplicationSettingsWindow().ShowDialog();
         }
     }
 }

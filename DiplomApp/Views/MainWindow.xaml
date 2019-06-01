@@ -15,20 +15,21 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5">
-            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Width="30" Click="Application_Settings_Click">
+            <Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Width="30" Command="{Binding ApplicationSettingsCommand}">
                 <Image Source="../Resources/Settings_Icon.png"/>
             </Button>
-            <Button Name="serverStartStopButton" Content="Запуск сервера" Template="{DynamicResource ButtonStyleControlTemplate}" Click="Server_Start_Stop_Click"/>
+            <Button Template="{DynamicResource ButtonStyleControlTemplate}" Width="110"
+                    Content="{Binding ServerStartStopButtonContent}" Command="{Binding ServerStartStopCommand}"/>
         </StackPanel>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
-            <Label x:Name="HelloLabel" Content="Здравствуйте"/>
-            <Button Name="SignOutButton" Content="Выход" Template="{DynamicResource ButtonStyleControlTemplate}" Height="30" Width="60" Click="SignOut_Click"/>
+            <Label Content="{Binding UserHelloTitle}"/>
+            <Button Content="Выход" Template="{DynamicResource ButtonStyleControlTemplate}" Height="30" Width="60" Command="{Binding SignOutCommand}"/>
         </StackPanel>
         <TabControl Grid.Row="1">
             <TabItem Header="Устройства">
                 <Grid Background="AliceBlue">
                     <ScrollViewer>
-                        <ListBox Name="StackOfDevices">
+                        <ListBox Name="StackOfDevices" ItemsSource="{Binding Controllers}" SelectedItem="{Binding SelectedDevice}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -48,7 +49,8 @@
                                         <Button Grid.Column="3" 
                                                 Content="Настройки" 
                                                 Width="80" Height="25"
-                                                Click="DeviceItemSettings_Click"/>
+                                                Command="{Binding DeviceSettingsCommand}"
+                                                CommandParameter="{Binding SelectedDevice}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>

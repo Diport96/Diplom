@@ -15,14 +15,15 @@ namespace DiplomApp.Controllers
     static class ControllersFactory
     {
         private static readonly RegisteredDeviceContext database;
-        private static readonly ObservableCollection<Controller> controllers;
         private static readonly IEnumerable<Type> Types;
         private static readonly Logger logger;
+
+        public static ObservableCollection<Controller> Controllers { get; }
 
         static ControllersFactory()
         {
             database = new RegisteredDeviceContext();
-            controllers = new ObservableCollection<Controller>();
+            Controllers = new ObservableCollection<Controller>();
             Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Controller)));
             logger = LogManager.GetCurrentClassLogger();
             App.Server.ServerStoped += Server_ServerStoped;
@@ -42,27 +43,27 @@ namespace DiplomApp.Controllers
 
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                controllers.Add(controller);
+                Controllers.Add(controller);
             });
         }
         public static void Remove(string id)
         {
-            var control = controllers.SingleOrDefault(x => x.ID == id);
+            var control = Controllers.SingleOrDefault(x => x.ID == id);
             if (control == null)
                 logger.Error($"Ошибка удаления экземпляра микроконтроллера: не удалось найти экземпляр с идентификатором: {id}");
             else
                 Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
                 {
-                    controllers.Remove(control);
+                    Controllers.Remove(control);
                 });
         }
         public static IEnumerable<Controller> GetControllers()
         {
-            return controllers;
-        }
+            return Controllers;
+        } //Delete this code
         public static Controller GetById(string id)
         {
-            var res = controllers.FirstOrDefault(x => x.ID == id);
+            var res = Controllers.FirstOrDefault(x => x.ID == id);
             return res;
         }
         public static RegisteredDeviceInfo GetControllerInfo(string id)
@@ -99,7 +100,7 @@ namespace DiplomApp.Controllers
         {
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                controllers.Clear();
+                Controllers.Clear();
             });
         }
     }

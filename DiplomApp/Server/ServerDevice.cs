@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using MQTTnet.Server;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Exceptions;
+using System.Runtime.CompilerServices;
 
 namespace DiplomApp.Server
 {
@@ -19,7 +19,7 @@ namespace DiplomApp.Server
     /// Класс, предоставляющи сервре для работы по протоколу MQTT. 
     /// Инкапуслирует MQTT брокер и клиент
     /// </summary>
-    public class ServerDevice
+    public class ServerDevice : INotifyPropertyChanged
     {
         private static ServerDevice instance;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -30,15 +30,22 @@ namespace DiplomApp.Server
         private readonly IMqttClientOptions clientOptions;
         private readonly IMqttServer server;
         private readonly IMqttClient client;
+        private bool isRun;
 
         /// <summary>
         /// Событие которое вызывается при запуске сервера
         /// </summary>
         public event EventHandler ServerStarted;
+
         /// <summary>
         /// Событие, которое вызывается при остановке сервера
         /// </summary>
         public event EventHandler ServerStoped;
+
+        /// <summary>
+        /// Событие, возникающее при изменении свойства компонента
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Предоставляет экземпляр класса, является реализацией паттерна Singleton
@@ -51,14 +58,24 @@ namespace DiplomApp.Server
                 return instance;
             }
         }
+
         /// <summary>
         /// Предоставляет уникальный идентификатор для MQTT клиента
         /// </summary>
         public Guid ID { get; }
+
         /// <summary>
         /// Указывает, запущен ли сервер
         /// </summary>
-        public bool IsRun { get; private set; }
+        public bool IsRun
+        {
+            get { return isRun; }
+            private set
+            {
+                isRun = value;
+                OnPropertyChanged("IsRun");
+            }
+        }
 
         private ServerDevice()
         {
@@ -142,6 +159,7 @@ namespace DiplomApp.Server
             ServerStarted?.Invoke(this, new EventArgs());
             logger.Info("Сервер запущен");
         }
+
         /// <summary>
         /// Метод асинхронной остановки сервера
         /// </summary>
@@ -163,6 +181,7 @@ namespace DiplomApp.Server
             ServerStoped?.Invoke(this, new EventArgs());
             logger.Info("Сервер остановлен");
         }
+
         /// <summary>
         /// Отправка сообщения в формате JSON по протоколу MQTT на указанный топик
         /// </summary>
@@ -174,6 +193,7 @@ namespace DiplomApp.Server
             await client.PublishAsync(topic, jsonMessage)
                 .ConfigureAwait(false);
         }
+
         /// <summary>
         /// Отправка сообщения по протоколу MQTT на указанный топик
         /// </summary>
@@ -185,6 +205,15 @@ namespace DiplomApp.Server
             var str = JsonConvert.SerializeObject(keyValuePairs);
             await client.PublishAsync(topic, str)
                 .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Метод, вызывающийся при изменении свойства компонента
+        /// </summary>
+        /// <param name="prop">Название свойства</param>
+        public void OnPropertyChanged([CallerMemberName]string prop = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
         private void MqttMsgPublishReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
