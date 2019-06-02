@@ -1,7 +1,6 @@
 ﻿using ClientApp;
 using DiplomApp.Accounts;
 using DiplomApp.Controllers;
-using DiplomApp.Controllers.Models;
 using DiplomApp.Data;
 using DiplomApp.Server;
 using DiplomApp.ViewModels.Commands;
@@ -9,16 +8,14 @@ using DiplomApp.Views;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DiplomApp.ViewModels
 {
@@ -27,10 +24,9 @@ namespace DiplomApp.ViewModels
         private string userHelloTitle;
         private string serverStartStopButtonContent;
         private readonly Window ownerWindow;
-        private Controller selectedDevice;
         private RelayCommand signOutCommand;
-        private RelayCommand deviceSettingsCommand;
         private AsyncRelayCommand serverStartStopCommand;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public RelayCommand SignOutCommand
         {
@@ -40,20 +36,12 @@ namespace DiplomApp.ViewModels
                     (signOutCommand = new RelayCommand(obj => SignOut(ownerWindow)));
             }
         }
-        public RelayCommand DeviceSettingsCommand
-        {
-            get
-            {
-                return deviceSettingsCommand ??
-                    (deviceSettingsCommand = new RelayCommand(obj => DeviceSettings(obj as Controller), obj => false));
-            }
-        }
         public AsyncRelayCommand ServerStartStopCommand
         {
             get
             {
                 return serverStartStopCommand ??
-                    (serverStartStopCommand = new AsyncRelayCommand(obj => ServerStartStopAsync(App.Server)));
+                    (serverStartStopCommand = new AsyncRelayCommand(obj => ServerStartStopAsync(App.Server, obj as Button)));
             }
         }
         public ApplicationSettingsCommand ApplicationSettingsCommand { get; }
@@ -78,17 +66,6 @@ namespace DiplomApp.ViewModels
         }
         public bool IsLocalSession { get; private set; }
         public ObservableCollection<Controller> Controllers { get; }
-        public Controller SelectedDevice
-        {
-            get { return selectedDevice; }
-            set
-            {
-                selectedDevice = value;
-                OnPropertyChanged("SelectedDevice");
-            }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-
 
         public MainWindowViewModel(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp, Window owner)
         {
@@ -107,7 +84,6 @@ namespace DiplomApp.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
-
         private void Server_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsRun") SetServerStartStopButtonContent(App.Server.IsRun);
@@ -150,29 +126,24 @@ namespace DiplomApp.ViewModels
                 }
             }
         }
-        private async Task ServerStartStopAsync(ServerDevice server)
+        private async Task ServerStartStopAsync(ServerDevice server, Button button)
         {
+            button.IsEnabled = false;
             if (server.IsRun) await server.StopAsync();
             else await server.RunAsync();
-        }
-        private void SignOut(Window owner)
-        {
-            AccountManager.Logout();
-            new AuthentificationWindow().Show();
-            owner.Close();
-        }
-        private void DeviceSettings(Controller selectedDevice)
-        {
-            if (selectedDevice is Switch)
-                new SwitchSettingsWindow(selectedDevice.ID).ShowDialog();
-            else if (selectedDevice is Sensor)
-                new SensorSettingsWindow(selectedDevice.ID).ShowDialog();
+            button.IsEnabled = true;
         }
         private void SetServerStartStopButtonContent(bool serverIsRunningStatus)
         {
             if (serverIsRunningStatus) ServerStartStopButtonContent = "Остановить сервер";
             else ServerStartStopButtonContent = "Запустить сервер";
         }
+        private void SignOut(Window owner)
+        {
+            AccountManager.Logout();
+            new AuthentificationWindow().Show();
+            owner.Close();
+        }      
 
         ~MainWindowViewModel()
         {

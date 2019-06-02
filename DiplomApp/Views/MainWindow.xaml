@@ -19,7 +19,8 @@
                 <Image Source="../Resources/Settings_Icon.png"/>
             </Button>
             <Button Template="{DynamicResource ButtonStyleControlTemplate}" Width="110"
-                    Content="{Binding ServerStartStopButtonContent}" Command="{Binding ServerStartStopCommand}"/>
+                    Content="{Binding ServerStartStopButtonContent}" Command="{Binding ServerStartStopCommand}" 
+                    CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}"/>
         </StackPanel>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0">
             <Label Content="{Binding UserHelloTitle}"/>
@@ -29,7 +30,7 @@
             <TabItem Header="Устройства">
                 <Grid Background="AliceBlue">
                     <ScrollViewer>
-                        <ListBox Name="StackOfDevices" ItemsSource="{Binding Controllers}" SelectedItem="{Binding SelectedDevice}">
+                        <ListBox Name="StackOfDevices" ItemsSource="{Binding Controllers}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -48,9 +49,9 @@
                                         </WrapPanel>
                                         <Button Grid.Column="3" 
                                                 Content="Настройки" 
-                                                Width="80" Height="25"
-                                                Command="{Binding DeviceSettingsCommand}"
-                                                CommandParameter="{Binding SelectedDevice}"/>
+                                                Width="80" Height="25"                                              
+                                                Click="DeviceSettings_Button_Click"
+                                                />
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
