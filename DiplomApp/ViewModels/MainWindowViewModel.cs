@@ -1,6 +1,7 @@
 ﻿using ClientApp;
 using DiplomApp.Accounts;
 using DiplomApp.Controllers;
+using DiplomApp.Controllers.Models;
 using DiplomApp.Data;
 using DiplomApp.Server;
 using DiplomApp.ViewModels.Commands;
@@ -25,6 +26,7 @@ namespace DiplomApp.ViewModels
         private string serverStartStopButtonContent;
         private readonly Window ownerWindow;
         private RelayCommand signOutCommand;
+        private RelayCommand deviceSettingsCommand;
         private AsyncRelayCommand serverStartStopCommand;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -34,6 +36,14 @@ namespace DiplomApp.ViewModels
             {
                 return signOutCommand ??
                     (signOutCommand = new RelayCommand(obj => SignOut(ownerWindow)));
+            }
+        }
+        public RelayCommand DeviceSettingsCommand
+        {
+            get
+            {
+                return deviceSettingsCommand ??
+                    (deviceSettingsCommand = new RelayCommand(obj => DeviceSettings(obj as Controller)));
             }
         }
         public AsyncRelayCommand ServerStartStopCommand
@@ -138,12 +148,19 @@ namespace DiplomApp.ViewModels
             if (serverIsRunningStatus) ServerStartStopButtonContent = "Остановить сервер";
             else ServerStartStopButtonContent = "Запустить сервер";
         }
+        private void DeviceSettings(Controller device)
+        {
+            if (device is Switch)
+                new SwitchSettingsWindow(device.ID).ShowDialog();
+            else if (device is Sensor)
+                new SensorSettingsWindow(device.ID).ShowDialog();
+        }
         private void SignOut(Window owner)
         {
             AccountManager.Logout();
             new AuthentificationWindow().Show();
             owner.Close();
-        }      
+        }
 
         ~MainWindowViewModel()
         {

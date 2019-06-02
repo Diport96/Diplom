@@ -1,10 +1,7 @@
-﻿using DiplomApp.Controllers;
-using DiplomApp.Controllers.Models;
-using DiplomApp.ViewModels;
+﻿using DiplomApp.ViewModels;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace DiplomApp.Views
 {
@@ -23,16 +20,6 @@ namespace DiplomApp.Views
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel(username, isLocalSession, connectToWebApp, this);
-        }
-
-        private void DeviceSettings_Button_Click(object sender, RoutedEventArgs e)
-        {
-            var device = ((e.Source as Button).DataContext as Controller);
-
-            if (device is Switch)
-                new SwitchSettingsWindow(device.ID).ShowDialog();
-            else if (device is Sensor)
-                new SensorSettingsWindow(device.ID).ShowDialog();
-        }
+        }     
     }
 }
