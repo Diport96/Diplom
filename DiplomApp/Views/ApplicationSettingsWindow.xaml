@@ -18,30 +18,21 @@
             <WrapPanel>
                 <Label Content="URL адрес веб-сервера"/>
                 <TextBox Name="WebAppAddressTextBox"
-                    Width="180"/>
+                   Text="{Binding WebAppUrl}" Width="180"/>
             </WrapPanel>
             <Border Padding="3" Margin="3" BorderBrush="LightGray" BorderThickness="1">
                 <StackPanel>
-                    <CheckBox Name="AutoSendDataCheckBox">
+                    <CheckBox Name="AutoSendDataCheckBox" IsChecked="{Binding AutoSendData}">
                         Выполнять отправку данных автоматически
                     </CheckBox>
-                    <WrapPanel Name="AutoSendDataSettings">
+                    <WrapPanel Name="AutoSendDataSettings" IsEnabled="{Binding AutoSendData}">
                         <Label Content="Каждые"/>
-                        <ComboBox Name="AutoSendDataComboBox"
-                            SelectedIndex="0">
-                            <system:String>30 минут</system:String>
-                            <system:String>1 час</system:String>
-                            <system:String>2 часа</system:String>
-                            <system:String>5 часов</system:String>
-                            <system:String>16 часов</system:String>
-                            <system:String>1 день</system:String>
-                            <system:String>3 дня</system:String>
-                            <system:String>1 неделя</system:String>
-                        </ComboBox>
+                        <ComboBox Name="AutoSendDataComboBox" ItemsSource="{Binding AutoSendDataEvery.Keys}"
+                                  SelectedItem="{Binding SelectedAutoSendDataTime}" SelectedIndex="0"/>
                     </WrapPanel>
                 </StackPanel>
             </Border>
-            <CheckBox Name="EnableDebugInfoCheckBox">
+            <CheckBox Name="EnableDebugInfoCheckBox" IsChecked="{Binding EnableDebugInfo}">
                 Включить отладочную информацию
             </CheckBox>
         </StackPanel>
@@ -50,8 +41,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0" Click="Cancel_Button_Click"/>
-            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0" Click="OK_Button_Click"/>
+            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0" Command="{Binding CancelChangesCommand}"/>
+            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0" Command="{Binding SubmitChangesCommand}"/>
         </Grid>
     </Grid>
 </Window>

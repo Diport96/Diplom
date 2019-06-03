@@ -142,6 +142,7 @@
     <Compile Include="Server\ResponseManager.cs" />
     <Compile Include="Server\SetOfConstants\MessageTypes.cs" />
     <Compile Include="Server\SetOfConstants\Topics.cs" />
+    <Compile Include="ViewModels\ApplicationSettingsViewModel.cs" />
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
     <Compile Include="ViewModels\Commands\ApplicationSettingsCommand.cs" />
     <Compile Include="ViewModels\Commands\AsyncCommandBase.cs" />
