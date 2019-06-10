@@ -151,6 +151,7 @@
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SensorSettingsViewModel.cs" />
+    <Compile Include="ViewModels\SwitchSettingsViewModel.cs" />
     <Compile Include="Views\ApplicationSettingsWindow.xaml.cs">
       <DependentUpon>ApplicationSettingsWindow.xaml</DependentUpon>
     </Compile>
