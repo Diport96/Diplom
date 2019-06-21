@@ -267,8 +267,7 @@ namespace DiplomApp.ViewModels
         {
             var dialogWindow = new SelectSensorDialogWindow();
             if (dialogWindow.ShowDialog().Value)
-                if (dialogWindow.Answer != null)
-                    SelectedSensor = dialogWindow.Answer;
+                SelectedSensor = (dialogWindow.DataContext as SelectSensorDialogViewModel).SelectedSensor;
         }
         private void SubmitChanges()
         {
