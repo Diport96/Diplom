@@ -209,7 +209,7 @@ namespace DiplomApp.ViewModels
                     SwitchToDelaySettings = true;
                     break;
                 case SwitchControl.SwitchToSignal:
-                    SwitchToDelaySettings = true;
+                    SwitchToSignalSettings = true;
                     break;
                 default:
                     break;
