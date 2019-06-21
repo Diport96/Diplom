@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
         <WrapPanel Grid.Row="0" Margin="5">
             <Label Content="Название устройства"/>
-            <TextBox  Name="DeviceNameTextBox" Width="120"/>
+            <TextBox Width="120" Text="{Binding DeviceName}"/>
         </WrapPanel>
         <GroupBox Header="Управление переключателем" Grid.Row="1" Margin="10">
             <Grid>
@@ -28,71 +28,45 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <RadioButton Name="DefaultValueRadioButton"
-                    Content="По умолчанию" Grid.Row="0" Grid.Column="0" IsChecked="True" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
-                <RadioButton Name="SwitchDelayValueRadioButton"
+                <RadioButton x:Name="DefaultSettingsRB" IsChecked="{Binding DefaultSettings}"
+                    Content="По умолчанию" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
+                <RadioButton x:Name="SwitchToDelaySettingsRB" IsChecked="{Binding SwitchToDelaySettings}"
                     Content="Интервал времени" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="5,10,0,10" HorizontalAlignment="Left"/>
-                <RadioButton Name="SensorIdValueRadioButton"
+                <RadioButton x:Name="SwitchToSignalSettingsRB" IsChecked="{Binding SwitchToSignalSettings}"
                     Content="По датчику" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,10,0,10"/>
-                <Grid Name="DefaultOptionsGrid"
+                <Grid IsEnabled="{Binding IsChecked, ElementName=DefaultSettingsRB}"
                       Grid.Row="0" Grid.Column="1">
-                    <Button Name="EnableDisableSwitchButton" HorizontalAlignment="Left" 
-                            Height="25" Width="80"  Margin="5" Click="EnableDisableSwitchButton_Click"/>
+                    <Button Content="{Binding EnableDisableSwitchButtonContent}"
+                            Command="{Binding EnableDisableSwitchButtonCommand}"
+                            CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}"
+                            HorizontalAlignment="Left" Height="25" Width="80"  Margin="5"/>
                 </Grid>
-                <Grid Name="SwitchToDelayOptionsGrid"
+                <Grid IsEnabled="{Binding IsChecked, ElementName=SwitchToDelaySettingsRB}"
                     Grid.Row="1" Grid.Column="1" Margin="5,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>                    
+                    </Grid.ColumnDefinitions>
                     <WrapPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ComboBox Name="HoursComboBox"
-                            SelectedIndex="0">
-                            <System:Int32>0</System:Int32>
-                            <System:Int32>1</System:Int32>
-                            <System:Int32>2</System:Int32>
-                            <System:Int32>4</System:Int32>
-                            <System:Int32>6</System:Int32>
-                            <System:Int32>8</System:Int32>
-                            <System:Int32>12</System:Int32>
-                            <System:Int32>16</System:Int32>
-                        </ComboBox>
+                        <TextBox Text="{Binding SwitchDelayHours}" Width="35"/>
                         <Label Content="Часов"/>
                     </WrapPanel>
                     <WrapPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ComboBox Name="MinutesComboBox" SelectedIndex="0">
-                            <System:Int32></System:Int32>
-                            <System:Int32>10</System:Int32>
-                            <System:Int32>20</System:Int32>
-                            <System:Int32>30</System:Int32>
-                            <System:Int32>40</System:Int32>
-                            <System:Int32>50</System:Int32>
-                            <System:Int32>60</System:Int32>
-                        </ComboBox>
+                        <TextBox Text="{Binding SwitchDelayMinutes}" Width="35"/>
                         <Label Content="Минут"/>
                     </WrapPanel>
                     <WrapPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ComboBox Name="SecondsComboBox" SelectedIndex="0">
-                            <System:Int32>0</System:Int32>
-                            <System:Int32>10</System:Int32>
-                            <System:Int32>20</System:Int32>
-                            <System:Int32>30</System:Int32>
-                            <System:Int32>40</System:Int32>
-                            <System:Int32>50</System:Int32>
-                            <System:Int32>60</System:Int32>
-                        </ComboBox>
+                        <TextBox Text="{Binding SwitchDelaySeconds}" Width="35"/>
                         <Label Content="Секунд"/>
                     </WrapPanel>
-                    <WrapPanel Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">                        
-                        <ComboBox Name="SwitchToDelayComboBox" SelectedIndex="0">
-                            <System:String>Включить</System:String>
-                            <System:String>Выключить</System:String>
-                        </ComboBox>
+                    <WrapPanel Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ComboBox ItemsSource="{Binding ChangeSwitchValueTo.Keys}" SelectedIndex="0" SelectedItem="{Binding SelectedChangeSwitchValueTo}"
+                                  Width="85"/>
                     </WrapPanel>
                 </Grid>
-                <Grid Name="SensorIdOptionsGrid" 
+                <Grid IsEnabled="{Binding IsChecked, ElementName=SwitchToSignalSettingsRB}"
                     Grid.Row="2" Grid.Column="1" Margin="5,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -101,14 +75,13 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Выберите устройство" Grid.Column="0" VerticalAlignment="Center"/>
-                    <Button Content="..." Grid.Column="1" Height="20" Width="30" FontWeight="Bold" HorizontalAlignment="Center" Click="SelectSensorId_Click"/>
-                    <Label Name="DeviceNameLabel"
+                    <Button Content="..." Command="{Binding SelectSensorCommand}"
+                            Grid.Column="1" Height="20" Width="30" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <Label Name="DeviceNameLabel" Content="{Binding SelectedSensor.Name}"
                            Grid.Column="2" HorizontalAlignment="Center" Margin="5"/>
-                    <WrapPanel Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">                        
-                        <ComboBox Name="SensorIdComboBox" SelectedIndex="0">
-                            <System:String>Включить</System:String>
-                            <System:String>Выключить</System:String>
-                        </ComboBox>
+                    <WrapPanel Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
+                        <ComboBox ItemsSource="{Binding ChangeSwitchValueTo.Keys}"  SelectedIndex="0" SelectedItem="{Binding SelectedChangeSwitchValueTo}"
+                                  Width="85"/>
                     </WrapPanel>
                 </Grid>
                 <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gray" BorderThickness="0.6"/>
@@ -120,8 +93,10 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0" Click="Cancel_Button_Click"/>
-            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0" Click="OK_Button_Click"/>
+            <Button Content="Отмена" Command="{Binding CancelChangesCommand}"
+                    Width="60" Grid.Column="0" Margin="0,0,5,0"/>
+            <Button Content="ОК" Command="{Binding SubmitChangesCommand}"
+                    Width="60" Grid.Column="1" Margin="5,0,0,0"/>
         </Grid>
     </Grid>
 </Window>

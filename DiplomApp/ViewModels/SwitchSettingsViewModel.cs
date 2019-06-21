@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,21 +18,31 @@ namespace DiplomApp.ViewModels
 {
     class SwitchSettingsViewModel : INotifyPropertyChanged
     {
+        #region Поля
+
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly Window owner;
         private readonly RegisteredDeviceContext database;
         private readonly RegisteredDeviceInfo deviceInfo;
         private readonly Switch @switch;
-        private AsyncRelayCommand enableDisableSwitchButtonCommand;
-        private RelayCommand selectSensorCommand;
 
-        private string deviceName;
-        private string enableDisableSwitchButtonContent;
         private bool defaultSettings = false;
         private bool switchToDelaySettings = false;
         private bool switchToSignalSettings = false;
+
+        private int switchDelayHours;
+        private int switchDelayMinutes;
+        private int switchDelaySeconds;
+
+        private string deviceName;
+        private string enableDisableSwitchButtonContent;
         private SwitchControl control;
         private Controller selectedSensor;
+        private string selectedChangeSwitchValueTo;
+
+        #endregion
+
+        #region Свойства
 
         public string DeviceName
         {
@@ -50,9 +59,34 @@ namespace DiplomApp.ViewModels
             set
             {
                 enableDisableSwitchButtonContent = value;
-                OnPropertyChanged("EnableDisableButtonContent");
+                OnPropertyChanged("EnableDisableSwitchButtonContent");
             }
         }
+        public Controller SelectedSensor
+        {
+            get { return selectedSensor; }
+            set
+            {
+                selectedSensor = value;
+                OnPropertyChanged("SelectedSensor");
+            }
+        }
+        public Dictionary<string, bool> ChangeSwitchValueTo { get; }
+        = new Dictionary<string, bool>()
+        {
+            { "Включить", true },
+            { "Выключить", false }
+        };
+        public string SelectedChangeSwitchValueTo
+        {
+            get { return selectedChangeSwitchValueTo; }
+            set
+            {
+                selectedChangeSwitchValueTo = value;
+                OnPropertyChanged("SelectedChangeSwitchValueTo");
+            }
+        }
+
         public bool DefaultSettings
         {
             get { return defaultSettings; }
@@ -83,15 +117,44 @@ namespace DiplomApp.ViewModels
                 OnPropertyChanged("SwitchToSignalSettings");
             }
         }
-        public Controller SelectedSensor
+
+        public int SwitchDelayHours
         {
-            get { return selectedSensor; }
+            get { return switchDelayHours; }
             set
             {
-                selectedSensor = value;
-                OnPropertyChanged("SelectedSensor");
+                switchDelayHours = value;
+                OnPropertyChanged("SwitchDelayHours");
             }
         }
+        public int SwitchDelayMinutes
+        {
+            get { return switchDelayMinutes; }
+            set
+            {
+                switchDelayMinutes = value;
+                OnPropertyChanged("SwitchDelayMinutes");
+            }
+        }
+        public int SwitchDelaySeconds
+        {
+            get { return switchDelaySeconds; }
+            set
+            {
+                switchDelaySeconds = value;
+                OnPropertyChanged("SwitchDelaySeconds");
+            }
+        }
+
+        #endregion
+
+        #region Команды
+
+        private AsyncRelayCommand enableDisableSwitchButtonCommand;
+        private RelayCommand selectSensorCommand;
+        private RelayCommand submitChangesCommand;
+        private RelayCommand cancelChangesCommand;
+
         public AsyncRelayCommand EnableDisableSwitchButtonCommand
         {
             get
@@ -108,7 +171,24 @@ namespace DiplomApp.ViewModels
                     (selectSensorCommand = new RelayCommand(obj => SelectSensor()));
             }
         }
+        public RelayCommand SubmitChangesCommand
+        {
+            get
+            {
+                return submitChangesCommand ??
+                    (submitChangesCommand = new RelayCommand(obj => SubmitChanges()));
+            }
+        }
+        public RelayCommand CancelChangesCommand
+        {
+            get
+            {
+                return cancelChangesCommand ??
+                    (cancelChangesCommand = new RelayCommand(obj => CancelChanges()));
+            }
+        }
 
+        #endregion
 
         public SwitchSettingsViewModel(Window owner, string deviceId)
         {
@@ -134,8 +214,33 @@ namespace DiplomApp.ViewModels
                 default:
                     break;
             }
+
+            SetEnableDisableSwitchButtonState(@switch.Value);
+            if (deviceInfo.Options.DelayToSwitch.HasValue)
+            {
+                var time = TimeSpan.FromMilliseconds(deviceInfo.Options.DelayToSwitch.Value);
+                SwitchDelayHours = time.Hours;
+                SwitchDelayMinutes = time.Minutes;
+                SwitchDelaySeconds = time.Seconds;
+            }
+            else
+            {
+                SwitchDelayHours = 0;
+                SwitchDelayMinutes = 0;
+                SwitchDelaySeconds = 0;
+            }
+            if (deviceInfo.Options.SensorId != null)
+            {
+                SelectedSensor = ControllersFactory.GetById(deviceInfo.Options.SensorId);
+            }
+            else
+            {
+                selectedSensor = null;
+            }
+            SelectedChangeSwitchValueTo = ChangeSwitchValueTo.First().Key;
         }
 
+        #region Методы
 
         public void OnPropertyChanged([CallerMemberName]string prop = null)
         {
@@ -163,21 +268,29 @@ namespace DiplomApp.ViewModels
             var dialogWindow = new SelectSensorDialogWindow();
             if (dialogWindow.ShowDialog().Value)
                 if (dialogWindow.Answer != null)
-                    selectedSensor = dialogWindow.Answer;
+                    SelectedSensor = dialogWindow.Answer;
         }
-
-        // Next
         private void SubmitChanges()
         {
             deviceInfo.Name = DeviceName;
-            database.SaveChanges();
             @switch.Name = DeviceName;
-            database.SwitchOptions.First(x => x.ID == deviceInfo.ID);
 
             deviceInfo.Options.Control = control;
-           
+            deviceInfo.Options.DelayToSwitch = (int)new TimeSpan(SwitchDelayHours, SwitchDelayMinutes, SwitchDelaySeconds).TotalMilliseconds;
+            if (SelectedSensor != null) deviceInfo.Options.SensorId = selectedSensor.ID;
+            else deviceInfo.Options.SensorId = default;
+            deviceInfo.Options.ValueTo = ChangeSwitchValueTo[SelectedChangeSwitchValueTo];
 
+            database.SaveChanges();
+            var response = ResponseManager.SetSwitchOptionsToDictionary(@switch.ID, deviceInfo.Options);
+            App.Server.SendMessage(response, Server.SetOfConstants.Topics.SWITCHES).GetAwaiter().GetResult();
             owner.DialogResult = true;
         }
+        private void CancelChanges()
+        {
+            owner.DialogResult = false;
+        }
+
+        #endregion
     }
 }
