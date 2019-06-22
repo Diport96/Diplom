@@ -159,6 +159,9 @@
     <Compile Include="Views\AuthenticationWindow.xaml.cs">
       <DependentUpon>AuthenticationWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Resources\CircularProgressBar.xaml.cs">
+      <DependentUpon>CircularProgressBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SelectSensorDialogWindow.xaml.cs">
       <DependentUpon>SelectSensorDialogWindow.xaml</DependentUpon>
     </Compile>
@@ -168,7 +171,7 @@
     <Compile Include="Views\SwitchSettingsWindow.xaml.cs">
       <DependentUpon>SwitchSettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\Resources\Templates.xaml">
+    <Page Include="Views\Resources\CircularProgressBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
