@@ -100,17 +100,17 @@ namespace DiplomApp.ViewModels
             //!!! Await exception handle
             if (await API.LoginAsync(login, password))
             {
-                if (!AccountManager.CheckIfAccountExists(login))
+                if (! await AccountManager.CheckIfAccountExists(login))
                 {
                     var acc = AccountManager.CreateAccount(login, password);
                 }
 
-                if (AccountManager.Login(login, password))
+                if (await AccountManager.LoginAsync(login, password))
                     RedirectToMainWindow(login, false);
             }
             else
             {
-                if (AccountManager.Login(login, password))
+                if (await AccountManager.LoginAsync(login, password))
                 {
                     async Task<bool> connectToWebApp() => await API.LoginAsync(login, password);
                     RedirectToMainWindow(login, true, connectToWebApp);

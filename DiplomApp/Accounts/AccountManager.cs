@@ -2,6 +2,7 @@
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
@@ -59,15 +60,17 @@ namespace DiplomApp.Accounts
                 return user;
             }
         }
+
         /// <summary>
         /// Проверяет, существует ли аккаунт с указаным логином
         /// </summary>
         /// <param name="login">Логин от аккаунта</param>
         /// <returns>Существует ли аккаунт с указаным логином</returns>
-        public static bool CheckIfAccountExists(string login)
+        public static async Task<bool> CheckIfAccountExists(string login)
         {
-            return database.UserAccounts.Any(x => x.Login == login);
+            return await database.UserAccounts.AnyAsync(x => x.Login == login);
         }
+
         /// <summary>
         /// Выполняет аутентификацию пользователя
         /// </summary>
@@ -93,8 +96,36 @@ namespace DiplomApp.Accounts
                 return true;
             }
             else return false;
-
         }
+
+        /// <summary>
+        /// Выполняет аутентификацию пользователя асинхронно
+        /// </summary>
+        /// <param name="login">Логин от аккаунта</param>
+        /// <param name="password">Пароль от аккаунта</param>
+        /// <returns>Удалоь ли выполнить аутентификацию</returns>
+        public static async Task<bool> LoginAsync(string login, string password)
+        {
+            UserAccount result;
+
+            try
+            {
+                result = await AuthenticateUserAsync(login, password);
+            }
+            catch (SqlException e)
+            {
+                logger.Fatal(e, e.Message);
+                result = await AuthenticateUserAsync(login, password);
+            }
+
+            if (result != null)
+            {
+                CurrentUser = result;
+                return true;
+            }
+            else return false;
+        }
+
         /// <summary>
         /// Выполняет выход из учетной записи пользователя
         /// </summary>
@@ -102,10 +133,30 @@ namespace DiplomApp.Accounts
         {
             CurrentUser = null;
         }
+
         private static UserAccount AuthenticateUser(string login, string password)
         {
-            // Exception of create database error code: -2146232060
+            // !!! Exception of create database error code: -2146232060
             UserAccount userAccount = database.UserAccounts.FirstOrDefault(x => x.Login == login);
+            if (userAccount != null)
+            {
+                using (var deriveBytes = new Rfc2898DeriveBytes(password, userAccount.Salt))
+                {
+                    byte[] newKey = deriveBytes.GetBytes(20);
+
+                    if (!newKey.SequenceEqual(userAccount.Key))
+                        return null;
+                }
+
+                return userAccount;
+            }
+
+            return null;
+        }
+        private static async Task<UserAccount> AuthenticateUserAsync(string login, string password)
+        {
+            // !!! Exception of create database error code: -2146232060
+            UserAccount userAccount = await database.UserAccounts.FirstOrDefaultAsync(x => x.Login == login);
             if (userAccount != null)
             {
                 using (var deriveBytes = new Rfc2898DeriveBytes(password, userAccount.Salt))
