@@ -188,6 +188,7 @@ namespace DiplomApp.Server
         /// <param name="jsonMessage">Сообщение в формате JSON</param>
         /// <param name="topic">Топик, на который происходит отправка сообщения</param>
         /// <returns></returns>
+
         public async Task SendMessage(string jsonMessage, string topic)
         {
             await client.PublishAsync(topic, jsonMessage)

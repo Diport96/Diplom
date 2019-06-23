@@ -35,7 +35,7 @@ namespace DiplomApp.ViewModels
             get
             {
                 return signOutCommand ??
-                    (signOutCommand = new RelayCommand(obj => SignOut(ownerWindow)));
+                    (signOutCommand = new RelayCommand(obj => SignOut(ownerWindow, App.Server)));
             }
         }
         public RelayCommand DeviceSettingsCommand
@@ -155,8 +155,9 @@ namespace DiplomApp.ViewModels
             else if (device is Sensor)
                 new SensorSettingsWindow(device.ID).ShowDialog();
         }
-        private void SignOut(Window owner)
+        private void SignOut(Window owner, ServerDevice server)
         {
+            if (server.IsRun) server.StopAsync().Wait();
             AccountManager.Logout();
             new AuthentificationWindow().Show();
             owner.Close();
