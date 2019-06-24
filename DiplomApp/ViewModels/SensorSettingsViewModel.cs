@@ -1,14 +1,12 @@
 ﻿using DiplomApp.Controllers;
 using DiplomApp.Data;
 using DiplomApp.ViewModels.Commands;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace DiplomApp.ViewModels
 {
-    class SensorSettingsViewModel : INotifyPropertyChanged
+    class SensorSettingsViewModel : BaseViewModel
     {
         private readonly Window owner;
         private string deviceName;
@@ -16,7 +14,6 @@ namespace DiplomApp.ViewModels
         private readonly RegisteredDeviceInfo deviceInfo;
         private RelayCommand submitChangesCommand;
         private RelayCommand cancelChangesCommand;
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public string DeviceName
         {
@@ -50,11 +47,6 @@ namespace DiplomApp.ViewModels
             database = new RegisteredDeviceContext();
             deviceInfo = database.RegisteredDevices.First(x => x.ID == deviceId);
             DeviceName = deviceInfo.Name;
-        }
-
-        public void OnPropertyChanged([CallerMemberName]string prop = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
         private void SubmitChanges()

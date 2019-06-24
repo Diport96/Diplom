@@ -1,13 +1,11 @@
 ﻿using DiplomApp.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace DiplomApp.ViewModels
 {
-    class ApplicationSettingsViewModel : INotifyPropertyChanged
+    class ApplicationSettingsViewModel : BaseViewModel
     {
         private readonly Window owner;
         private bool autoSendData;
@@ -16,7 +14,6 @@ namespace DiplomApp.ViewModels
         private string selectedAutoSendDataTime;
         private RelayCommand submitChangesCommand;
         private RelayCommand cancelChangesCommand;
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public Dictionary<string, TimeSpan> AutoSendDataEvery { get; }
             = new Dictionary<string, TimeSpan>()
@@ -91,10 +88,6 @@ namespace DiplomApp.ViewModels
             EnableDebugInfo = Properties.Settings.Default.EnableDebugInfo;
         }
 
-        public void OnPropertyChanged([CallerMemberName]string prop = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
         private void SubmitChanges()
         {
             Properties.Settings.Default.WebAppUrl = WebAppUrl;

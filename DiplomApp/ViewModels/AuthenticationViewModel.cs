@@ -3,15 +3,13 @@ using DiplomApp.Accounts;
 using DiplomApp.ViewModels.Commands;
 using DiplomApp.Views;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace DiplomApp.ViewModels
 {
-    class AuthenticationViewModel : INotifyPropertyChanged
+    class AuthenticationViewModel : BaseViewModel
     {
         private AsyncRelayCommand signInCommand;
         private readonly Window ownerWindow;
@@ -19,8 +17,7 @@ namespace DiplomApp.ViewModels
         private string attemptMessage;
         private bool attemptShow;
         private bool isSignInButtonEnabled;
-        private Visibility circualrBarIsVisible;
-        public event PropertyChangedEventHandler PropertyChanged;
+        private Visibility circualrBarIsVisible;        
 
         public string AttemptMessage
         {
@@ -82,11 +79,7 @@ namespace DiplomApp.ViewModels
             IsSignInButtonEnabled = true;
             CircualrBarIsVisible = Visibility.Hidden;
         }
-
-        public void OnPropertyChanged([CallerMemberName]string prop = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
+        
         private async Task SignIn(string login, string password)
         {
             BeginProcessing();   

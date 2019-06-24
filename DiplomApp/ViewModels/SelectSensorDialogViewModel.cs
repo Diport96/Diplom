@@ -8,7 +8,7 @@ using System.Windows;
 namespace DiplomApp.ViewModels
 {
     // Реализовать ObservableCollection. MVVM dialog window whth answer
-    class SelectSensorDialogViewModel
+    class SelectSensorDialogViewModel : BaseViewModel
     {
         private readonly Window owner;
         private RelayCommand submitSelectionCommand;

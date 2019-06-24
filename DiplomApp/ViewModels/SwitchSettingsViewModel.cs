@@ -6,9 +6,7 @@ using DiplomApp.ViewModels.Commands;
 using DiplomApp.Views;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,11 +14,10 @@ using static DiplomApp.Controllers.SwitchOptions;
 
 namespace DiplomApp.ViewModels
 {
-    class SwitchSettingsViewModel : INotifyPropertyChanged
+    class SwitchSettingsViewModel : BaseViewModel
     {
         #region Поля
 
-        public event PropertyChangedEventHandler PropertyChanged;
         private readonly Window owner;
         private readonly RegisteredDeviceContext database;
         private readonly RegisteredDeviceInfo deviceInfo;
@@ -241,11 +238,6 @@ namespace DiplomApp.ViewModels
         }
 
         #region Методы
-
-        public void OnPropertyChanged([CallerMemberName]string prop = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
 
         private async Task EnableDisableSwitchButton(Button button)
         {

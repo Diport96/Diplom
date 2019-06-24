@@ -12,7 +12,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,15 +19,14 @@ using System.Windows.Controls;
 
 namespace DiplomApp.ViewModels
 {
-    class MainWindowViewModel : INotifyPropertyChanged
+    class MainWindowViewModel : BaseViewModel
     {
         private string userHelloTitle;
         private string serverStartStopButtonContent;
         private readonly Window ownerWindow;
         private RelayCommand signOutCommand;
         private RelayCommand deviceSettingsCommand;
-        private AsyncRelayCommand serverStartStopCommand;
-        public event PropertyChangedEventHandler PropertyChanged;
+        private AsyncRelayCommand serverStartStopCommand;        
 
         public RelayCommand SignOutCommand
         {
@@ -89,11 +87,7 @@ namespace DiplomApp.ViewModels
             App.Server.PropertyChanged += Server_PropertyChanged;
             SetServerStartStopButtonContent(App.Server.IsRun);
         }
-
-        public void OnPropertyChanged([CallerMemberName]string prop = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
+       
         private void Server_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsRun") SetServerStartStopButtonContent(App.Server.IsRun);

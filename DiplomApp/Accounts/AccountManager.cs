@@ -27,6 +27,7 @@ namespace DiplomApp.Accounts
         static AccountManager()
         {
             database = new UserAccountContext();
+            database.Database.CreateIfNotExists();
         }
 
         /// <summary>
