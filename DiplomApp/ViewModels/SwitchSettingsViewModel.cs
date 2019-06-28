@@ -18,7 +18,6 @@ namespace DiplomApp.ViewModels
     {
         #region Поля
 
-        private readonly Window owner;
         private readonly RegisteredDeviceContext database;
         private readonly RegisteredDeviceInfo deviceInfo;
         private readonly Switch @switch;
@@ -187,9 +186,9 @@ namespace DiplomApp.ViewModels
 
         #endregion
 
-        public SwitchSettingsViewModel(Window owner, string deviceId)
+        public SwitchSettingsViewModel(string deviceId, Action closingWindow, Action<bool> dialogResultWindow)
+            : base(closingWindow, dialogResultWindow)
         {
-            this.owner = owner;
             database = new RegisteredDeviceContext();
             deviceInfo = database.RegisteredDevices.First(x => x.ID == deviceId);
             database.SwitchOptions.First(x => x.ID == deviceInfo.ID);
@@ -275,11 +274,11 @@ namespace DiplomApp.ViewModels
             database.SaveChanges();
             var response = ResponseManager.SetSwitchOptionsToDictionary(@switch.ID, deviceInfo.Options);
             App.Server.SendMessage(response, Server.SetOfConstants.Topics.SWITCHES).GetAwaiter().GetResult();
-            owner.DialogResult = true;
+            dialogResultWindowAction(true);
         }
         private void CancelChanges()
         {
-            owner.DialogResult = false;
+            dialogResultWindowAction(false);
         }
 
         #endregion

@@ -1,21 +1,6 @@
-﻿using DiplomApp.Controllers;
-using DiplomApp.Controllers.Models;
-using DiplomApp.Data;
-using DiplomApp.Server;
-using DiplomApp.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DiplomApp.ViewModels;
+using DiplomApp.ViewModels.Extensions;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DiplomApp.Views
 {
@@ -31,7 +16,7 @@ namespace DiplomApp.Views
         public SwitchSettingsWindow(string deviceId)
         {
             InitializeComponent();
-            DataContext = new SwitchSettingsViewModel(this, deviceId);
+            DataContext = new SwitchSettingsViewModel(deviceId, this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
         }
     }
 }

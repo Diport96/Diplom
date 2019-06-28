@@ -1,4 +1,5 @@
 ﻿using DiplomApp.ViewModels;
+using DiplomApp.ViewModels.Extensions;
 using System.Windows;
 
 namespace DiplomApp.Views
@@ -15,7 +16,7 @@ namespace DiplomApp.Views
         public SensorSettingsWindow(string deviceId)
         {
             InitializeComponent();
-            DataContext = new SensorSettingsViewModel(this, deviceId);
-        }      
+            DataContext = new SensorSettingsViewModel(deviceId, this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
+        }
     }
 }

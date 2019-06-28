@@ -7,7 +7,6 @@ namespace DiplomApp.ViewModels
 {
     class ApplicationSettingsViewModel : BaseViewModel
     {
-        private readonly Window owner;
         private bool autoSendData;
         private bool enableDebugInfo;
         private string webAppUrl;
@@ -80,9 +79,9 @@ namespace DiplomApp.ViewModels
             }
         }
 
-        public ApplicationSettingsViewModel(Window owner)
+        public ApplicationSettingsViewModel(Action closingWindow, Action<bool> dialogResultWindow)
+            : base(closingWindow, dialogResultWindow)
         {
-            this.owner = owner;
             WebAppUrl = Properties.Settings.Default.WebAppUrl;
             AutoSendData = Properties.Settings.Default.AutoSendDataToWebApp;
             EnableDebugInfo = Properties.Settings.Default.EnableDebugInfo;
@@ -96,11 +95,11 @@ namespace DiplomApp.ViewModels
             Properties.Settings.Default.EnableDebugInfo = EnableDebugInfo;
 
             Properties.Settings.Default.Save();
-            owner.DialogResult = true;
+            dialogResultWindowAction(true);
         }
         private void CancelChanges()
         {
-            owner.DialogResult = false;
+            dialogResultWindowAction(false);
         }
     }
 }

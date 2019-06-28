@@ -1,6 +1,7 @@
 ﻿using DiplomApp.Controllers;
 using DiplomApp.Controllers.Models;
 using DiplomApp.ViewModels.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -10,7 +11,6 @@ namespace DiplomApp.ViewModels
     // Реализовать ObservableCollection. MVVM dialog window whth answer
     class SelectSensorDialogViewModel : BaseViewModel
     {
-        private readonly Window owner;
         private RelayCommand submitSelectionCommand;
         private RelayCommand cancelSelectionCommand;
 
@@ -33,9 +33,9 @@ namespace DiplomApp.ViewModels
         public IEnumerable<Controller> Sensors { get; }
         public Controller SelectedSensor { get; set; }
 
-        public SelectSensorDialogViewModel(Window owner)
+        public SelectSensorDialogViewModel(Action closingWindow, Action<bool> dialogResultWindow)
+            : base(closingWindow, dialogResultWindow)
         {
-            this.owner = owner;
             Sensors = ControllersFactory.GetControllers().Where(x => x is Sensor);
         }
 
@@ -43,12 +43,12 @@ namespace DiplomApp.ViewModels
         {
             if (SelectedSensor != null)
             {
-                owner.DialogResult = true;
+                dialogResultWindowAction(true);
             }
         }
         private void CancelSelection()
         {
-            owner.DialogResult = false;
+            dialogResultWindowAction(false);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DiplomApp.ViewModels;
+using DiplomApp.ViewModels.Extensions;
 using System.Windows;
 
 namespace DiplomApp.Views
@@ -14,7 +15,7 @@ namespace DiplomApp.Views
         public AuthentificationWindow()
         {
             InitializeComponent();
-            DataContext = new AuthenticationViewModel(this);
+            DataContext = new AuthenticationViewModel(this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
         }
     }
 }

@@ -12,12 +12,11 @@ namespace DiplomApp.ViewModels
     class AuthenticationViewModel : BaseViewModel
     {
         private AsyncRelayCommand signInCommand;
-        private readonly Window ownerWindow;
         private string login;
         private string attemptMessage;
         private bool attemptShow;
         private bool isSignInButtonEnabled;
-        private Visibility circualrBarIsVisible;        
+        private Visibility circualrBarIsVisible;
 
         public string AttemptMessage
         {
@@ -73,16 +72,16 @@ namespace DiplomApp.ViewModels
             }
         }
 
-        public AuthenticationViewModel(Window owner)
+        public AuthenticationViewModel(Action closingWindow, Action<bool> dialogResultWindow)
+            : base(closingWindow, dialogResultWindow)
         {
-            ownerWindow = owner;
             IsSignInButtonEnabled = true;
             CircualrBarIsVisible = Visibility.Hidden;
         }
-        
+
         private async Task SignIn(string login, string password)
         {
-            BeginProcessing();   
+            BeginProcessing();
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
                 AttemptMessage = "Поля логина и пароля не должны быть пустыми";
@@ -93,7 +92,7 @@ namespace DiplomApp.ViewModels
             //!!! Await exception handle
             if (await API.LoginAsync(login, password))
             {
-                if (! await AccountManager.CheckIfAccountExists(login))
+                if (!await AccountManager.CheckIfAccountExists(login))
                 {
                     var acc = AccountManager.CreateAccount(login, password);
                 }
@@ -119,7 +118,7 @@ namespace DiplomApp.ViewModels
         private void RedirectToMainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp = null)
         {
             new MainWindow(username, isLocalSession, connectToWebApp).Show();
-            ownerWindow.Close();
+            closingWindowAction();
         }
         private void BeginProcessing()
         {

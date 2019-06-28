@@ -1,4 +1,5 @@
 ﻿using DiplomApp.ViewModels;
+using DiplomApp.ViewModels.Extensions;
 using System.Windows;
 
 namespace DiplomApp.Views
@@ -14,7 +15,7 @@ namespace DiplomApp.Views
         public SelectSensorDialogWindow()
         {
             InitializeComponent();
-            DataContext = new SelectSensorDialogViewModel(this);
+            DataContext = new SelectSensorDialogViewModel(this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
         }
     }
 }

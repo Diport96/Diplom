@@ -1,6 +1,7 @@
 ﻿using DiplomApp.Controllers;
 using DiplomApp.Data;
 using DiplomApp.ViewModels.Commands;
+using System;
 using System.Linq;
 using System.Windows;
 
@@ -8,7 +9,6 @@ namespace DiplomApp.ViewModels
 {
     class SensorSettingsViewModel : BaseViewModel
     {
-        private readonly Window owner;
         private string deviceName;
         private readonly RegisteredDeviceContext database;
         private readonly RegisteredDeviceInfo deviceInfo;
@@ -41,9 +41,9 @@ namespace DiplomApp.ViewModels
             }
         }
 
-        public SensorSettingsViewModel(Window owner, string deviceId)
+        public SensorSettingsViewModel(string deviceId, Action closingWindow, Action<bool> dialogResultWindow)
+            : base(closingWindow, dialogResultWindow)
         {
-            this.owner = owner;
             database = new RegisteredDeviceContext();
             deviceInfo = database.RegisteredDevices.First(x => x.ID == deviceId);
             DeviceName = deviceInfo.Name;
@@ -55,11 +55,11 @@ namespace DiplomApp.ViewModels
             database.SaveChanges();
             ControllersFactory.GetById(deviceInfo.ID).Name = DeviceName;
 
-            owner.DialogResult = true;
+            dialogResultWindowAction(true);
         }
         private void CancelChanges()
         {
-            owner.DialogResult = false;
+            dialogResultWindowAction(false);
         }
     }
 }

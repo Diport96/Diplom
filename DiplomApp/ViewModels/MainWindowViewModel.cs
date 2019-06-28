@@ -23,17 +23,16 @@ namespace DiplomApp.ViewModels
     {
         private string userHelloTitle;
         private string serverStartStopButtonContent;
-        private readonly Window ownerWindow;
         private RelayCommand signOutCommand;
         private RelayCommand deviceSettingsCommand;
-        private AsyncRelayCommand serverStartStopCommand;        
+        private AsyncRelayCommand serverStartStopCommand;
 
         public RelayCommand SignOutCommand
         {
             get
             {
                 return signOutCommand ??
-                    (signOutCommand = new RelayCommand(obj => SignOut(ownerWindow, App.Server)));
+                    (signOutCommand = new RelayCommand(obj => SignOut(App.Server)));
             }
         }
         public RelayCommand DeviceSettingsCommand
@@ -75,9 +74,9 @@ namespace DiplomApp.ViewModels
         public bool IsLocalSession { get; private set; }
         public ObservableCollection<Controller> Controllers { get; }
 
-        public MainWindowViewModel(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp, Window owner)
+        public MainWindowViewModel(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp, Action closingWindow, Action<bool> dialogResultWindow)
+            : base(closingWindow, dialogResultWindow)
         {
-            ownerWindow = owner;
             UserHelloTitle = $"Здравствуйте {username}";
             IsLocalSession = isLocalSession;
             ApplicationSettingsCommand = new ApplicationSettingsCommand();
@@ -87,7 +86,7 @@ namespace DiplomApp.ViewModels
             App.Server.PropertyChanged += Server_PropertyChanged;
             SetServerStartStopButtonContent(App.Server.IsRun);
         }
-       
+
         private void Server_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsRun") SetServerStartStopButtonContent(App.Server.IsRun);
@@ -149,12 +148,12 @@ namespace DiplomApp.ViewModels
             else if (device is Sensor)
                 new SensorSettingsWindow(device.ID).ShowDialog();
         }
-        private void SignOut(Window owner, ServerDevice server)
+        private void SignOut(ServerDevice server)
         {
             if (server.IsRun) server.StopAsync().Wait();
             AccountManager.Logout();
             new AuthentificationWindow().Show();
-            owner.Close();
+            closingWindowAction();
         }
 
         ~MainWindowViewModel()

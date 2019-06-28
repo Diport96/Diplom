@@ -155,8 +155,7 @@ namespace DiplomApp.Accounts
             return null;
         }
         private static async Task<UserAccount> AuthenticateUserAsync(string login, string password)
-        {
-            // !!! Exception of create database error code: -2146232060
+        {            
             UserAccount userAccount = await database.UserAccounts.FirstOrDefaultAsync(x => x.Login == login);
             if (userAccount != null)
             {

@@ -150,6 +150,7 @@
     <Compile Include="ViewModels\Commands\AsyncRelayCommand.cs" />
     <Compile Include="ViewModels\Commands\IAsyncCommand.cs" />
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
+    <Compile Include="ViewModels\Extensions\WindowExtensions.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SelectSensorDialogViewModel.cs" />
     <Compile Include="ViewModels\SensorSettingsViewModel.cs" />

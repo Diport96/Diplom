@@ -1,4 +1,5 @@
 ﻿using DiplomApp.ViewModels;
+using DiplomApp.ViewModels.Extensions;
 using System.Windows;
 
 namespace DiplomApp.Views
@@ -14,7 +15,7 @@ namespace DiplomApp.Views
         public ApplicationSettingsWindow()
         {
             InitializeComponent();
-            DataContext = new ApplicationSettingsViewModel(this);
+            DataContext = new ApplicationSettingsViewModel(this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
         }
     }
 }

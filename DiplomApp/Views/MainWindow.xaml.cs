@@ -1,4 +1,5 @@
 ﻿using DiplomApp.ViewModels;
+using DiplomApp.ViewModels.Extensions;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,7 +20,7 @@ namespace DiplomApp.Views
         public MainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp)
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel(username, isLocalSession, connectToWebApp, this);
-        }     
+            DataContext = new MainWindowViewModel(username, isLocalSession, connectToWebApp, this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
+        }
     }
 }
