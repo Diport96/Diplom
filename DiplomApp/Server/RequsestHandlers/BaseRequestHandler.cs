@@ -11,11 +11,9 @@ namespace DiplomApp.Server.RequsestHandlers
 
         static BaseRequestHandler()
         {
-            var interfaceName = typeof(BaseRequestHandler).Name;
-            var types = Assembly.GetExecutingAssembly().GetTypes().Where
-                (x => x.GetInterface(interfaceName) != null && x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
-            SupportedRequestHandlers = types.Where
-               (x => x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
+            SupportedRequestHandlers = Assembly.GetExecutingAssembly().GetTypes().Where
+                (x => x.IsSubclassOf(typeof(BaseRequestHandler)) &&
+                x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
         }
 
         public abstract void Run(Dictionary<string, string> pairs);
