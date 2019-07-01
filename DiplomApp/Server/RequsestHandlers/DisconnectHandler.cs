@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DiplomApp.Server.RequsestHandlers
 {
     [RequestType(SetOfConstants.MessageTypes.REQUSET_TO_DISCONNECT)]
-    class DisconnectHandler : IRequestHandler
+    class DisconnectHandler : BaseRequestHandler
     {
         private static DisconnectHandler instance;
         public static DisconnectHandler Instance
@@ -23,7 +23,7 @@ namespace DiplomApp.Server.RequsestHandlers
 
         private DisconnectHandler() { }
 
-        public void Run(Dictionary<string, string> pairs)
+        public override void Run(Dictionary<string, string> pairs)
         {
             pairs.TryGetValue("ID", out string id);
             ControllersFactory.Remove(id);

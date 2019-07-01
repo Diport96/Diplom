@@ -13,8 +13,8 @@ using DiplomApp.Controllers.Models;
 namespace DiplomApp.Server.RequsestHandlers
 {
     [RequestType(MessageTypes.REQUSET_TO_CONNECT)]
-    class ConnectHandler : IRequestHandler
-    {       
+    class ConnectHandler : BaseRequestHandler
+    {
         private static ConnectHandler instance;
         public static ConnectHandler Instance
         {
@@ -26,9 +26,9 @@ namespace DiplomApp.Server.RequsestHandlers
             }
         }
 
-        private ConnectHandler() { }        
+        private ConnectHandler() { }
 
-        public void Run(Dictionary<string, string> pairs)
+        public override void Run(Dictionary<string, string> pairs)
         {
             pairs.TryGetValue("Type", out string t);
             pairs.TryGetValue("Topic", out string topic);
@@ -38,6 +38,6 @@ namespace DiplomApp.Server.RequsestHandlers
             ControllersFactory.Create(controller, t);
             var res = ResponseManager.ConnackToDictionary(controller.ID);
             ServerDevice.Instance.SendMessage(res, topic).Wait();
-        }       
+        }
     }
 }
