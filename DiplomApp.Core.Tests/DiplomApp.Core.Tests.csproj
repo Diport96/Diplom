@@ -110,8 +110,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Integrate tests\AccountManagerTests.cs" />
-    <Compile Include="Integrate tests\ServerDeviceTests.cs" />
+    <Compile Include="IntegrateTests\AccountManagerTests.cs" />
+    <Compile Include="IntegrateTests\ServerDeviceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +123,9 @@
       <Project>{311a393f-8be7-40b2-9bb2-c2c69d38a228}</Project>
       <Name>DiplomApp.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IntegrateTests\ViewModelTests\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
