@@ -16,8 +16,8 @@ namespace DiplomApp.Server
         private Guid Id;
         private readonly IMqttClient client;
         private readonly IMqttClientOptions clientOptions;
+        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
         private readonly TopicFilter topic;
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private readonly object _asyncLocker;
 
         public bool IsRun { get; private set; }
@@ -38,6 +38,18 @@ namespace DiplomApp.Server
                   .WithExactlyOnceQoS()
                   .Build();
             client.ApplicationMessageReceived += MqttMsgPublishReceived;
+        }
+
+        /// <summary>
+        /// Конструктор для тестирования
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="clientOptions"></param>
+        /// <param name="logger"></param>
+        internal MqttClient(IMqttClient client, IMqttClientOptions clientOptions) : this()
+        {            
+            this.client = client;
+            this.clientOptions = clientOptions;            
         }
 
         public async Task<bool> RunAsync()
@@ -62,7 +74,7 @@ namespace DiplomApp.Server
                 return true;
             }
 
-            if (!await tryConnect()) return false;
+            if (!await tryConnect()) return false;            
             await client.SubscribeAsync(topic);
             IsRun = true;
             return true;
@@ -77,32 +89,19 @@ namespace DiplomApp.Server
             await client.DisconnectAsync()
                 .ConfigureAwait(false);
         }
-
-        /// <summary>
-        /// Отправка сообщения в формате JSON по протоколу MQTT на указанный топик
-        /// </summary>
-        /// <param name="jsonMessage">Сообщение в формате JSON</param>
-        /// <param name="topic">Топик, на который происходит отправка сообщения</param>
-        /// <returns></returns>
+        
         public async Task SendMessage(string jsonMessage, string topic)
         {
             await client.PublishAsync(topic, jsonMessage)
                 .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Отправка сообщения по протоколу MQTT на указанный топик
-        /// </summary>
-        /// <param name="keyValuePairs">Словарь, содержащий сообщение в формате "ключ": "значение"</param>
-        /// <param name="topic">Топик, на который происходит отправка сообщения</param>
-        /// <returns></returns>
+        }        
         public async Task SendMessage(Dictionary<string, string> keyValuePairs, string topic)
         {
             var str = JsonConvert.SerializeObject(keyValuePairs);
             await client.PublishAsync(topic, str)
                 .ConfigureAwait(false);
         }
-        
+
         private void MqttMsgPublishReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
         {
             Dictionary<string, string> message;
