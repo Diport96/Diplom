@@ -37,6 +37,17 @@ namespace DiplomApp.Server
             serverOptions = new MqttServerOptions();
         }
 
+        /// <summary>
+        /// Конструктор для тестирования
+        /// </summary>
+        /// <param name="server"></param>
+        /// <param name="serverOptions"></param>
+        internal MqttServer(IMqttServer server, IMqttServerOptions serverOptions) : this()
+        {
+            this.server = server;
+            this.serverOptions = serverOptions;
+        }
+
         public async Task<bool> RunAsync()
         {
             lock (_asyncLocker)
