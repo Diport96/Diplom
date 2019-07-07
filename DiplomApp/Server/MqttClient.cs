@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Server
 {
-    class MqttClient
+    class MqttClient : IMqttComponent
     {
         private Guid Id;
         private readonly IMqttClient client;
@@ -47,9 +47,9 @@ namespace DiplomApp.Server
         /// <param name="clientOptions"></param>
         /// <param name="logger"></param>
         internal MqttClient(IMqttClient client, IMqttClientOptions clientOptions) : this()
-        {            
+        {
             this.client = client;
-            this.clientOptions = clientOptions;            
+            this.clientOptions = clientOptions;
         }
 
         public async Task<bool> RunAsync()
@@ -74,7 +74,7 @@ namespace DiplomApp.Server
                 return true;
             }
 
-            if (!await tryConnect()) return false;            
+            if (!await tryConnect()) return false;
             await client.SubscribeAsync(topic);
             IsRun = true;
             return true;
@@ -89,12 +89,12 @@ namespace DiplomApp.Server
             await client.DisconnectAsync()
                 .ConfigureAwait(false);
         }
-        
+
         public async Task SendMessage(string jsonMessage, string topic)
         {
             await client.PublishAsync(topic, jsonMessage)
                 .ConfigureAwait(false);
-        }        
+        }
         public async Task SendMessage(Dictionary<string, string> keyValuePairs, string topic)
         {
             var str = JsonConvert.SerializeObject(keyValuePairs);

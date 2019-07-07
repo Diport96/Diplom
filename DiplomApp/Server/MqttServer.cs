@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Server
 {
-    class MqttServer
+    class MqttServer : IMqttComponent
     {
         private static MqttServer instance;
         private readonly IMqttServer server;
         private readonly IMqttServerOptions serverOptions;
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
         private readonly object _asyncLocker;
 
         public static MqttServer Instance
