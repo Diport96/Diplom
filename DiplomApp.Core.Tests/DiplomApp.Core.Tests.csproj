@@ -127,6 +127,7 @@
     <Compile Include="IntegrateTests\ServerDeviceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\MqttClientTests.cs" />
+    <Compile Include="UnitTests\MqttServerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
