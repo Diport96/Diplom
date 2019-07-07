@@ -12,23 +12,14 @@ namespace DiplomApp.Server
 {
     class MqttServer : IMqttComponent
     {
-        private static MqttServer instance;
         private readonly IMqttServer server;
         private readonly IMqttServerOptions serverOptions;
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
         private readonly object _asyncLocker;
 
-        public static MqttServer Instance
-        {
-            get
-            {
-                if (instance == null) instance = new MqttServer();
-                return instance;
-            }
-        }
         public bool IsRun { get; private set; }
 
-        private MqttServer()
+        public MqttServer()
         {
             IsRun = false;
             _asyncLocker = new object();
@@ -75,9 +66,7 @@ namespace DiplomApp.Server
                 if (!IsRun) return;
                 IsRun = false;
             }
-
-            await server.StopAsync()
-                .ConfigureAwait(false);
+            await server.StopAsync();               
             logger.Info("Сервер остановлен");
         }
     }

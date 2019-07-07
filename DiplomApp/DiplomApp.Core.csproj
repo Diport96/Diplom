@@ -140,8 +140,11 @@
     <Compile Include="Controllers\Models\Switch.cs" />
     <Compile Include="Controllers\Models\Termometer.cs" />
     <Compile Include="Data\UserAccountContext.cs" />
+    <Compile Include="Server\IMqttClientComponent.cs" />
     <Compile Include="Server\IMqttComponent.cs" />
+    <Compile Include="Server\IMqttManagaer.cs" />
     <Compile Include="Server\MqttClient.cs" />
+    <Compile Include="Server\MqttManager.cs" />
     <Compile Include="Server\MqttServer.cs" />
     <Compile Include="Server\ResponseManager.cs" />
     <Compile Include="Server\SetOfConstants\MessageTypes.cs" />

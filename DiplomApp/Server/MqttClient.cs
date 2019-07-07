@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DiplomApp.Server
 {
-    class MqttClient : IMqttComponent
+    class MqttClient : IMqttClientComponent
     {
         private Guid Id;
         private readonly IMqttClient client;
@@ -37,7 +37,7 @@ namespace DiplomApp.Server
                   .WithTopic("#")
                   .WithExactlyOnceQoS()
                   .Build();
-            client.ApplicationMessageReceived += MqttMsgPublishReceived;
+            client.ApplicationMessageReceived += Callback;
         }
 
         /// <summary>
@@ -86,8 +86,7 @@ namespace DiplomApp.Server
                 if (!IsRun) return;
                 IsRun = false;
             }
-            await client.DisconnectAsync()
-                .ConfigureAwait(false);
+            await client.DisconnectAsync();                
         }
 
         public async Task SendMessage(string jsonMessage, string topic)
@@ -102,7 +101,7 @@ namespace DiplomApp.Server
                 .ConfigureAwait(false);
         }
 
-        private void MqttMsgPublishReceived(object sender, MqttApplicationMessageReceivedEventArgs e)
+        private void Callback(object sender, MqttApplicationMessageReceivedEventArgs e)
         {
             Dictionary<string, string> message;
             try
