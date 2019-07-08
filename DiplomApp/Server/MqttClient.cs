@@ -22,7 +22,7 @@ namespace DiplomApp.Server
 
         public bool IsRun { get; private set; }
 
-        public MqttClient()
+        public MqttClient(EventHandler<MqttApplicationMessageReceivedEventArgs> callback)
         {
             Id = Guid.NewGuid();
             IsRun = false;
@@ -37,7 +37,7 @@ namespace DiplomApp.Server
                   .WithTopic("#")
                   .WithExactlyOnceQoS()
                   .Build();
-            client.ApplicationMessageReceived += Callback;
+            client.ApplicationMessageReceived += callback;
         }
 
         /// <summary>
@@ -46,7 +46,11 @@ namespace DiplomApp.Server
         /// <param name="client"></param>
         /// <param name="clientOptions"></param>
         /// <param name="logger"></param>
-        internal MqttClient(IMqttClient client, IMqttClientOptions clientOptions) : this()
+        internal MqttClient(
+            IMqttClient client,
+            IMqttClientOptions clientOptions,
+            EventHandler<MqttApplicationMessageReceivedEventArgs> callback)
+            : this(callback)
         {
             this.client = client;
             this.clientOptions = clientOptions;
@@ -86,7 +90,7 @@ namespace DiplomApp.Server
                 if (!IsRun) return;
                 IsRun = false;
             }
-            await client.DisconnectAsync();                
+            await client.DisconnectAsync();
         }
 
         public async Task SendMessage(string jsonMessage, string topic)
@@ -99,37 +103,6 @@ namespace DiplomApp.Server
             var str = JsonConvert.SerializeObject(keyValuePairs);
             await client.PublishAsync(topic, str)
                 .ConfigureAwait(false);
-        }
-
-        private void Callback(object sender, MqttApplicationMessageReceivedEventArgs e)
-        {
-            Dictionary<string, string> message;
-            try
-            {
-                var jsonMessage = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-                message = JsonConvert.DeserializeObject(jsonMessage, typeof(Dictionary<string, string>)) as Dictionary<string, string>;
-            }
-            catch (Exception w)
-            {
-                logger.Error(w, "Не удалось распарсить данные, возможно нарушение структуры данных");
-                return;
-            }
-
-            message.TryGetValue("Message_Type", out string req);
-            logger.Trace($"Получено сообщение из топика { e.ApplicationMessage.Topic}. Тип сообщения: {req}");
-            if (req == SetOfConstants.MessageTypes.PERMIT_TO_CONNECT) return;
-
-            message.Add("Topic", e.ApplicationMessage.Topic);
-            try
-            {
-                var handler = BaseRequestHandler.GetRequestHandler(message);
-                message.Remove("Message_Type");
-                handler.Run(message);
-            }
-            catch (HandlerNotFindException w)
-            {
-                logger.Error(w.Message);
-            }
-        }
+        }        
     }
 }

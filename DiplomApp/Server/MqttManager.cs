@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DiplomApp.Server.RequsestHandlers;
@@ -10,12 +12,14 @@ using NLog;
 
 namespace DiplomApp.Server
 {
-    class MqttManager : IMqttProtocolManagaer
-    {        
+    class MqttManager : IMqttProtocolManagaer, INotifyPropertyChanged
+    {
+        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
         private static IMqttProtocolManagaer instance;
         private readonly IMqttComponent server;
         private readonly IMqttClientComponent client;
         private readonly object _asyncLocker;
+        private bool isRun;
 
         public static IMqttProtocolManagaer Instance
         {
@@ -25,15 +29,24 @@ namespace DiplomApp.Server
                 return instance;
             }
         }
-        public bool IsRun { get; private set; }
+        public bool IsRun
+        {
+            get { return isRun; }
+            private set
+            {
+                isRun = value;
+                OnPropertyChanged("IsRun");
+            }
+        }
 
         public event EventHandler MqttProtocolStarted;
         public event EventHandler MqttProtocolStoped;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private MqttManager()
         {
             server = new MqttServer();
-            client = new MqttClient();
+            client = new MqttClient(Callback);
             _asyncLocker = new object();
         }
 
@@ -85,6 +98,46 @@ namespace DiplomApp.Server
         public async Task SendMessage(Dictionary<string, string> keyValuePairs, string topic)
         {
             await client.SendMessage(keyValuePairs, topic);
-        }        
+        }
+
+        protected void OnPropertyChanged([CallerMemberName]string prop = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+        private void Callback(object sender, MqttApplicationMessageReceivedEventArgs e)
+        {
+
+            var jsonMessage = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+            var message = GetDataFromJson(jsonMessage);
+
+            message.TryGetValue("Message_Type", out string req);
+            logger.Trace($"Получено сообщение из топика { e.ApplicationMessage.Topic}. Тип сообщения: {req}");
+            if (req == SetOfConstants.MessageTypes.PERMIT_TO_CONNECT) return;
+
+            message.Add("Topic", e.ApplicationMessage.Topic);
+            try
+            {
+                var handler = BaseRequestHandler.GetRequestHandler(message);
+                message.Remove("Message_Type");
+                handler.Run(message);
+            }
+            catch (HandlerNotFindException w)
+            {
+                logger.Error(w.Message);
+            }
+        }
+        private Dictionary<string, string> GetDataFromJson(string jsonMessage)
+        {
+            try
+            {
+                var message = JsonConvert.DeserializeObject(jsonMessage, typeof(Dictionary<string, string>)) as Dictionary<string, string>;
+                return message;
+            }
+            catch (Exception w)
+            {
+                logger.Error(w, "Не удалось распарсить данные, возможно нарушение структуры данных");
+                throw;
+            }
+        }
     }
 }
