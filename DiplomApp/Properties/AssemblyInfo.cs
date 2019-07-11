@@ -22,6 +22,7 @@ using System.Windows;
 [assembly: ComVisible(false)]
 
 [assembly: InternalsVisibleTo("DiplomApp.Core.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 //Чтобы начать создание локализуемых приложений, задайте
 //<UICulture>CultureYouAreCodingWith</UICulture> в файле .csproj

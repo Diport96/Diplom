@@ -1,5 +1,4 @@
-﻿using DiplomApp.Server.RequsestHandlers;
-using MQTTnet;
+﻿using MQTTnet;
 using MQTTnet.Client;
 using Newtonsoft.Json;
 using NLog;
@@ -95,14 +94,12 @@ namespace DiplomApp.Server
 
         public async Task SendMessage(string jsonMessage, string topic)
         {
-            await client.PublishAsync(topic, jsonMessage)
-                .ConfigureAwait(false);
+            await client.PublishAsync(topic, jsonMessage);                
         }
         public async Task SendMessage(Dictionary<string, string> keyValuePairs, string topic)
         {
             var str = JsonConvert.SerializeObject(keyValuePairs);
-            await client.PublishAsync(topic, str)
-                .ConfigureAwait(false);
-        }        
+            await client.PublishAsync(topic, str);                
+        }
     }
 }

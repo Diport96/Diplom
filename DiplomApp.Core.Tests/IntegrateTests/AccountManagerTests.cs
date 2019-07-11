@@ -4,7 +4,7 @@ using DiplomApp.Accounts;
 using DiplomApp.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DiplomApp.Core.Integrate_tests
+namespace DiplomApp.Core.Tests.IntegrateTests
 {
     [TestClass]
     public class AccountManagerTests
