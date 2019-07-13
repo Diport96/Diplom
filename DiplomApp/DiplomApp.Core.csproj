@@ -199,7 +199,6 @@
     <Compile Include="Server\RequsestHandlers\ConnectHandler.cs" />
     <Compile Include="Server\RequsestHandlers\DisconnectHandler.cs" />
     <Compile Include="Server\RequsestHandlers\DistributeHandler.cs" />
-    <Compile Include="Server\ServerDevice.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
