@@ -17,7 +17,7 @@ namespace DiplomApp
         /// <summary>
         /// Является экземпляром сервера, доступным на уровне всего приложения
         /// </summary>
-        public static ServerDevice Server { get; private set; }
+        internal static IMqttProtocolManager Server { get; private set; }
 
         App()
         {
@@ -29,14 +29,12 @@ namespace DiplomApp
             AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            if(DiplomApp.Properties.Settings.Default.EnableDebugInfo)            
+            if (DiplomApp.Properties.Settings.Default.EnableDebugInfo)
                 LogManager.Configuration.LoggingRules[0].EnableLoggingForLevels(LogLevel.Trace, LogLevel.Debug);
             else
                 LogManager.Configuration.LoggingRules[0].DisableLoggingForLevels(LogLevel.Trace, LogLevel.Debug);
 
-
-
-            Server = ServerDevice.Instance;                     
+            Server = MqttManager.Instance;
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -51,6 +49,6 @@ namespace DiplomApp
         {
             Server.StopAsync().Wait();
             logger.Info("Завершение работы приложения");
-        }        
+        }
     }
 }

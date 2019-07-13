@@ -37,7 +37,7 @@ namespace DiplomApp.Server.RequsestHandlers
             var controller = JsonConvert.DeserializeObject(classData, type) as Controller;
             ControllersFactory.Create(controller, t);
             var res = ResponseManager.ConnackToDictionary(controller.ID);
-            ServerDevice.Instance.SendMessage(res, topic).Wait();
+            App.Server.SendMessage(res, topic).Wait();
         }
     }
 }

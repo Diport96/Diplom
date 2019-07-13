@@ -26,7 +26,7 @@ namespace DiplomApp.Controllers
             Controllers = new ObservableCollection<Controller>();
             Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Controller)));
             logger = LogManager.GetCurrentClassLogger();
-            App.Server.ServerStoped += Server_ServerStoped;
+            App.Server.MqttProtocolStoped += Server_ServerStoped;
         }
 
         public static void Create(Controller controller, string controllerType)

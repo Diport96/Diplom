@@ -1,29 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using DiplomApp.Server.RequsestHandlers;
+﻿using DiplomApp.Server.RequsestHandlers;
 using MQTTnet;
 using Newtonsoft.Json;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DiplomApp.Server
 {
-    class MqttManager : IMqttProtocolManagaer, INotifyPropertyChanged
+    class MqttManager : IMqttProtocolManager
     {
         #region Поля и свойства
 
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
-        private static IMqttProtocolManagaer instance;
+        private static IMqttProtocolManager instance;
         private readonly IMqttComponent server;
         private readonly IMqttClientComponent client;
         private readonly object _asyncLocker;
         private bool isRun;
 
-        public static IMqttProtocolManagaer Instance
+        public static IMqttProtocolManager Instance
         {
             get
             {
@@ -86,7 +85,7 @@ namespace DiplomApp.Server
             {
                 MqttProtocolStarted?.Invoke(this, new EventArgs());
                 return true;
-            }            
+            }
             return false;
         }
         public async Task StopAsync()
@@ -105,13 +104,13 @@ namespace DiplomApp.Server
         }
 
         #endregion
-        
+
         #region Методы отправки сообщений
 
         public async Task SendMessage(string jsonMessage, string topic)
         {
             await client.SendMessage(jsonMessage, topic)
-                 .ConfigureAwait(false); 
+                 .ConfigureAwait(false);
         }
         public async Task SendMessage(Dictionary<string, string> keyValuePairs, string topic)
         {

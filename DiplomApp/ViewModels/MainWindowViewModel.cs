@@ -129,7 +129,7 @@ namespace DiplomApp.ViewModels
                 }
             }
         }
-        private async Task ServerStartStopAsync(ServerDevice server, Button button)
+        private async Task ServerStartStopAsync(IMqttProtocolManager server, Button button)
         {
             button.IsEnabled = false;
             if (server.IsRun) await server.StopAsync();
@@ -148,7 +148,7 @@ namespace DiplomApp.ViewModels
             else if (device is Sensor)
                 new SensorSettingsWindow(device.ID).ShowDialog();
         }
-        private void SignOut(ServerDevice server)
+        private void SignOut(IMqttProtocolManager server)
         {
             if (server.IsRun) server.StopAsync().Wait();
             AccountManager.Logout();
