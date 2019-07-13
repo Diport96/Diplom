@@ -11,6 +11,6 @@ namespace DiplomApp.Server
         bool IsRun { get; }
 
         Task<bool> RunAsync();
-        Task StopAsync();
+        Task StopAsync();        
     }
 }

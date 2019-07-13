@@ -47,7 +47,7 @@ namespace DiplomApp
         }
         private void App_Exit(object sender, ExitEventArgs e)
         {
-            Server.StopAsync().Wait();
+            Server.Stop();
             logger.Info("Завершение работы приложения");
         }
     }

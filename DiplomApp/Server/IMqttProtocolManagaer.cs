@@ -11,5 +11,6 @@ namespace DiplomApp.Server
     {
         event EventHandler MqttProtocolStarted;
         event EventHandler MqttProtocolStoped;
+        void Stop();
     }
 }

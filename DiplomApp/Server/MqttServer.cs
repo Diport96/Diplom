@@ -66,8 +66,9 @@ namespace DiplomApp.Server
                 if (!IsRun) return;
                 IsRun = false;
             }
-            await server.StopAsync();               
+            await server.StopAsync()
+                .ConfigureAwait(false);
             logger.Info("Сервер остановлен");
-        }
+        }        
     }
 }

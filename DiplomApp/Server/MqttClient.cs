@@ -89,7 +89,8 @@ namespace DiplomApp.Server
                 if (!IsRun) return;
                 IsRun = false;
             }
-            await client.DisconnectAsync();
+            await client.DisconnectAsync()
+                .ConfigureAwait(false);
         }
 
         public async Task SendMessage(string jsonMessage, string topic)
@@ -100,6 +101,6 @@ namespace DiplomApp.Server
         {
             var str = JsonConvert.SerializeObject(keyValuePairs);
             await client.PublishAsync(topic, str);                
-        }
+        }       
     }
 }

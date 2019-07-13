@@ -23,16 +23,16 @@ namespace DiplomApp.ViewModels
     {
         private string userHelloTitle;
         private string serverStartStopButtonContent;
-        private RelayCommand signOutCommand;
+        private AsyncRelayCommand signOutCommand;
         private RelayCommand deviceSettingsCommand;
         private AsyncRelayCommand serverStartStopCommand;
 
-        public RelayCommand SignOutCommand
+        public AsyncRelayCommand SignOutCommand
         {
             get
             {
                 return signOutCommand ??
-                    (signOutCommand = new RelayCommand(obj => SignOut(App.Server)));
+                    (signOutCommand = new AsyncRelayCommand(obj => SignOut(App.Server)));
             }
         }
         public RelayCommand DeviceSettingsCommand
@@ -148,9 +148,9 @@ namespace DiplomApp.ViewModels
             else if (device is Sensor)
                 new SensorSettingsWindow(device.ID).ShowDialog();
         }
-        private void SignOut(IMqttProtocolManager server)
+        private async Task SignOut(IMqttProtocolManager server)
         {
-            if (server.IsRun) server.StopAsync().Wait();
+            if (server.IsRun) await server.StopAsync();
             AccountManager.Logout();
             new AuthentificationWindow().Show();
             closingWindowAction();
@@ -158,7 +158,7 @@ namespace DiplomApp.ViewModels
 
         ~MainWindowViewModel()
         {
-            App.Server.StopAsync().Wait();
+            App.Server.Stop();
         }
     }
 }

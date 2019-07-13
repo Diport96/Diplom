@@ -95,10 +95,20 @@ namespace DiplomApp.Server
                 if (!IsRun) return;
                 IsRun = false;
             }
-            if (client.IsRun) await client.StopAsync()
-                    .ConfigureAwait(false);
-            if (server.IsRun) await server.StopAsync()
-                    .ConfigureAwait(false);
+            if (client.IsRun) await client.StopAsync();
+            if (server.IsRun) await server.StopAsync();
+            MqttProtocolStoped?.Invoke(this, new EventArgs());
+            IsRun = false;
+        }
+        public void Stop()
+        {
+            lock (_asyncLocker)
+            {
+                if (!IsRun) return;
+                IsRun = false;
+            }
+            if (client.IsRun) client.StopAsync().Wait();
+            if (server.IsRun) server.StopAsync().Wait();
             MqttProtocolStoped?.Invoke(this, new EventArgs());
             IsRun = false;
         }
@@ -165,6 +175,7 @@ namespace DiplomApp.Server
                 logger.Error(w.Message);
             }
         }
+
 
         #endregion
     }
