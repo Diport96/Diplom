@@ -132,10 +132,6 @@ namespace DiplomApp.Server
 
         #region Методы обработки полученных сообщений
 
-        protected void OnPropertyChanged([CallerMemberName]string prop = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
         private void Callback(object sender, MqttApplicationMessageReceivedEventArgs e)
         {
 
@@ -176,7 +172,11 @@ namespace DiplomApp.Server
             }
         }
 
-
         #endregion
+
+        protected void OnPropertyChanged([CallerMemberName]string prop = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
     }
 }

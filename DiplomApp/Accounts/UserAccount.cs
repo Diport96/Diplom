@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DiplomApp.Accounts
 {
     /// <summary>
     /// Класс, проедставляющий аккаунт пользователя
     /// </summary>
-    public class UserAccount
+    public class UserAccount : IAccount
     {
         /// <summary>
         /// Уникальный идентификатор аккаунта
