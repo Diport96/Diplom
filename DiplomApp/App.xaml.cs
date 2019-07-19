@@ -1,4 +1,5 @@
 ﻿using ClientApp;
+using DiplomApp.Accounts;
 using DiplomApp.Server;
 using NLog;
 using System;
@@ -18,6 +19,7 @@ namespace DiplomApp
         /// Является экземпляром сервера, доступным на уровне всего приложения
         /// </summary>
         internal static IMqttProtocolManager Server { get; private set; }
+        internal static IAccountManager UserAccountManager { get; private set; }
 
         App()
         {
@@ -35,6 +37,7 @@ namespace DiplomApp
                 LogManager.Configuration.LoggingRules[0].DisableLoggingForLevels(LogLevel.Trace, LogLevel.Debug);
 
             Server = MqttManager.Instance;
+            UserAccountManager = AccountManager.Instance;
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

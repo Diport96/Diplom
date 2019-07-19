@@ -14,17 +14,27 @@ namespace DiplomApp.Accounts
     /// <summary>
     /// Предоставляет менеджер аккаунтов пользователей
     /// </summary>
-    public static class AccountManager
+    class AccountManager : IAccountManager
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static readonly UserAccountContext database;
+        private readonly ILogger logger = LogManager.GetCurrentClassLogger();
+        private readonly UserAccountContext database;
+        private static AccountManager instance;
 
         /// <summary>
         /// Хранит информацию об авторизованном пользователе
         /// </summary>
-        public static UserAccount CurrentUser { get; set; }
+        public IAccount CurrentUser { get; set; }
+        public static AccountManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new AccountManager();
+                return instance;
+            }
+        }
 
-        static AccountManager()
+        public AccountManager()
         {
             database = new UserAccountContext();
             database.Database.CreateIfNotExists();
@@ -37,7 +47,7 @@ namespace DiplomApp.Accounts
         /// <param name="login">Логин от аккаунта</param>
         /// <param name="password">Пароль от аккаунта</param>
         /// <returns>Аккаунт пользователя</returns>
-        public static UserAccount CreateAccount(string login, string password)
+        public IAccount CreateAccount(string login, string password)
         {
             var result = database.UserAccounts.FirstOrDefault(x => x.Login == login);
             if (result != null)
@@ -67,7 +77,7 @@ namespace DiplomApp.Accounts
         /// </summary>
         /// <param name="login">Логин от аккаунта</param>
         /// <returns>Существует ли аккаунт с указаным логином</returns>
-        public static async Task<bool> CheckIfAccountExists(string login)
+        public async Task<bool> CheckIfAccountExists(string login)
         {
             return await database.UserAccounts.AnyAsync(x => x.Login == login);
         }
@@ -78,7 +88,7 @@ namespace DiplomApp.Accounts
         /// <param name="login">Логин от аккаунта</param>
         /// <param name="password">Пароль от аккаунта</param>
         /// <returns>Удалоь ли выполнить аутентификацию</returns>
-        public static bool Login(string login, string password)
+        public bool Login(string login, string password)
         {
             UserAccount result;
             try
@@ -105,7 +115,7 @@ namespace DiplomApp.Accounts
         /// <param name="login">Логин от аккаунта</param>
         /// <param name="password">Пароль от аккаунта</param>
         /// <returns>Удалоь ли выполнить аутентификацию</returns>
-        public static async Task<bool> LoginAsync(string login, string password)
+        public async Task<bool> LoginAsync(string login, string password)
         {
             UserAccount result;
 
@@ -130,12 +140,12 @@ namespace DiplomApp.Accounts
         /// <summary>
         /// Выполняет выход из учетной записи пользователя
         /// </summary>
-        public static void Logout()
+        public void Logout()
         {
             CurrentUser = null;
         }
 
-        private static UserAccount AuthenticateUser(string login, string password)
+        private UserAccount AuthenticateUser(string login, string password)
         {
             // !!! Exception of create database error code: -2146232060
             UserAccount userAccount = database.UserAccounts.FirstOrDefault(x => x.Login == login);
@@ -154,8 +164,8 @@ namespace DiplomApp.Accounts
 
             return null;
         }
-        private static async Task<UserAccount> AuthenticateUserAsync(string login, string password)
-        {            
+        private async Task<UserAccount> AuthenticateUserAsync(string login, string password)
+        {
             UserAccount userAccount = await database.UserAccounts.FirstOrDefaultAsync(x => x.Login == login);
             if (userAccount != null)
             {

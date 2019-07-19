@@ -1,8 +1,7 @@
-﻿using System;
-using System.Linq;
-using DiplomApp.Accounts;
-using DiplomApp.Data;
+﻿using DiplomApp.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using static DiplomApp.App;
 
 namespace DiplomApp.Core.Tests.IntegrateTests
 {
@@ -15,7 +14,7 @@ namespace DiplomApp.Core.Tests.IntegrateTests
             string userName = "TestAcc@bk.ru";
             string password = "123456798AbCd";
 
-            var account = AccountManager.CreateAccount(userName, password);
+            var account = UserAccountManager.CreateAccount(userName, password);
 
             Assert.IsNotNull(account);
 
@@ -38,7 +37,7 @@ namespace DiplomApp.Core.Tests.IntegrateTests
             string password = "123456798AbCd";
 
             // Actual
-            var account = AccountManager.CreateAccount(userName, password);
+            var account = UserAccountManager.CreateAccount(userName, password);
 
             Assert.AreEqual(userName, account.Login);
 
@@ -58,10 +57,10 @@ namespace DiplomApp.Core.Tests.IntegrateTests
         {
             string userName = "TestAcc@bk.ru";
             string password = "123456798AbCd";
-            AccountManager.CreateAccount(userName, password);
+            UserAccountManager.CreateAccount(userName, password);
 
             // Actual
-            bool actual = AccountManager.Login(userName, password);
+            bool actual = UserAccountManager.Login(userName, password);
 
             Assert.IsTrue(actual);
 
@@ -80,12 +79,12 @@ namespace DiplomApp.Core.Tests.IntegrateTests
         public void Login_NotExistingUser_FalseReturned()
         {
             string userName = "TestAcc@bk.ru";
-            string password = "123456798AbCd";            
+            string password = "123456798AbCd";
 
             // Actual
-            bool actual = AccountManager.Login(userName, password);
+            bool actual = UserAccountManager.Login(userName, password);
 
-            Assert.IsFalse(actual);           
+            Assert.IsFalse(actual);
         }
 
         [TestMethod]
@@ -94,11 +93,11 @@ namespace DiplomApp.Core.Tests.IntegrateTests
             // Expected
             string userName = "TestAcc@bk.ru";
             string password = "123456798AbCd";
-            AccountManager.CreateAccount(userName, password);
-            AccountManager.Login(userName, password);
+            UserAccountManager.CreateAccount(userName, password);
+            UserAccountManager.Login(userName, password);
 
             // Actual
-            string actual = AccountManager.CurrentUser.Login;
+            string actual = UserAccountManager.CurrentUser.Login;
 
             Assert.AreEqual(userName, actual);
 
@@ -112,7 +111,5 @@ namespace DiplomApp.Core.Tests.IntegrateTests
                 }
             }
         }
-
-
     }
 }

@@ -151,7 +151,7 @@ namespace DiplomApp.ViewModels
         private async Task SignOut(IMqttProtocolManager server)
         {
             if (server.IsRun) await server.StopAsync();
-            AccountManager.Logout();
+            App.UserAccountManager.Logout();
             new AuthentificationWindow().Show();
             closingWindowAction();
         }

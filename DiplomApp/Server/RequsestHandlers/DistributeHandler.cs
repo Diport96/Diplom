@@ -53,15 +53,15 @@ namespace DiplomApp.Server.RequsestHandlers
                 double.TryParse(pairs["Value"], out double value);
                 controller.Value = value;
             }
-            else if(type == typeof(Switch) || type.IsSubclassOf(typeof(Switch)))
+            else if (type == typeof(Switch) || type.IsSubclassOf(typeof(Switch)))
             {
                 var controller = ControllersFactory.GetById(pairs["ID"]) as Switch;
                 bool.TryParse(pairs["Value"], out bool value);
                 controller.Value = value;
-            }         
+            }
 
             pairs.Remove("Topic");
-            pairs.Add("User", AccountManager.CurrentUser.Login);
+            pairs.Add("User", App.UserAccountManager.CurrentUser.Login);
             pairs.Add("Name", info.Name);
             BsonDocument element = new BsonDocument(pairs);
             try

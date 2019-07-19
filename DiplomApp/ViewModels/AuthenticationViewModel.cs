@@ -1,11 +1,11 @@
 ﻿using ClientApp;
-using DiplomApp.Accounts;
 using DiplomApp.ViewModels.Commands;
 using DiplomApp.Views;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using static DiplomApp.App;
 
 namespace DiplomApp.ViewModels
 {
@@ -92,17 +92,17 @@ namespace DiplomApp.ViewModels
             //!!! Await exception handle
             if (await API.LoginAsync(login, password))
             {
-                if (!await AccountManager.CheckIfAccountExists(login))
+                if (!await UserAccountManager.CheckIfAccountExists(login))
                 {
-                    var acc = AccountManager.CreateAccount(login, password);
+                    var acc = UserAccountManager.CreateAccount(login, password);
                 }
 
-                if (await AccountManager.LoginAsync(login, password))
+                if (await UserAccountManager.LoginAsync(login, password))
                     RedirectToMainWindow(login, false);
             }
             else
             {
-                if (await AccountManager.LoginAsync(login, password))
+                if (await UserAccountManager.LoginAsync(login, password))
                 {
                     async Task<bool> connectToWebApp() => await API.LoginAsync(login, password);
                     RedirectToMainWindow(login, true, connectToWebApp);
