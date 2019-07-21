@@ -1,5 +1,6 @@
 ﻿using ClientApp;
 using DiplomApp.Accounts;
+using DiplomApp.Controllers;
 using DiplomApp.Server;
 using NLog;
 using System;
@@ -15,11 +16,13 @@ namespace DiplomApp
     public partial class App : Application
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Является экземпляром сервера, доступным на уровне всего приложения
         /// </summary>
         internal static IMqttProtocolManager Server { get; private set; }
         internal static IAccountManager UserAccountManager { get; private set; }
+        internal static IControllersFactory ControllersFactory { get; private set; }
 
         App()
         {
@@ -38,6 +41,7 @@ namespace DiplomApp
 
             Server = MqttManager.Instance;
             UserAccountManager = AccountManager.Instance;
+            ControllersFactory = Controllers.ControllersFactory.Instance;
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

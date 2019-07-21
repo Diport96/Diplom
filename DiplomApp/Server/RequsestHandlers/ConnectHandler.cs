@@ -7,8 +7,8 @@ using DiplomApp.Server.SetOfConstants;
 using Newtonsoft.Json;
 using NLog;
 using System.Reflection;
-using DiplomApp.Controllers;
 using DiplomApp.Controllers.Models;
+using DiplomApp.Controllers;
 
 namespace DiplomApp.Server.RequsestHandlers
 {
@@ -33,9 +33,9 @@ namespace DiplomApp.Server.RequsestHandlers
             pairs.TryGetValue("Type", out string t);
             pairs.TryGetValue("Topic", out string topic);
             pairs.TryGetValue("Class", out string classData);
-            var type = ControllersFactory.GetType(t);
+            var type = App.ControllersFactory.GetType(t);
             var controller = JsonConvert.DeserializeObject(classData, type) as Controller;
-            ControllersFactory.Create(controller, t);
+            App.ControllersFactory.Create(controller, t);
             var res = ResponseManager.ConnackToDictionary(controller.ID);
             App.Server.SendMessage(res, topic).Wait();
         }

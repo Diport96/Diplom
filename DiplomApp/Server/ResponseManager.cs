@@ -16,7 +16,7 @@ namespace DiplomApp.Server
                 { "Message_Type", MessageTypes.PERMIT_TO_CONNECT },
                 { "ID", id },
             };
-            var regOptions = Controllers.ControllersFactory.GetControllerInfo(id).Options;
+            var regOptions = App.ControllersFactory.GetControllerInfo(id).Options;
             if (regOptions != null)
             {
                 var control = regOptions.Control;

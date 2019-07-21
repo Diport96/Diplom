@@ -7,11 +7,11 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Configuration;
 using DiplomApp.Server.SetOfConstants;
-using DiplomApp.Controllers;
 using DiplomApp.Controllers.Models;
 using NLog;
 using DiplomApp.Accounts;
 using DiplomApp.Data;
+using static DiplomApp.App;
 
 namespace DiplomApp.Server.RequsestHandlers
 {

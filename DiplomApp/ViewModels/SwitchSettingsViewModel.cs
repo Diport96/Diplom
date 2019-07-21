@@ -186,6 +186,8 @@ namespace DiplomApp.ViewModels
 
         #endregion
 
+        #region Конструкторы
+
         public SwitchSettingsViewModel(string deviceId, Action closingWindow, Action<bool> dialogResultWindow)
             : base(closingWindow, dialogResultWindow)
         {
@@ -194,7 +196,7 @@ namespace DiplomApp.ViewModels
             database.SwitchOptions.First(x => x.ID == deviceInfo.ID);
 
             DeviceName = deviceInfo.Name;
-            @switch = ControllersFactory.GetById(deviceId) as Switch;
+            @switch = App.ControllersFactory.GetById(deviceId) as Switch;
             control = deviceInfo.Options.Control;
             switch (control)
             {
@@ -227,7 +229,7 @@ namespace DiplomApp.ViewModels
             }
             if (deviceInfo.Options.SensorId != null)
             {
-                SelectedSensor = ControllersFactory.GetById(deviceInfo.Options.SensorId);
+                SelectedSensor = App.ControllersFactory.GetById(deviceInfo.Options.SensorId);
             }
             else
             {
@@ -235,6 +237,8 @@ namespace DiplomApp.ViewModels
             }
             SelectedChangeSwitchValueTo = ChangeSwitchValueTo.First().Key;
         }
+
+        #endregion
 
         #region Методы
 

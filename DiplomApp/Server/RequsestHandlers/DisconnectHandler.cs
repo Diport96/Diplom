@@ -26,7 +26,7 @@ namespace DiplomApp.Server.RequsestHandlers
         public override void Run(Dictionary<string, string> pairs)
         {
             pairs.TryGetValue("ID", out string id);
-            ControllersFactory.Remove(id);
+            App.ControllersFactory.Remove(id);
         }
     }
 }

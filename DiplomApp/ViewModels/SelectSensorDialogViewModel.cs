@@ -36,7 +36,7 @@ namespace DiplomApp.ViewModels
         public SelectSensorDialogViewModel(Action closingWindow, Action<bool> dialogResultWindow)
             : base(closingWindow, dialogResultWindow)
         {
-            Sensors = ControllersFactory.GetControllers().Where(x => x is Sensor);
+            Sensors = App.ControllersFactory.GetControllers().Where(x => x is Sensor);
         }
 
         private void SubmitSelection()

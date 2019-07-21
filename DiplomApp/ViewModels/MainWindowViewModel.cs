@@ -82,7 +82,7 @@ namespace DiplomApp.ViewModels
             ApplicationSettingsCommand = new ApplicationSettingsCommand();
             Task.Run(() => ConnectingToWebApp(connectToWebApp));
 
-            Controllers = ControllersFactory.Controllers;
+            Controllers = App.ControllersFactory.Controllers;
             App.Server.PropertyChanged += Server_PropertyChanged;
             SetServerStartStopButtonContent(App.Server.IsRun);
         }

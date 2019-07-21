@@ -53,7 +53,7 @@ namespace DiplomApp.ViewModels
         {
             deviceInfo.Name = DeviceName;
             database.SaveChanges();
-            ControllersFactory.GetById(deviceInfo.ID).Name = DeviceName;
+            App.ControllersFactory.GetById(deviceInfo.ID).Name = DeviceName;
 
             dialogResultWindowAction(true);
         }

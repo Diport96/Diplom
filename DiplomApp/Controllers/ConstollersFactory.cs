@@ -1,26 +1,33 @@
-﻿using DiplomApp.Controllers.Models;
-using DiplomApp.Data;
+﻿using DiplomApp.Data;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace DiplomApp.Controllers
 {
-    static class ControllersFactory
+    class ControllersFactory : IControllersFactory
     {
-        private static readonly RegisteredDeviceContext database;
-        private static readonly IEnumerable<Type> Types;
-        private static readonly Logger logger;
+        private static ControllersFactory instance;
+        private readonly RegisteredDeviceContext database;
+        private readonly IEnumerable<Type> Types;
+        private readonly Logger logger;
 
-        public static ObservableCollection<Controller> Controllers { get; }
+        public static ControllersFactory Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new ControllersFactory();
+                return instance;
+            }
+        }
+        public ObservableCollection<Controller> Controllers { get; }
 
-        static ControllersFactory()
+        private ControllersFactory()
         {
             database = new RegisteredDeviceContext();
             Controllers = new ObservableCollection<Controller>();
@@ -29,7 +36,7 @@ namespace DiplomApp.Controllers
             App.Server.MqttProtocolStoped += Server_ServerStoped;
         }
 
-        public static void Create(Controller controller, string controllerType)
+        public void Create(Controller controller, string controllerType)
         {
             try
             {
@@ -46,7 +53,7 @@ namespace DiplomApp.Controllers
                 Controllers.Add(controller);
             });
         }
-        public static void Remove(string id)
+        public void Remove(string id)
         {
             var control = Controllers.SingleOrDefault(x => x.ID == id);
             if (control == null)
@@ -57,21 +64,21 @@ namespace DiplomApp.Controllers
                     Controllers.Remove(control);
                 });
         }
-        public static IEnumerable<Controller> GetControllers()
+        public IEnumerable<Controller> GetControllers()
         {
             return Controllers;
-        } //Delete this code
-        public static Controller GetById(string id)
+        } //!!! Delete this code?
+        public Controller GetById(string id)
         {
             var res = Controllers.FirstOrDefault(x => x.ID == id);
             return res;
         }
-        public static RegisteredDeviceInfo GetControllerInfo(string id)
+        public RegisteredDeviceInfo GetControllerInfo(string id)
         {
             var res = database.RegisteredDevices.FirstOrDefault(x => x.ID == id);
             return res;
         }
-        public static Type GetType(string Type)
+        public Type GetType(string Type)
         {
             foreach (var t in Types)
             {
@@ -81,7 +88,7 @@ namespace DiplomApp.Controllers
             throw new InvalidControllerTypeException("Не удалось определить тип контроллера, возможно название класса не совпадает с названием типа контроллера");
         }
 
-        private static void RegisterDeviceInfoInDatabase(Controller controller, string controllerType, RegisteredDeviceContext database)
+        private void RegisterDeviceInfoInDatabase(Controller controller, string controllerType, RegisteredDeviceContext database)
         {
             //!!! Найти способ оптимизации запроса  
             if (!database.RegisteredDevices.Any(x => x.ID == controller.ID))
@@ -96,7 +103,7 @@ namespace DiplomApp.Controllers
                 database.SaveChanges();
             }
         }
-        private static void Server_ServerStoped(object sender, EventArgs e)
+        private void Server_ServerStoped(object sender, EventArgs e)
         {
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
