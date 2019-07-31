@@ -13,7 +13,7 @@ using DiplomApp.Controllers;
 namespace DiplomApp.Server.RequsestHandlers
 {
     [RequestType(MessageTypes.REQUSET_TO_CONNECT)]
-    class ConnectHandler : BaseRequestHandler
+    class ConnectHandler : IRequestHandler
     {
         private static ConnectHandler instance;
         public static ConnectHandler Instance
@@ -28,7 +28,7 @@ namespace DiplomApp.Server.RequsestHandlers
 
         private ConnectHandler() { }
 
-        public override void Run(Dictionary<string, string> pairs)
+        public void Run(Dictionary<string, string> pairs)
         {
             pairs.TryGetValue("Type", out string t);
             pairs.TryGetValue("Topic", out string topic);

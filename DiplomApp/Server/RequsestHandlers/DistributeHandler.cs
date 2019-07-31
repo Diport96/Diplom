@@ -16,7 +16,7 @@ using static DiplomApp.App;
 namespace DiplomApp.Server.RequsestHandlers
 {
     [RequestType(SetOfConstants.MessageTypes.DISTRIBUTION_OF_VALUES)]
-    class DistributeHandler : BaseRequestHandler
+    class DistributeHandler : IRequestHandler
     {
         private readonly IMongoDatabase database;
         private static DistributeHandler instance;
@@ -36,7 +36,7 @@ namespace DiplomApp.Server.RequsestHandlers
             database = MongoDbInstance.Instance.Database;
         }
 
-        public override void Run(Dictionary<string, string> pairs)
+        public void Run(Dictionary<string, string> pairs)
         {
             var info = ControllersFactory.GetControllerInfo(pairs["ID"]);
             if (info == null)

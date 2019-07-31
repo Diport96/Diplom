@@ -19,6 +19,7 @@ namespace DiplomApp.Server
         private static IMqttProtocolManager instance;
         private readonly IMqttComponent server;
         private readonly IMqttClientComponent client;
+        private readonly IRequestHandleManager handleManager;
         private readonly object _asyncLocker;
         private bool isRun;
 
@@ -56,6 +57,7 @@ namespace DiplomApp.Server
         {
             server = new MqttServer();
             client = new MqttClient(Callback);
+            handleManager = new RequestHandleManager();
             _asyncLocker = new object();
         }
 
@@ -162,7 +164,7 @@ namespace DiplomApp.Server
         {
             try
             {
-                var handler = BaseRequestHandler.GetRequestHandler(message);
+                var handler = handleManager.GetRequestHandler(message);
                 message.Remove("Message_Type");
                 handler.Run(message);
             }

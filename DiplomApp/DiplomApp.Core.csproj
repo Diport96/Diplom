@@ -149,6 +149,8 @@
     <Compile Include="Server\MqttClient.cs" />
     <Compile Include="Server\MqttManager.cs" />
     <Compile Include="Server\MqttServer.cs" />
+    <Compile Include="Server\RequsestHandlers\IRequestHandleManager.cs" />
+    <Compile Include="Server\RequsestHandlers\IRequestHandler.cs" />
     <Compile Include="Server\ResponseManager.cs" />
     <Compile Include="Server\SetOfConstants\MessageTypes.cs" />
     <Compile Include="Server\SetOfConstants\Topics.cs" />
