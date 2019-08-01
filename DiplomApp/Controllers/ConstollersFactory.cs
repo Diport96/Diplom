@@ -34,6 +34,7 @@ namespace DiplomApp.Controllers
             Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Controller)));
             logger = LogManager.GetCurrentClassLogger();
             App.Server.MqttProtocolStoped += Server_ServerStoped;
+            database.Database.CreateIfNotExists();
         }
 
         public void Create(Controller controller, string controllerType)

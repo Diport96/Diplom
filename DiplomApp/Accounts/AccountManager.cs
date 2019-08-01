@@ -146,8 +146,7 @@ namespace DiplomApp.Accounts
         }
 
         private UserAccount AuthenticateUser(string login, string password)
-        {
-            // !!! Exception of create database error code: -2146232060
+        {            
             UserAccount userAccount = database.UserAccounts.FirstOrDefault(x => x.Login == login);
             if (userAccount != null)
             {

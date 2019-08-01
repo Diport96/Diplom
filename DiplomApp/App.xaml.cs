@@ -29,15 +29,12 @@ namespace DiplomApp
             InitializeComponent();
             Exit += App_Exit;
             Startup += App_Startup;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             // Путь к локальному директорию приложения
             AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            if (DiplomApp.Properties.Settings.Default.EnableDebugInfo)
-                LogManager.Configuration.LoggingRules[0].EnableLoggingForLevels(LogLevel.Trace, LogLevel.Debug);
-            else
-                LogManager.Configuration.LoggingRules[0].DisableLoggingForLevels(LogLevel.Trace, LogLevel.Debug);
+            SetLogSettings();
 
             Server = MqttManager.Instance;
             UserAccountManager = AccountManager.Instance;
@@ -56,6 +53,13 @@ namespace DiplomApp
         {
             Server.Stop();
             logger.Info("Завершение работы приложения");
+        }
+        private void SetLogSettings()
+        {
+            if (DiplomApp.Properties.Settings.Default.EnableDebugInfo)
+                LogManager.Configuration.LoggingRules[0].EnableLoggingForLevels(LogLevel.Trace, LogLevel.Debug);
+            else
+                LogManager.Configuration.LoggingRules[0].DisableLoggingForLevels(LogLevel.Trace, LogLevel.Debug);
         }
     }
 }
