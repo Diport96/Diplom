@@ -11,9 +11,7 @@ namespace DiplomApp.Server.RequsestHandlers
 
         static RequestHandleManager()
         {
-            SupportedRequestHandlers = Assembly.GetExecutingAssembly().GetTypes().Where
-                (x => x.GetInterface(nameof(IRequestHandler)) != null &&
-                x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
+            SupportedRequestHandlers = GetRequestHandlersFromAssembly();
         }
 
         public IRequestHandler GetRequestHandler(Dictionary<string, string> keyValuePairs)
@@ -27,6 +25,13 @@ namespace DiplomApp.Server.RequsestHandlers
                 throw new NotImplementedException($"В классе {type.Name} не реализован паттерн Singleton");
             var getClass = prop.GetMethod.Invoke(null, null) as IRequestHandler;
             return getClass;
+        }
+
+        private static IEnumerable<Type> GetRequestHandlersFromAssembly()
+        {
+            return Assembly.GetExecutingAssembly().GetTypes().Where
+                (x => x.GetInterface(nameof(IRequestHandler)) != null &&
+                x.GetCustomAttributes(typeof(RequestTypeAttribute), true).Length == 1);
         }
     }
 }
