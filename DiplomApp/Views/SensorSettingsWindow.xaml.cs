@@ -11,12 +11,10 @@ namespace DiplomApp.Views
     {
         /// <summary>
         /// Конструктор класса
-        /// </summary>
-        /// <param name="deviceId">Идентификатор датчика для которого выполняется настройка</param>
-        public SensorSettingsWindow(string deviceId)
+        /// </summary>        
+        public SensorSettingsWindow()
         {
             InitializeComponent();
-            DataContext = new SensorSettingsViewModel(deviceId, this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
         }
     }
 }

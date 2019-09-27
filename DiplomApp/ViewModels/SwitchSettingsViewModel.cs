@@ -3,6 +3,7 @@ using DiplomApp.Controllers.Models;
 using DiplomApp.Data;
 using DiplomApp.Server;
 using DiplomApp.ViewModels.Commands;
+using DiplomApp.ViewModels.Services;
 using DiplomApp.Views;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ namespace DiplomApp.ViewModels
     {
         #region Поля
 
+        private readonly IWindowService windowService;
+        private readonly Action<bool> dialogResultWindowAction;
         private readonly RegisteredDeviceContext database;
         private readonly RegisteredDeviceInfo deviceInfo;
         private readonly Switch @switch;
@@ -188,9 +191,10 @@ namespace DiplomApp.ViewModels
 
         #region Конструкторы
 
-        public SwitchSettingsViewModel(string deviceId, Action closingWindow, Action<bool> dialogResultWindow)
-            : base(closingWindow, dialogResultWindow)
+        public SwitchSettingsViewModel(string deviceId, Action<bool> dialogResultWindow, IWindowService windowService)
         {
+            dialogResultWindowAction = dialogResultWindow;
+            this.windowService = windowService;
             database = new RegisteredDeviceContext();
             deviceInfo = database.RegisteredDevices.First(x => x.ID == deviceId);
             database.SwitchOptions.First(x => x.ID == deviceInfo.ID);
@@ -260,9 +264,9 @@ namespace DiplomApp.ViewModels
         }
         private void SelectSensor()
         {
-            var dialogWindow = new SelectSensorDialogWindow();
-            if (dialogWindow.ShowDialog().Value)
-                SelectedSensor = (dialogWindow.DataContext as SelectSensorDialogViewModel).SelectedSensor;
+            var dialogWindowResult = windowService.OpenSelectSensorDialogWindow();
+            if (dialogWindowResult != null)
+                SelectedSensor = dialogWindowResult;
         }
         private void SubmitChanges()
         {

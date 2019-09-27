@@ -4,6 +4,7 @@ using System.Windows.Input;
 
 namespace DiplomApp.ViewModels.Commands
 {
+    // Удалить
     class ApplicationSettingsCommand : ICommand
     {
         private readonly Func<object, bool> canExecute;

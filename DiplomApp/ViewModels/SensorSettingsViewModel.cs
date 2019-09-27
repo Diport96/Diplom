@@ -10,6 +10,7 @@ namespace DiplomApp.ViewModels
     class SensorSettingsViewModel : BaseViewModel
     {
         private string deviceName;
+        private readonly Action<bool> dialogResultWindowAction;
         private readonly RegisteredDeviceContext database;
         private readonly RegisteredDeviceInfo deviceInfo;
         private RelayCommand submitChangesCommand;
@@ -41,11 +42,11 @@ namespace DiplomApp.ViewModels
             }
         }
 
-        public SensorSettingsViewModel(string deviceId, Action closingWindow, Action<bool> dialogResultWindow)
-            : base(closingWindow, dialogResultWindow)
+        public SensorSettingsViewModel(string deviceId, Action<bool> dialogResultWindow)
         {
             database = new RegisteredDeviceContext();
             deviceInfo = database.RegisteredDevices.First(x => x.ID == deviceId);
+            dialogResultWindowAction = dialogResultWindow;
             DeviceName = deviceInfo.Name;
         }
 

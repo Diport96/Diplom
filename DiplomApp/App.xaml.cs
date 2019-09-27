@@ -1,14 +1,9 @@
-﻿using ClientApp;
-using DiplomApp.Accounts;
+﻿using DiplomApp.Accounts;
 using DiplomApp.Controllers;
 using DiplomApp.Server;
+using DiplomApp.ViewModels.Services;
 using NLog;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace DiplomApp
@@ -23,6 +18,7 @@ namespace DiplomApp
         internal static IMqttProtocolManager Server { get; private set; }
         internal static IAccountManager UserAccountManager { get; private set; }
         internal static IControllersFactory ControllersFactory { get; private set; }
+        internal static IWindowService WindowService { get; private set; }
 
         App()
         {
@@ -39,6 +35,7 @@ namespace DiplomApp
             Server = MqttManager.Instance;
             UserAccountManager = AccountManager.Instance;
             ControllersFactory = Controllers.ControllersFactory.Instance;
+            WindowService = new WindowService();
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -48,6 +45,7 @@ namespace DiplomApp
         private void App_Startup(object sender, StartupEventArgs e)
         {
             logger.Info("Запуск приложения");
+            WindowService.OpenAuthenticationWindow();
         }
         private void App_Exit(object sender, ExitEventArgs e)
         {

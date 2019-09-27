@@ -11,6 +11,7 @@ namespace DiplomApp.ViewModels
     // Реализовать ObservableCollection. MVVM dialog window whth answer
     class SelectSensorDialogViewModel : BaseViewModel
     {
+        private readonly Action<bool> dialogResultWindowAction;
         private RelayCommand submitSelectionCommand;
         private RelayCommand cancelSelectionCommand;
 
@@ -33,10 +34,10 @@ namespace DiplomApp.ViewModels
         public IEnumerable<Controller> Sensors { get; }
         public Controller SelectedSensor { get; set; }
 
-        public SelectSensorDialogViewModel(Action closingWindow, Action<bool> dialogResultWindow)
-            : base(closingWindow, dialogResultWindow)
+        public SelectSensorDialogViewModel(Action<bool> dialogResultWindow)
         {
             Sensors = App.ControllersFactory.GetControllers().Where(x => x is Sensor);
+            dialogResultWindowAction = dialogResultWindow;
         }
 
         private void SubmitSelection()

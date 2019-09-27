@@ -15,7 +15,6 @@ namespace DiplomApp.Views
         public AuthentificationWindow()
         {
             InitializeComponent();
-            DataContext = new AuthenticationViewModel(this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
         }
     }
 }

@@ -15,7 +15,6 @@ namespace DiplomApp.Views
         public SelectSensorDialogWindow()
         {
             InitializeComponent();
-            DataContext = new SelectSensorDialogViewModel(this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
         }
     }
 }

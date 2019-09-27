@@ -5,6 +5,7 @@ using DiplomApp.Controllers.Models;
 using DiplomApp.Data;
 using DiplomApp.Server;
 using DiplomApp.ViewModels.Commands;
+using DiplomApp.ViewModels.Services;
 using DiplomApp.Views;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -21,11 +22,13 @@ namespace DiplomApp.ViewModels
 {
     class MainWindowViewModel : BaseViewModel
     {
+        private readonly IWindowService windowService;
         private string userHelloTitle;
         private string serverStartStopButtonContent;
         private AsyncRelayCommand signOutCommand;
         private RelayCommand deviceSettingsCommand;
         private AsyncRelayCommand serverStartStopCommand;
+        private RelayCommand applicationSettingsCommand;
 
         public AsyncRelayCommand SignOutCommand
         {
@@ -51,7 +54,14 @@ namespace DiplomApp.ViewModels
                     (serverStartStopCommand = new AsyncRelayCommand(obj => ServerStartStopAsync(App.Server, obj as Button)));
             }
         }
-        public ApplicationSettingsCommand ApplicationSettingsCommand { get; }
+        public RelayCommand ApplicationSettingsCommand
+        {
+            get
+            {
+                return applicationSettingsCommand ??
+                    (applicationSettingsCommand = new RelayCommand(obj => windowService.OpenAppSettingsDialogWindow()));
+            }
+        }
 
         public string UserHelloTitle
         {
@@ -74,12 +84,11 @@ namespace DiplomApp.ViewModels
         public bool IsLocalSession { get; private set; }
         public ObservableCollection<Controller> Controllers { get; }
 
-        public MainWindowViewModel(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp, Action closingWindow, Action<bool> dialogResultWindow)
-            : base(closingWindow, dialogResultWindow)
+        public MainWindowViewModel(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp, IWindowService windowService)
         {
             UserHelloTitle = $"Здравствуйте {username}";
             IsLocalSession = isLocalSession;
-            ApplicationSettingsCommand = new ApplicationSettingsCommand();
+            this.windowService = windowService;
             Task.Run(() => ConnectingToWebApp(connectToWebApp));
 
             Controllers = App.ControllersFactory.Controllers;
@@ -144,16 +153,16 @@ namespace DiplomApp.ViewModels
         private void DeviceSettings(Controller device)
         {
             if (device is Switch)
-                new SwitchSettingsWindow(device.ID).ShowDialog();
+                windowService.OpenSwitchSettingsDialogWindow(device.ID);
             else if (device is Sensor)
-                new SensorSettingsWindow(device.ID).ShowDialog();
+                windowService.OpenSensorSettingsDialogWindow(device.ID);
         }
         private async Task SignOut(IMqttProtocolManager server)
         {
             if (server.IsRun) await server.StopAsync();
             App.UserAccountManager.Logout();
-            new AuthentificationWindow().Show();
-            closingWindowAction();
+            windowService.OpenAuthenticationWindow();
+            windowService.CloseMainWindow();
         }
 
         ~MainWindowViewModel()

@@ -13,14 +13,10 @@ namespace DiplomApp.Views
     {
         /// <summary>
         /// Конструктор класса
-        /// </summary>
-        /// <param name="username">Имя пользователя, выполнившего аутентификацию</param>
-        /// <param name="isLocalSession">Выполнена ли аутентификация локально</param>
-        /// <param name="connectToWebApp">Функция переподключения к веб-серверу</param>
-        public MainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp)
+        /// </summary>       
+        public MainWindow()
         {
-            InitializeComponent();
-            DataContext = new MainWindowViewModel(username, isLocalSession, connectToWebApp, this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
+            InitializeComponent();            
         }
     }
 }

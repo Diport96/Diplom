@@ -182,9 +182,11 @@
     <Compile Include="Views\SensorSettingsWindow.xaml.cs">
       <DependentUpon>SensorSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\Services\IWindowService.cs" />
     <Compile Include="Views\SwitchSettingsWindow.xaml.cs">
       <DependentUpon>SwitchSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowService.cs" />
     <Page Include="Views\Resources\CircularProgressBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

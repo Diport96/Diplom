@@ -11,12 +11,10 @@ namespace DiplomApp.Views
     {
         /// <summary>
         /// Конструктор класса
-        /// </summary>
-        /// <param name="deviceId">Идентификатор переключателя для которого выполняется настройка</param>
-        public SwitchSettingsWindow(string deviceId)
+        /// </summary>        
+        public SwitchSettingsWindow()
         {
             InitializeComponent();
-            DataContext = new SwitchSettingsViewModel(deviceId, this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
         }
     }
 }

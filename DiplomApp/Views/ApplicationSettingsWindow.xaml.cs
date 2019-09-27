@@ -14,8 +14,7 @@ namespace DiplomApp.Views
         /// </summary>
         public ApplicationSettingsWindow()
         {
-            InitializeComponent();
-            DataContext = new ApplicationSettingsViewModel(this.GetClosingWindowAction(), this.GetDialogResultWindowAction());
+            InitializeComponent();           
         }
     }
 }

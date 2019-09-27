@@ -1,5 +1,6 @@
 ﻿using ClientApp;
 using DiplomApp.ViewModels.Commands;
+using DiplomApp.ViewModels.Services;
 using DiplomApp.Views;
 using System;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace DiplomApp.ViewModels
 {
     class AuthenticationViewModel : BaseViewModel
     {
+        private readonly IWindowService windowService;
         private AsyncRelayCommand signInCommand;
         private string login;
         private string attemptMessage;
@@ -72,11 +74,11 @@ namespace DiplomApp.ViewModels
             }
         }
 
-        public AuthenticationViewModel(Action closingWindow, Action<bool> dialogResultWindow)
-            : base(closingWindow, dialogResultWindow)
+        public AuthenticationViewModel(IWindowService windowService)
         {
             IsSignInButtonEnabled = true;
             CircualrBarIsVisible = Visibility.Hidden;
+            this.windowService = windowService;
         }
 
         private async Task SignIn(string login, string password)
@@ -117,8 +119,8 @@ namespace DiplomApp.ViewModels
         }
         private void RedirectToMainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp = null)
         {
-            new MainWindow(username, isLocalSession, connectToWebApp).Show();
-            closingWindowAction();
+            windowService.OpenMainWindow(username, isLocalSession, connectToWebApp);
+            windowService.CloseAuthenticationWindow();
         }
         private void BeginProcessing()
         {
