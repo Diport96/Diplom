@@ -1,8 +1,4 @@
-﻿using DiplomApp.ViewModels;
-using DiplomApp.ViewModels.Extensions;
-using System;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace DiplomApp.Views
 {
@@ -16,7 +12,7 @@ namespace DiplomApp.Views
         /// </summary>       
         public MainWindow()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
     }
 }

@@ -24,13 +24,14 @@ namespace DiplomApp
                 {
                     DataContext = new AuthenticationViewModel(this)
                 };
-                authentificationWindow.Closed += Window_Closed;
+                authentificationWindow.Closed += (sender, e) => authentificationWindow = null;
                 authentificationWindow.Show();
             }
         }
         public void CloseAuthenticationWindow()
         {
-            authentificationWindow.Close();
+            if (authentificationWindow != null)
+                authentificationWindow.Close();
         }
         public void OpenMainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp)
         {
@@ -40,13 +41,14 @@ namespace DiplomApp
                 {
                     DataContext = new MainWindowViewModel(username, isLocalSession, connectToWebApp, this)
                 };
-                mainWindow.Closed += Window_Closed;
+                mainWindow.Closed += (sender, e) => mainWindow = null;
                 mainWindow.Show();
             }
         }
         public void CloseMainWindow()
         {
-            mainWindow.Close();
+            if (mainWindow != null)
+                mainWindow.Close();
         }
 
         public bool? OpenAppSettingsDialogWindow()
@@ -85,11 +87,6 @@ namespace DiplomApp
             {
                 window.DialogResult = result;
             };
-        }
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            if (sender is AuthentificationWindow) authentificationWindow = null;
-            else if (sender is MainWindow) mainWindow = null;
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using DiplomApp.ViewModels;
-using DiplomApp.ViewModels.Extensions;
-using System.Windows;
+﻿using System.Windows;
 
 namespace DiplomApp.Views
 {

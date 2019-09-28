@@ -157,12 +157,11 @@
     <Compile Include="ViewModels\ApplicationSettingsViewModel.cs" />
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\Commands\ApplicationSettingsCommand.cs" />
     <Compile Include="ViewModels\Commands\AsyncCommandBase.cs" />
     <Compile Include="ViewModels\Commands\AsyncRelayCommand.cs" />
     <Compile Include="ViewModels\Commands\IAsyncCommand.cs" />
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
-    <Compile Include="ViewModels\Extensions\WindowExtensions.cs" />
+    <Compile Include="ViewModels\DialogBaseViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\SelectSensorDialogViewModel.cs" />
     <Compile Include="ViewModels\SensorSettingsViewModel.cs" />
