@@ -5,15 +5,12 @@ using System.Windows;
 
 namespace DiplomApp.ViewModels
 {
-    class ApplicationSettingsViewModel : BaseViewModel
+    class ApplicationSettingsViewModel : DialogBaseViewModel
     {
-        private readonly Action<bool> dialogResultWindowAction;
         private bool autoSendData;
         private bool enableDebugInfo;
         private string webAppUrl;
         private string selectedAutoSendDataTime;
-        private RelayCommand submitChangesCommand;
-        private RelayCommand cancelChangesCommand;
 
         public Dictionary<string, TimeSpan> AutoSendDataEvery { get; }
             = new Dictionary<string, TimeSpan>()
@@ -63,32 +60,16 @@ namespace DiplomApp.ViewModels
                 OnPropertyChanged("ServerUrl");
             }
         }
-        public RelayCommand SubmitChangesCommand
-        {
-            get
-            {
-                return submitChangesCommand ??
-                    (submitChangesCommand = new RelayCommand(obj => SubmitChanges()));
-            }
-        }
-        public RelayCommand CancelChangesCommand
-        {
-            get
-            {
-                return cancelChangesCommand ??
-                    (cancelChangesCommand = new RelayCommand(obj => CancelChanges()));
-            }
-        }
 
         public ApplicationSettingsViewModel(Action<bool> dialogResultWindow)
+            : base(dialogResultWindow)
         {
             WebAppUrl = Properties.Settings.Default.WebAppUrl;
             AutoSendData = Properties.Settings.Default.AutoSendDataToWebApp;
             EnableDebugInfo = Properties.Settings.Default.EnableDebugInfo;
-            dialogResultWindowAction = dialogResultWindow;
         }
 
-        private void SubmitChanges()
+        protected override void Submit()
         {
             Properties.Settings.Default.WebAppUrl = WebAppUrl;
             Properties.Settings.Default.AutoSendDataToWebApp = AutoSendData;
@@ -98,7 +79,7 @@ namespace DiplomApp.ViewModels
             Properties.Settings.Default.Save();
             dialogResultWindowAction(true);
         }
-        private void CancelChanges()
+        protected override void Cancel()
         {
             dialogResultWindowAction(false);
         }

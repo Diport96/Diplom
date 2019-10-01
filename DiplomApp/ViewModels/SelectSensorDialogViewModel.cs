@@ -9,45 +9,25 @@ using System.Windows;
 namespace DiplomApp.ViewModels
 {
     // Реализовать ObservableCollection. MVVM dialog window whth answer
-    class SelectSensorDialogViewModel : BaseViewModel
+    class SelectSensorDialogViewModel : DialogBaseViewModel
     {
-        private readonly Action<bool> dialogResultWindowAction;
-        private RelayCommand submitSelectionCommand;
-        private RelayCommand cancelSelectionCommand;
-
-        public RelayCommand SubmitSelectionCommand
-        {
-            get
-            {
-                return submitSelectionCommand ??
-                    (submitSelectionCommand = new RelayCommand(obj => SubmitSelection()));
-            }
-        }
-        public RelayCommand CancelSelectionCommand
-        {
-            get
-            {
-                return cancelSelectionCommand ??
-                    (cancelSelectionCommand = new RelayCommand(obj => CancelSelection()));
-            }
-        }
         public IEnumerable<Controller> Sensors { get; }
         public Controller SelectedSensor { get; set; }
 
         public SelectSensorDialogViewModel(Action<bool> dialogResultWindow)
+            : base(dialogResultWindow)
         {
             Sensors = App.ControllersFactory.GetControllers().Where(x => x is Sensor);
-            dialogResultWindowAction = dialogResultWindow;
         }
 
-        private void SubmitSelection()
+        protected override void Submit()
         {
             if (SelectedSensor != null)
             {
                 dialogResultWindowAction(true);
             }
         }
-        private void CancelSelection()
+        protected override void Cancel()
         {
             dialogResultWindowAction(false);
         }

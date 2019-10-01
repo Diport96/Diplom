@@ -41,8 +41,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0" Command="{Binding CancelChangesCommand}"/>
-            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0" Command="{Binding SubmitChangesCommand}"/>
+            <Button Content="Отмена" Width="60" Grid.Column="0" Margin="0,0,5,0" Command="{Binding CancelButtonCommand}"/>
+            <Button Content="ОК" Width="60" Grid.Column="1" Margin="5,0,0,0" Command="{Binding SubmitButtonCommand}"/>
         </Grid>
     </Grid>
 </Window>

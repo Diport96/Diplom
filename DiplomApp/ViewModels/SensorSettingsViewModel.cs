@@ -7,14 +7,11 @@ using System.Windows;
 
 namespace DiplomApp.ViewModels
 {
-    class SensorSettingsViewModel : BaseViewModel
+    class SensorSettingsViewModel : DialogBaseViewModel
     {
         private string deviceName;
-        private readonly Action<bool> dialogResultWindowAction;
         private readonly RegisteredDeviceContext database;
         private readonly RegisteredDeviceInfo deviceInfo;
-        private RelayCommand submitChangesCommand;
-        private RelayCommand cancelChangesCommand;
 
         public string DeviceName
         {
@@ -25,32 +22,16 @@ namespace DiplomApp.ViewModels
                 OnPropertyChanged("DeviceName");
             }
         }
-        public RelayCommand SubmitChangesCommand
-        {
-            get
-            {
-                return submitChangesCommand ??
-                    (submitChangesCommand = new RelayCommand(obj => SubmitChanges()));
-            }
-        }
-        public RelayCommand CancelChangesCommand
-        {
-            get
-            {
-                return cancelChangesCommand ??
-                    (cancelChangesCommand = new RelayCommand(obj => CancelChanges()));
-            }
-        }
 
         public SensorSettingsViewModel(string deviceId, Action<bool> dialogResultWindow)
+            : base(dialogResultWindow)
         {
             database = new RegisteredDeviceContext();
             deviceInfo = database.RegisteredDevices.First(x => x.ID == deviceId);
-            dialogResultWindowAction = dialogResultWindow;
             DeviceName = deviceInfo.Name;
         }
 
-        private void SubmitChanges()
+        protected override void Submit()
         {
             deviceInfo.Name = DeviceName;
             database.SaveChanges();
@@ -58,7 +39,7 @@ namespace DiplomApp.ViewModels
 
             dialogResultWindowAction(true);
         }
-        private void CancelChanges()
+        protected override void Cancel()
         {
             dialogResultWindowAction(false);
         }

@@ -15,12 +15,11 @@ using static DiplomApp.Controllers.SwitchOptions;
 
 namespace DiplomApp.ViewModels
 {
-    class SwitchSettingsViewModel : BaseViewModel
+    class SwitchSettingsViewModel : DialogBaseViewModel
     {
         #region Поля
 
         private readonly IWindowService windowService;
-        private readonly Action<bool> dialogResultWindowAction;
         private readonly RegisteredDeviceContext database;
         private readonly RegisteredDeviceInfo deviceInfo;
         private readonly Switch @switch;
@@ -151,8 +150,6 @@ namespace DiplomApp.ViewModels
 
         private AsyncRelayCommand enableDisableSwitchButtonCommand;
         private RelayCommand selectSensorCommand;
-        private RelayCommand submitChangesCommand;
-        private RelayCommand cancelChangesCommand;
 
         public AsyncRelayCommand EnableDisableSwitchButtonCommand
         {
@@ -170,30 +167,14 @@ namespace DiplomApp.ViewModels
                     (selectSensorCommand = new RelayCommand(obj => SelectSensor()));
             }
         }
-        public RelayCommand SubmitChangesCommand
-        {
-            get
-            {
-                return submitChangesCommand ??
-                    (submitChangesCommand = new RelayCommand(obj => SubmitChanges()));
-            }
-        }
-        public RelayCommand CancelChangesCommand
-        {
-            get
-            {
-                return cancelChangesCommand ??
-                    (cancelChangesCommand = new RelayCommand(obj => CancelChanges()));
-            }
-        }
 
         #endregion
 
         #region Конструкторы
 
         public SwitchSettingsViewModel(string deviceId, Action<bool> dialogResultWindow, IWindowService windowService)
+            : base(dialogResultWindow)
         {
-            dialogResultWindowAction = dialogResultWindow;
             this.windowService = windowService;
             database = new RegisteredDeviceContext();
             deviceInfo = database.RegisteredDevices.First(x => x.ID == deviceId);
@@ -268,7 +249,7 @@ namespace DiplomApp.ViewModels
             if (dialogWindowResult != null)
                 SelectedSensor = dialogWindowResult;
         }
-        private void SubmitChanges()
+        protected override void Submit()
         {
             deviceInfo.Name = DeviceName;
             @switch.Name = DeviceName;
@@ -284,7 +265,7 @@ namespace DiplomApp.ViewModels
             App.Server.SendMessage(response, Server.SetOfConstants.Topics.SWITCHES).GetAwaiter().GetResult();
             dialogResultWindowAction(true);
         }
-        private void CancelChanges()
+        protected override void Cancel()
         {
             dialogResultWindowAction(false);
         }
