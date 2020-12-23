@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DiplomApp.Controllers;
 
-namespace DiplomApp.Controllers.Models
+namespace DiplomApp.Models
 {
     class Sensor : Controller
     {

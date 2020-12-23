@@ -1,5 +1,4 @@
 ﻿using DiplomApp.Controllers;
-using DiplomApp.Controllers.Models;
 using DiplomApp.Data;
 using DiplomApp.Server;
 using DiplomApp.ViewModels.Commands;
@@ -11,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using DiplomApp.Models;
 using static DiplomApp.Controllers.SwitchOptions;
 
 namespace DiplomApp.ViewModels

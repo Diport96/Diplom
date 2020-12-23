@@ -1,7 +1,6 @@
 ﻿using ClientApp;
 using DiplomApp.Accounts;
 using DiplomApp.Controllers;
-using DiplomApp.Controllers.Models;
 using DiplomApp.Data;
 using DiplomApp.Server;
 using DiplomApp.ViewModels.Commands;
@@ -17,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using DiplomApp.Models;
 
 namespace DiplomApp.ViewModels
 {

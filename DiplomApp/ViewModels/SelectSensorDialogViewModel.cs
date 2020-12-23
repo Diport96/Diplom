@@ -1,10 +1,10 @@
 ﻿using DiplomApp.Controllers;
-using DiplomApp.Controllers.Models;
 using DiplomApp.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using DiplomApp.Models;
 
 namespace DiplomApp.ViewModels
 {
