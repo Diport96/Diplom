@@ -2,16 +2,16 @@
 
 namespace DiplomApp.Models
 {
-    class Sensor : Controller
+    internal class Sensor : Controller
     {
         private double value;
         public double Value
         {
-            get { return value; }
+            get => value;
             set
             {
                 this.value = value;
-                OnPropertyChanged("Value");
+                OnPropertyChanged();
             }
         }
 

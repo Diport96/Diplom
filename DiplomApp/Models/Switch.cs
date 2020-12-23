@@ -2,16 +2,16 @@
 
 namespace DiplomApp.Models
 {
-    class Switch : Controller
+    internal class Switch : Controller
     {
         private bool value;       
         public bool Value
         {
-            get { return value; }
+            get => value;
             set
             {
                 this.value = value;
-                OnPropertyChanged("Value");
+                OnPropertyChanged();
             }
         }
 
