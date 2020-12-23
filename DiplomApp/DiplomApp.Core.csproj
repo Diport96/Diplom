@@ -141,7 +141,7 @@
     <Compile Include="Data\RegisteredDeviceContext.cs" />
     <Compile Include="Controllers\InvalidControllerTypeException.cs" />
     <Compile Include="Models\Switch.cs" />
-    <Compile Include="Models\Termometer.cs" />
+    <Compile Include="Models\Thermometer.cs" />
     <Compile Include="Data\UserAccountContext.cs" />
     <Compile Include="Server\IMqttClientComponent.cs" />
     <Compile Include="Server\IMqttComponent.cs" />
