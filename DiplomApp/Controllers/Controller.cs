@@ -1,14 +1,7 @@
-﻿using DiplomApp;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiplomApp.Controllers
 {
@@ -31,11 +24,11 @@ namespace DiplomApp.Controllers
         [Required]
         public string Name
         {
-            get { return name; }
+            get => name;
             set
             {
                 name = value;
-                OnPropertyChanged("Name");
+                OnPropertyChanged();
             }
         }
 

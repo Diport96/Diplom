@@ -3,35 +3,32 @@ using DiplomApp.ViewModels;
 using DiplomApp.ViewModels.Services;
 using DiplomApp.Views;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace DiplomApp
 {
-    class WindowService : IWindowService
+    internal class WindowService : IWindowService
     {
-        private AuthentificationWindow authentificationWindow;
+        private AuthentificationWindow authenticationWindow;
         private MainWindow mainWindow;
 
         public void OpenAuthenticationWindow()
         {
-            if (authentificationWindow == null)
+            if (authenticationWindow == null)
             {
-                authentificationWindow = new AuthentificationWindow
+                authenticationWindow = new AuthentificationWindow
                 {
                     DataContext = new AuthenticationViewModel(this)
                 };
-                authentificationWindow.Closed += (sender, e) => authentificationWindow = null;
-                authentificationWindow.Show();
+                authenticationWindow.Closed += (sender, e) => authenticationWindow = null;
+                authenticationWindow.Show();
             }
         }
         public void CloseAuthenticationWindow()
         {
-            if (authentificationWindow != null)
-                authentificationWindow.Close();
+            if (authenticationWindow != null)
+                authenticationWindow.Close();
         }
         public void OpenMainWindow(string username, bool isLocalSession, Func<Task<bool>> connectToWebApp)
         {
@@ -81,7 +78,7 @@ namespace DiplomApp
             return window.ShowDialog();
         }
 
-        private Action<bool> GetActionDialogResult(Window window)
+        private static Action<bool> GetActionDialogResult(Window window)
         {
             return (result) =>
             {

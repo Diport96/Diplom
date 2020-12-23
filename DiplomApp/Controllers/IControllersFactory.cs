@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace DiplomApp.Controllers
 {
-    interface IControllersFactory
+    internal interface IControllersFactory
     {
         ObservableCollection<Controller> Controllers { get; }
 
@@ -13,6 +13,6 @@ namespace DiplomApp.Controllers
         IEnumerable<Controller> GetControllers();
         Controller GetById(string id);
         RegisteredDeviceInfo GetControllerInfo(string id);
-        Type GetType(string Type);
+        Type GetType(string type);
     }
 }

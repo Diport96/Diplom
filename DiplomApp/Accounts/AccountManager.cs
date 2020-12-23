@@ -1,12 +1,9 @@
 ﻿using DiplomApp.Data;
 using NLog;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DiplomApp.Accounts
@@ -14,25 +11,17 @@ namespace DiplomApp.Accounts
     /// <summary>
     /// Предоставляет менеджер аккаунтов пользователей
     /// </summary>
-    class AccountManager : IAccountManager
+    internal class AccountManager : IAccountManager
     {
         private readonly ILogger logger = LogManager.GetCurrentClassLogger();
         private readonly UserAccountContext database;
-        private static AccountManager instance;
+        private static AccountManager _instance;
 
         /// <summary>
         /// Хранит информацию об авторизованном пользователе
         /// </summary>
         public IAccount CurrentUser { get; set; }
-        public static AccountManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new AccountManager();
-                return instance;
-            }
-        }
+        public static AccountManager Instance => _instance ?? (_instance = new AccountManager());
 
         public AccountManager()
         {

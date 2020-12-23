@@ -9,31 +9,23 @@ using System.Windows;
 
 namespace DiplomApp.Controllers
 {
-    class ControllersFactory : IControllersFactory
+    internal class ControllersFactory : IControllersFactory
     {
-        private static ControllersFactory instance;
+        private static ControllersFactory _instance;
         private readonly RegisteredDeviceContext database;
-        private readonly IEnumerable<Type> Types;
+        private readonly IEnumerable<Type> types;
         private readonly Logger logger;
 
-        public static ControllersFactory Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new ControllersFactory();
-                return instance;
-            }
-        }
+        public static ControllersFactory Instance => _instance ?? (_instance = new ControllersFactory());
         public ObservableCollection<Controller> Controllers { get; }
 
         private ControllersFactory()
         {
             database = new RegisteredDeviceContext();
             Controllers = new ObservableCollection<Controller>();
-            Types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Controller)));
+            types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Controller)));
             logger = LogManager.GetCurrentClassLogger();
-            App.Server.MqttProtocolStoped += Server_ServerStoped;
+            App.Server.MqttProtocolStoped += Server_ServerStopped;
             database.Database.CreateIfNotExists();
         }
 
@@ -68,7 +60,7 @@ namespace DiplomApp.Controllers
         public IEnumerable<Controller> GetControllers()
         {
             return Controllers;
-        } //!!! Delete this code?
+        } // TODO: Delete this code?
         public Controller GetById(string id)
         {
             var res = Controllers.FirstOrDefault(x => x.ID == id);
@@ -79,32 +71,32 @@ namespace DiplomApp.Controllers
             var res = database.RegisteredDevices.FirstOrDefault(x => x.ID == id);
             return res;
         }
-        public Type GetType(string Type)
+        public Type GetType(string type)
         {
-            foreach (var t in Types)
+            foreach (var t in types)
             {
-                if (t.Name == Type)
+                if (t.Name == type)
                     return t;
             }
             throw new InvalidControllerTypeException("Не удалось определить тип контроллера, возможно название класса не совпадает с названием типа контроллера");
         }
 
-        private void RegisterDeviceInfoInDatabase(Controller controller, string controllerType, RegisteredDeviceContext database)
+        private void RegisterDeviceInfoInDatabase(Controller controller, string controllerType, RegisteredDeviceContext context)
         {
-            //!!! Найти способ оптимизации запроса  
-            if (!database.RegisteredDevices.Any(x => x.ID == controller.ID))
+            //TODO: Найти способ оптимизации запроса  
+            if (!context.RegisteredDevices.Any(x => x.ID == controller.ID))
             {
-                database.RegisteredDevices.Add(new RegisteredDeviceInfo(
+                context.RegisteredDevices.Add(new RegisteredDeviceInfo(
                     controller.ID,
                     controller.Name,
                     controllerType,
                     DateTime.Now
                     ));
 
-                database.SaveChanges();
+                context.SaveChanges();
             }
         }
-        private void Server_ServerStoped(object sender, EventArgs e)
+        private void Server_ServerStopped(object sender, EventArgs e)
         {
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
