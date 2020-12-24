@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiplomApp.Web", "MqttWebApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomApp.Core.Tests", "DiplomApp.Core.Tests\DiplomApp.Core.Tests.csproj", "{F421698A-F7EB-405A-9689-6CA5CCC2C832}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDevicesUtility", "EmuDevicesUtility\EmuDevicesUtility.csproj", "{C2A9539B-2F49-4208-9458-323184A5548B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{F421698A-F7EB-405A-9689-6CA5CCC2C832}.Release|x64.Build.0 = Release|Any CPU
 		{F421698A-F7EB-405A-9689-6CA5CCC2C832}.Release|x86.ActiveCfg = Release|Any CPU
 		{F421698A-F7EB-405A-9689-6CA5CCC2C832}.Release|x86.Build.0 = Release|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Debug|x64.Build.0 = Debug|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Debug|x86.Build.0 = Debug|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Release|x64.ActiveCfg = Release|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Release|x64.Build.0 = Release|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Release|x86.ActiveCfg = Release|Any CPU
+		{C2A9539B-2F49-4208-9458-323184A5548B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

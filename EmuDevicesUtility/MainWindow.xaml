@@ -1,0 +1,48 @@
+﻿<Window x:Class="EmuDevicesUtility.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EmuDevicesUtility"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="0.85*"/>
+			<RowDefinition Height="0.15*"/>
+		</Grid.RowDefinitions>
+		<ListView Name="tStack" Grid.Row="0" SelectionChanged="TStack_SelectionChanged">
+			<ListView.View>
+				<GridView>
+					<GridViewColumn DisplayMemberBinding="{Binding Path=ID}">ID</GridViewColumn>
+					<GridViewColumn DisplayMemberBinding="{Binding Path=Name}">Name</GridViewColumn>
+					<GridViewColumn DisplayMemberBinding="{Binding Path=Type}">Type</GridViewColumn>
+					<GridViewColumn DisplayMemberBinding="{Binding Path=Value}">Value</GridViewColumn>
+				</GridView>
+			</ListView.View>
+		</ListView>
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<WrapPanel Grid.Column="0" VerticalAlignment="Center" >
+				<GroupItem>
+					<WrapPanel>
+						<Label Content="Количество "/>
+						<TextBox Name="TCount" Width="40"/>
+					</WrapPanel>
+				</GroupItem>
+				<GroupItem Margin="10,0,0,0">
+					<WrapPanel>
+						<Label Content="Тип "/>
+						<ComboBox Name="CBType"/>
+					</WrapPanel>
+				</GroupItem >
+			</WrapPanel>
+			<WrapPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,20,0">
+				<Button Name="GenerateBtn" Content="Создать" Width="80" Click="GenerateBtn_Click"/>
+			</WrapPanel>
+		</Grid>
+	</Grid>
+</Window>
