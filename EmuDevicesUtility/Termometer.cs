@@ -19,13 +19,13 @@ namespace EmuDevicesUtility
             }
         }
 
-        public Termometer(string name, double value) : base(name, "Termometer")
+        public Termometer(string name, double value) : base(name, "Thermometer")
         {
             this.value = value;
-            Client.MessageSended += Client_MessageSended;
+            Client.AfterSendMessage += ClientAfterSendMessage;
         }
 
-        private void Client_MessageSended(object sender, EventArgs e)
+        private void ClientAfterSendMessage(object sender, EventArgs e)
         {
             var x = DateTime.Now.Millisecond;
             var res = Math.Abs(Math.Sin(x * 20) * 20);

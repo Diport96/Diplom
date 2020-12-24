@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EmuDevicesUtility
+﻿namespace EmuDevicesUtility
 {
-    class Sensor : Controller
+    internal class Sensor : Controller
     {
         private int value;
         public override string Value
         {
-            get { return value.ToString(); }
+            get => value.ToString();
             set
             {
                 this.value = int.Parse(value);
-                OnPropertyChanged("Value");
+                OnPropertyChanged();
             }
         }
        

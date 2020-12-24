@@ -1,26 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace EmuDevicesUtility
 {
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : INotifyPropertyChanged
     {
         internal ObservableCollection<Controller> Controllers { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -47,18 +35,18 @@ namespace EmuDevicesUtility
         private void GenerateBtn_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(TCount.Text)) { }//throw new ArgumentNullException();
-            if (!int.TryParse(TCount.Text, out int count)) { }// throw new ArgumentException();
+            if (!int.TryParse(TCount.Text, out var count)) { }// throw new ArgumentException();
             if (CBType.SelectedItem == null) { }// throw new ArgumentNullException();
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 if ((CType)CBType.SelectedValue == CType.Sensor)
-                    Controllers.Add(new Sensor(CType.Sensor + " " + i.ToString(), 20));
+                    Controllers.Add(new Sensor(CType.Sensor + " " + i, 20));
                 if ((CType)CBType.SelectedValue == CType.Switch)
-                    Controllers.Add(new Switch(CType.Switch + " " + i.ToString(), false));
-                if ((CType)CBType.SelectedValue == CType.Termometer)
-                    Controllers.Add(new Termometer(CType.Termometer + " " + i.ToString(), 20));
+                    Controllers.Add(new Switch(CType.Switch + " " + i, false));
+                if ((CType)CBType.SelectedValue == CType.Thermometer)
+                    Controllers.Add(new Termometer(CType.Thermometer + " " + i, 20));
             }
-            OnPropertyChanged("Controllers");
+            OnPropertyChanged(nameof(Controllers));
         }
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

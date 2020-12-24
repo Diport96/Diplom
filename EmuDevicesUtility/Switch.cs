@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EmuDevicesUtility
+﻿namespace EmuDevicesUtility
 {
-    class Switch : Controller
+    internal class Switch : Controller
     {
         private bool value;
         public override string Value
         {
-            get { return value.ToString(); }
+            get => value.ToString();
             set
             {
                 this.value = bool.Parse(value);
-                OnPropertyChanged("Value");
+                OnPropertyChanged();
             }
         }
         public Switch(string name, bool value) : base(name, "Switch")
@@ -35,7 +29,7 @@ namespace EmuDevicesUtility
         public void SetValue(bool val)
         {
             value = val;
-            OnPropertyChanged("Value");
+            OnPropertyChanged(nameof(Value));
         }
     }
 }

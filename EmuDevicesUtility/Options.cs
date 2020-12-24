@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EmuDevicesUtility
+﻿namespace EmuDevicesUtility
 {
-    class Options
+    internal class Options
     {
         public string SensorId { get; set; }
         public int? DelayToSwitch { get; set; }

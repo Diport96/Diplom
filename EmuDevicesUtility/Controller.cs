@@ -1,20 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using EmuDevicesUtility;
-using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace EmuDevicesUtility
 {
-    abstract class Controller : INotifyPropertyChanged
+    internal abstract class Controller : INotifyPropertyChanged
     {
-        string name;
+        private string name;
         protected readonly ClientDevice Client;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -22,17 +14,17 @@ namespace EmuDevicesUtility
         public string Type { get; }
         public string Name
         {
-            get { return name; }
+            get => name;
             set
             {
                 name = value;
-                OnPropertyChanged("Name");
+                OnPropertyChanged();
             }
         }
         public Options Options { get; }
-        abstract public string Value { get; set; }
+        public abstract string Value { get; set; }
 
-        public Controller(string name, string type)
+        protected Controller(string name, string type)
         {
             Type = type;
             ID = Guid.NewGuid().ToString();
