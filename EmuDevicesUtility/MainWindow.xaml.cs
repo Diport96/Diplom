@@ -17,9 +17,9 @@ namespace EmuDevicesUtility
         {
             InitializeComponent();
             Controllers = new ObservableCollection<Controller>();
-            CBType.ItemsSource = Enum.GetValues(typeof(CType)).Cast<CType>();
-            CBType.SelectedIndex = 0;
-            tStack.ItemsSource = Controllers;
+            CbType.ItemsSource = Enum.GetValues(typeof(CType)).Cast<CType>();
+            CbType.SelectedIndex = 0;
+            TStack.ItemsSource = Controllers;
 
             Closed += MainWindow_Closed;
         }
@@ -36,14 +36,14 @@ namespace EmuDevicesUtility
         {
             if (string.IsNullOrEmpty(TCount.Text)) { }//throw new ArgumentNullException();
             if (!int.TryParse(TCount.Text, out var count)) { }// throw new ArgumentException();
-            if (CBType.SelectedItem == null) { }// throw new ArgumentNullException();
+            if (CbType.SelectedItem == null) { }// throw new ArgumentNullException();
             for (var i = 0; i < count; i++)
             {
-                if ((CType)CBType.SelectedValue == CType.Sensor)
+                if ((CType)CbType.SelectedValue == CType.Sensor)
                     Controllers.Add(new Sensor(CType.Sensor + " " + i, 20));
-                if ((CType)CBType.SelectedValue == CType.Switch)
+                if ((CType)CbType.SelectedValue == CType.Switch)
                     Controllers.Add(new Switch(CType.Switch + " " + i, false));
-                if ((CType)CBType.SelectedValue == CType.Thermometer)
+                if ((CType)CbType.SelectedValue == CType.Thermometer)
                     Controllers.Add(new Termometer(CType.Thermometer + " " + i, 20));
             }
             OnPropertyChanged(nameof(Controllers));

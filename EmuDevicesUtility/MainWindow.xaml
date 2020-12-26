@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EmuDevicesUtility"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 	<Grid>
@@ -11,7 +10,7 @@
 			<RowDefinition Height="0.85*"/>
 			<RowDefinition Height="0.15*"/>
 		</Grid.RowDefinitions>
-		<ListView Name="tStack" Grid.Row="0" SelectionChanged="TStack_SelectionChanged">
+		<ListView Name="TStack" Grid.Row="0" SelectionChanged="TStack_SelectionChanged">
 			<ListView.View>
 				<GridView>
 					<GridViewColumn DisplayMemberBinding="{Binding Path=ID}">ID</GridViewColumn>
@@ -36,7 +35,7 @@
 				<GroupItem Margin="10,0,0,0">
 					<WrapPanel>
 						<Label Content="Тип "/>
-						<ComboBox Name="CBType"/>
+						<ComboBox Name="CbType"/>
 					</WrapPanel>
 				</GroupItem >
 			</WrapPanel>
