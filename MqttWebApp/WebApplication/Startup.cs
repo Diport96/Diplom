@@ -117,6 +117,7 @@ namespace MqttWebApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapDefaultControllerRoute();
             });
 
             MongoDbConnectionString = Configuration.GetConnectionString("MongoDbConnection");
