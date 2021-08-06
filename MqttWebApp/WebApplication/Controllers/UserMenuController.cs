@@ -29,6 +29,8 @@ namespace MqttWebApp.Controllers
         public JsonResult GetJsonData()
         {
             var user = User.Identity.Name;
+            
+            // TODO: when database is empty it throws exception
             return Json(GetStatisticUserTermometersData(user, database).Result);
         }
         private async Task<List<object>> GetStatisticUserTermometersData(string user, IMongoDatabase database)

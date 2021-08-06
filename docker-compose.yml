@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  sql_db: 
+    image: microsoft/mssql-server-windows-developer
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+      
+  diplomapp.web:
+    image: ${DOCKER_REGISTRY-}diplomappweb
+    build:
+      context: .
+      dockerfile: MqttWebApp\WebApplication\Dockerfile
+    ports: 
+      - "80:80"
+      - "443:443"   
+    depends_on:
+      - sql_db   
