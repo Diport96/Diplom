@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "composeLaunchServiceName": "diplomapp.web",
+      "composeProfile": {
+        "includes": [
+          "webApp"
+        ]
+      },
+      "composeLaunchAction": "LaunchBrowser",
+      "commandVersion": "1.0",
+      "composeLaunchUrl": "{Scheme}://{ServiceIPAddress}{ServicePort}"
+    }
+  }
+}

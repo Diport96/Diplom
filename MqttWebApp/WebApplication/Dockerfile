@@ -14,10 +14,10 @@ COPY ["MqttWebApp/WebApplication/DiplomApp.Web.csproj", "MqttWebApp/WebApplicati
 RUN dotnet restore "MqttWebApp/WebApplication/DiplomApp.Web.csproj"
 COPY . .
 WORKDIR "/src/MqttWebApp/WebApplication"
-RUN dotnet build "DiplomApp.Web.csproj" -c Release -o /app/build
+RUN dotnet build "DiplomApp.Web.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "DiplomApp.Web.csproj" -c Release -o /app/publish
+RUN dotnet publish "DiplomApp.Web.csproj" -c Debug -o /app/publish
 
 FROM base AS final
 WORKDIR /app
