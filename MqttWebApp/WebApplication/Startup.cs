@@ -38,7 +38,7 @@ namespace MqttWebApp
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
-                        options.RequireHttpsMetadata = true;
+                        options.RequireHttpsMetadata = false;
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             // валидация ключа безопасности
@@ -52,7 +52,7 @@ namespace MqttWebApp
                             ValidIssuer = TokenAuthOptions.ISSUER,
 
                             // будет ли валидироваться потребитель токена
-                            ValidateAudience = true,
+                            ValidateAudience = false,
                             // установка потребителя токена
                             ValidAudience = TokenAuthOptions.AUDIENCE,
 
@@ -105,7 +105,7 @@ namespace MqttWebApp
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+           
             app.UseStaticFiles();
             app.UseCookiePolicy();
 

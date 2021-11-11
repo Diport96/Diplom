@@ -113,7 +113,7 @@ namespace MqttWebApp.Controllers.API
             }
         }
 
-        [HttpGet]
+        [HttpGet(nameof(GetConnectionString))]
         public string GetConnectionString()
         {
             return Startup.MongoDbConnectionString;

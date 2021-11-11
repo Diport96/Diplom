@@ -10,11 +10,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDevicesUtility", "EmuDevicesUtility\EmuDevicesUtility.csproj", "{C2A9539B-2F49-4208-9458-323184A5548B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiplomApp.Web", "MqttWebApp\WebApplication\DiplomApp.Web.csproj", "{742393AF-7548-4F47-B43C-B4F29207B36E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{17BC5B0C-BC2F-4AB6-975D-927C0AA84279} = {17BC5B0C-BC2F-4AB6-975D-927C0AA84279}
-	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{17BC5B0C-BC2F-4AB6-975D-927C0AA84279}"
+	ProjectSection(ProjectDependencies) = postProject
+		{742393AF-7548-4F47-B43C-B4F29207B36E} = {742393AF-7548-4F47-B43C-B4F29207B36E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
