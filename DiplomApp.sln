@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiplomApp.Web", "MqttWebApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomApp.Backend", "DiplomApp.Backend\DiplomApp.Backend.csproj", "{9389EA27-BACE-4B4F-9AF2-16432A7AFDD2}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "DiplomApp.WebClient", "DiplomApp.WebClient\DiplomApp.WebClient.esproj", "{71770E66-58E7-3019-7DC9-4D8E01173FC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,24 @@ Global
 		{9389EA27-BACE-4B4F-9AF2-16432A7AFDD2}.Release|x64.Build.0 = Release|Any CPU
 		{9389EA27-BACE-4B4F-9AF2-16432A7AFDD2}.Release|x86.ActiveCfg = Release|Any CPU
 		{9389EA27-BACE-4B4F-9AF2-16432A7AFDD2}.Release|x86.Build.0 = Release|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Debug|x64.Build.0 = Debug|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Debug|x86.Build.0 = Debug|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Release|x64.ActiveCfg = Release|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Release|x64.Build.0 = Release|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Release|x64.Deploy.0 = Release|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Release|x86.ActiveCfg = Release|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Release|x86.Build.0 = Release|Any CPU
+		{71770E66-58E7-3019-7DC9-4D8E01173FC5}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
