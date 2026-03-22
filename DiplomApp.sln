@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmuDevicesUtility", "EmuDev
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiplomApp.Web", "MqttWebApp\WebApplication\DiplomApp.Web.csproj", "{742393AF-7548-4F47-B43C-B4F29207B36E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomApp.Backend", "DiplomApp.Backend\DiplomApp.Backend.csproj", "{9389EA27-BACE-4B4F-9AF2-16432A7AFDD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{9389EA27-BACE-4B4F-9AF2-16432A7AFDD2}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "WebClient", "WebClient\WebClient.esproj", "{71770E66-58E7-3019-7DC9-4D8E01173FC5}"
 EndProject
