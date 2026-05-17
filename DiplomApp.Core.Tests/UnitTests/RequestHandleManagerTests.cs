@@ -1,25 +1,24 @@
-﻿using DiplomApp.Server.RequsestHandlers;
+using DiplomApp.Server.RequsestHandlers;
 using DiplomApp.Server.SetOfConstants;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace DiplomApp.Core.Tests.UnitTests
 {
-    [TestClass]
+    [TestFixture]
     public class RequestHandleManagerTests
     {
-        [TestMethod]
+        [Test]
         public void GetRequestHandler_TryGetConnectHandler_ConnectHandlerReturned()
         {
-            Dictionary<string, string> request = new Dictionary<string, string>()
+            Dictionary<string, string> request = new Dictionary<string, string>
             {
-                {"Message_Type", MessageTypes.REQUSET_TO_CONNECT }
+                { "Message_Type", MessageTypes.REQUSET_TO_CONNECT }
             };
 
             var handleManager = new RequestHandleManager();
             var handler = handleManager.GetRequestHandler(request);
 
-            Assert.IsInstanceOfType(handler, typeof(ConnectHandler));
+            Assert.That(handler, Is.InstanceOf<ConnectHandler>());
         }
     }
 }

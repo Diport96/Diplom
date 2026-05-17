@@ -1,29 +1,23 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DiplomApp.Server;
 using Moq;
-using MQTTnet.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace DiplomApp.Core.Tests.UnitTests
 {
-    [TestClass]
+    [TestFixture]
     public class MqttServerTests
     {
-        [TestMethod]
+        [Test]
         public async Task IsRunProperty_RunAndStopServer_TrueAfterRunAndFalseAfterStop()
         {
-            IMqttServer fakeServer = Mock.Of<IMqttServer>();
-            IMqttServerOptions fakeServerOptions = Mock.Of<IMqttServerOptions>();
-            Server.MqttServer mqttServer = new Server.MqttServer(fakeServer, fakeServerOptions);
+            IMqttServerAdapter fakeServerAdapter = Mock.Of<IMqttServerAdapter>();
+            Server.MqttServer mqttServer = new Server.MqttServer(fakeServerAdapter);
 
             await mqttServer.RunAsync();
-            Assert.IsTrue(mqttServer.IsRun);
+            Assert.That(mqttServer.IsRun, Is.True);
 
             await mqttServer.StopAsync();
-            Assert.IsFalse(mqttServer.IsRun);
+            Assert.That(mqttServer.IsRun, Is.False);
         }
     }
 }

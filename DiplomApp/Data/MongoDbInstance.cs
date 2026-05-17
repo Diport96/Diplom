@@ -1,30 +1,25 @@
-﻿using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MongoDB.Driver;
 
 namespace DiplomApp.Data
 {
     class MongoDbInstance
     {
-        private static MongoDbInstance instance;
+        private static MongoDbInstance? instance;
+
         public static MongoDbInstance Instance
         {
             get
             {
-                if (instance == null)
-                    instance = new MongoDbInstance();
+                instance ??= new MongoDbInstance();
                 return instance;
             }
         }
+
         public IMongoDatabase Database { get; private set; }
 
         private MongoDbInstance()
         {
-            var client = new MongoClient(ConfigurationManager.ConnectionStrings["MongoDb"].ConnectionString);
+            var client = new MongoClient(Properties.Settings.Default.MongoDbConnectionString);
             Database = client.GetDatabase("DevicesData");
         }
 

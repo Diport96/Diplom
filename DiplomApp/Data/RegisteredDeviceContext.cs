@@ -1,43 +1,17 @@
-﻿using DiplomApp.Controllers;
-using DiplomApp.Data;
-using NLog;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using DiplomApp.Controllers;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiplomApp.Data
 {
-    /// <summary>
-    /// Представляет контекст данных для устройств, для создания сессии с базой данных 
-    /// </summary>
     public class RegisteredDeviceContext : DbContext
     {
-        /// <summary>
-        /// Сущность данных, в которой хранится информация 
-        /// об зарегистрированных в базе данных устройствах
-        /// </summary>
         public DbSet<RegisteredDeviceInfo> RegisteredDevices { get; set; }
-
-        /// <summary>
-        /// Сущность данных, в которой хранится информация 
-        /// об опциях зарегистрированных в базе данных устройств
-        /// </summary>
         public DbSet<SwitchOptions> SwitchOptions { get; set; }
 
-        /// <summary>
-        /// Конструктор класса
-        /// </summary>
-        public RegisteredDeviceContext() : base("SqlDatabaseConnection") { }
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+            => options.UseSqlServer(Properties.Settings.Default.SqlConnectionString);
 
-        /// <summary>
-        /// Представляет Fluent API для Entity Framework
-        /// </summary>
-        /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RegisteredDeviceInfo>().HasKey(pk => pk.ID);
             base.OnModelCreating(modelBuilder);

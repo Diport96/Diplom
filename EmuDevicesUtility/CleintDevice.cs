@@ -1,14 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using DiplomApp.Server.SetOfConstants;
+using MQTTnet;
+using MQTTnet.Client;
+using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using uPLibrary.Networking.M2Mqtt;
-using uPLibrary.Networking.M2Mqtt.Messages;
-using DiplomApp.Server.SetOfConstants;
-
 
 namespace EmuDevicesUtility
 {
@@ -22,40 +17,44 @@ namespace EmuDevicesUtility
 
     internal class ClientDevice
     {
-        public event EventHandler AfterSendMessage;
-        private const string CONNECTION = DiplomApp.Server.SetOfConstants.Topics.CONNECTION;
-        private readonly MqttClient client;
+        public event EventHandler? AfterSendMessage;
+        private const string CONNECTION = Topics.CONNECTION;
+        private readonly IMqttClient _mqttClient;
         private readonly Controller controller;
         private readonly CancellationTokenSource cancellation;
 
-
-        public IReadOnlyList<string> Topics { get; }
+        public IReadOnlyList<string> Topics { get; } = new List<string> { "#" }.AsReadOnly();
         public bool IsConnected { get; private set; }
 
         public ClientDevice(Controller controller)
         {
             this.controller = controller;
-            Topics = new List<string>() {
-               "#"
-            }.AsReadOnly();
-
-            client = new MqttClient("localhost");
-            foreach (var topic in Topics)
-            {
-                client.Subscribe(new[] { topic }, new[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-            }
-            client.Connect(this.controller.ID);
-            client.MqttMsgPublishReceived += Client_MqttMsgPublishReceived;
-
-            IsConnected = false;
             cancellation = new CancellationTokenSource();
 
+            var factory = new MqttFactory();
+            _mqttClient = factory.CreateMqttClient();
+            _mqttClient.ApplicationMessageReceivedAsync += OnMessageReceivedAsync;
+
+            var options = new MqttClientOptionsBuilder()
+                .WithClientId(this.controller.ID)
+                .WithTcpServer("localhost")
+                .Build();
+
+            _mqttClient.ConnectAsync(options).GetAwaiter().GetResult();
+
+            _mqttClient.SubscribeAsync(
+                new MqttClientSubscribeOptionsBuilder()
+                    .WithTopicFilter(f => f.WithTopic("#").WithExactlyOnceQoS())
+                    .Build()
+            ).GetAwaiter().GetResult();
+
+            IsConnected = false;
             this.controller.PropertyChanged += Controller_PropertyChanged;
         }
 
-        private void Controller_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Controller_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            var property = sender.GetType().GetProperty(e.PropertyName);
+            var property = sender?.GetType().GetProperty(e.PropertyName ?? string.Empty);
             property?.GetValue(sender);
         }
 
@@ -75,49 +74,53 @@ namespace EmuDevicesUtility
                 Class = cData
             };
             var res = JsonConvert.SerializeObject(message);
-            client.Publish(CONNECTION, Encoding.UTF8.GetBytes(res));
+            _mqttClient.PublishStringAsync(CONNECTION, res).GetAwaiter().GetResult();
         }
+
         public void SendDisconnect()
         {
-            if (!client.IsConnected) return;
+            if (!_mqttClient.IsConnected) return;
             var message = new
             {
                 Message_Type = MessageTypes.REQUSET_TO_DISCONNECT,
                 controller.ID
             };
             var res = JsonConvert.SerializeObject(message);
-            client.Publish(CONNECTION, Encoding.UTF8.GetBytes(res));
-            client.Disconnect();
+            _mqttClient.PublishStringAsync(CONNECTION, res).GetAwaiter().GetResult();
+            _mqttClient.DisconnectAsync().GetAwaiter().GetResult();
             if (!IsConnected) return;
             IsConnected = false;
             cancellation.Cancel();
         }
+
         private async void StartDistributionOfValues()
         {
-            void Action(CancellationToken x)
+            void Action(CancellationToken token)
             {
-                while (!x.IsCancellationRequested)
+                while (!token.IsCancellationRequested)
                 {
                     DistributeValue();
-                    AfterSendMessage?.Invoke(this, new EventArgs());
+                    AfterSendMessage?.Invoke(this, EventArgs.Empty);
                     Thread.Sleep((int)Properties.Settings.Default.SendMessageDelay.TotalMilliseconds);
                 }
             }
             await Task.Run(() => Action(cancellation.Token), cancellation.Token);
         }
+
         private void StopDistributionOfValues()
         {
             cancellation.Cancel();
         }
 
-        private void Client_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        private Task OnMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
         {
-            if (e.Topic != CONNECTION 
-                || !(JsonConvert.DeserializeObject(
-                    Encoding.UTF8.GetString(e.Message), 
-                    typeof(Dictionary<string, string>))
-                    is Dictionary<string, string> message)) 
-                return;
+            if (e.ApplicationMessage.Topic != CONNECTION)
+                return Task.CompletedTask;
+
+            var payload = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
+            if (JsonConvert.DeserializeObject(payload, typeof(Dictionary<string, string>))
+                    is not Dictionary<string, string> message)
+                return Task.CompletedTask;
 
             message.TryGetValue("Message_Type", out var val);
 
@@ -146,7 +149,6 @@ namespace EmuDevicesUtility
                             message.TryGetValue("ValueTo", out var valueInput);
                             int.TryParse(delayInput, out var delay);
                             bool.TryParse(valueInput, out var valueTo);
-
                             controller.Options.SetOptions(delay, valueTo);
                         }
                         else if (controlType == SwitchControl.SwitchToSignal.ToString())
@@ -154,27 +156,23 @@ namespace EmuDevicesUtility
                             message.TryGetValue("SensorId", out var sensorId);
                             message.TryGetValue("ValueTo", out var valueInput);
                             bool.TryParse(valueInput, out var valueTo);
-
-                            controller.Options.SetOptions(sensorId, valueTo);
+                            controller.Options.SetOptions(sensorId!, valueTo);
                         }
                     }
                 }
             }
+
+            return Task.CompletedTask;
         }
 
         private string GetCurrentTopic()
         {
-            var res = "Devices/";
-            switch (controller)
+            return controller switch
             {
-                case Sensor _:
-                    res += "Sensors";
-                    break;
-                case Switch _:
-                    res += "Switches";
-                    break;
-            }
-            return res;
+                Sensor => "Devices/Sensors",
+                Switch => "Devices/Switches",
+                _ => "Devices/Other"
+            };
         }
 
         public void DistributeValue()
@@ -187,7 +185,7 @@ namespace EmuDevicesUtility
                 controller.Value
             };
             var res = JsonConvert.SerializeObject(message);
-            client.Publish(GetCurrentTopic(), Encoding.UTF8.GetBytes(res));
+            _mqttClient.PublishStringAsync(GetCurrentTopic(), res).GetAwaiter().GetResult();
         }
 
         ~ClientDevice()

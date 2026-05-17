@@ -1,9 +1,6 @@
 ﻿using DiplomApp.Data;
 using NLog;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
 
@@ -26,7 +23,7 @@ namespace DiplomApp.Controllers
             types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(Controller)));
             logger = LogManager.GetCurrentClassLogger();
             App.Server.MqttProtocolStoped += Server_ServerStopped;
-            database.Database.CreateIfNotExists();
+            database.Database.EnsureCreated();
         }
 
         public void Create(Controller controller, string controllerType)

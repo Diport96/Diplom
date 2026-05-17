@@ -11,7 +11,6 @@ using MongoDB.Driver;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -119,7 +118,7 @@ namespace DiplomApp.ViewModels
         {
             if (!isLocalSession)
             {
-                var client = new MongoClient(ConfigurationManager.ConnectionStrings["MongoDb"].ConnectionString);
+                var client = new MongoClient(Properties.Settings.Default.MongoDbConnectionString);
                 var database = client.GetDatabase("DevicesData");
 
                 using (var collectionNamesCursor = await database.ListCollectionNamesAsync())

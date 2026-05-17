@@ -1,7 +1,4 @@
-﻿using DiplomApp.ViewModels.Commands;
-using System;
-using System.Collections.Generic;
-using System.Windows;
+using DiplomApp.ViewModels.Commands;
 
 namespace DiplomApp.ViewModels
 {
@@ -9,8 +6,8 @@ namespace DiplomApp.ViewModels
     {
         private bool autoSendData;
         private bool enableDebugInfo;
-        private string webAppUrl;
-        private string selectedAutoSendDataTime;
+        private string webAppUrl = string.Empty;
+        private string? selectedAutoSendDataTime;
 
         public Dictionary<string, TimeSpan> AutoSendDataEvery { get; }
             = new Dictionary<string, TimeSpan>()
@@ -24,36 +21,40 @@ namespace DiplomApp.ViewModels
             { "3 дня", new TimeSpan(3, 0, 0, 0) },
             { "1 неделя", new TimeSpan(7, 0, 0, 0) }
         };
+
         public bool AutoSendData
         {
-            get { return autoSendData; }
+            get => autoSendData;
             set
             {
                 autoSendData = value;
                 OnPropertyChanged("AutoSendData");
             }
         }
-        public string SelectedAutoSendDataTime
+
+        public string? SelectedAutoSendDataTime
         {
-            get { return selectedAutoSendDataTime; }
+            get => selectedAutoSendDataTime;
             set
             {
                 selectedAutoSendDataTime = value;
                 OnPropertyChanged("SelectedAutoSendDataTime");
             }
         }
+
         public bool EnableDebugInfo
         {
-            get { return enableDebugInfo; }
+            get => enableDebugInfo;
             set
             {
                 enableDebugInfo = value;
                 OnPropertyChanged("EnableDebugInfo");
             }
         }
+
         public string WebAppUrl
         {
-            get { return webAppUrl; }
+            get => webAppUrl;
             set
             {
                 webAppUrl = value;
@@ -64,21 +65,24 @@ namespace DiplomApp.ViewModels
         public ApplicationSettingsViewModel(Action<bool> dialogResultWindow)
             : base(dialogResultWindow)
         {
-            WebAppUrl = Properties.Settings.Default.WebAppUrl;
-            AutoSendData = Properties.Settings.Default.AutoSendDataToWebApp;
-            EnableDebugInfo = Properties.Settings.Default.EnableDebugInfo;
+            var settings = Properties.Settings.Default;
+            WebAppUrl = settings.WebAppUrl;
+            AutoSendData = settings.AutoSendDataToWebApp;
+            EnableDebugInfo = settings.EnableDebugInfo;
         }
 
         protected override void Submit()
         {
-            Properties.Settings.Default.WebAppUrl = WebAppUrl;
-            Properties.Settings.Default.AutoSendDataToWebApp = AutoSendData;
-            if (!string.IsNullOrEmpty(SelectedAutoSendDataTime)) Properties.Settings.Default.AutoSendDataEvery = AutoSendDataEvery[SelectedAutoSendDataTime];
-            Properties.Settings.Default.EnableDebugInfo = EnableDebugInfo;
-
-            Properties.Settings.Default.Save();
+            var settings = Properties.Settings.Default;
+            settings.WebAppUrl = WebAppUrl;
+            settings.AutoSendDataToWebApp = AutoSendData;
+            if (!string.IsNullOrEmpty(SelectedAutoSendDataTime))
+                settings.AutoSendDataEvery = AutoSendDataEvery[SelectedAutoSendDataTime];
+            settings.EnableDebugInfo = EnableDebugInfo;
+            settings.Save();
             dialogResultWindowAction(true);
         }
+
         protected override void Cancel()
         {
             dialogResultWindowAction(false);

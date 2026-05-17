@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using DiplomApp.Server;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NUnit.Framework;
+using System.ComponentModel;
 
 namespace DiplomApp.Core.Tests.UnitTests
 {
-    [TestClass]
+    [TestFixture]
     public class MqttManagerTests
     {
-        [TestMethod]
+        [Test]
         public async Task IsRunProperty_RunAndStopManager_TrueAfterRunAndFalseAfterStop()
         {
             IMqttComponent fakeServer = Mock.Of<IMqttComponent>();
@@ -19,37 +16,37 @@ namespace DiplomApp.Core.Tests.UnitTests
             MqttManager mqttManager = new MqttManager(fakeServer, fakeClient);
 
             await mqttManager.RunAsync();
-            Assert.IsTrue(mqttManager.IsRun);
+            Assert.That(mqttManager.IsRun, Is.True);
 
             await mqttManager.StopAsync();
-            Assert.IsFalse(mqttManager.IsRun);
+            Assert.That(mqttManager.IsRun, Is.False);
         }
 
-        [TestMethod]
+        [Test]
         public async Task MqttProtocolStarted_SubscribeDelegateAndInvokeStartAsync_DelegateHasBeenInvokedOnce()
         {
             int invokedEvenCounter = 0;
             var fakeServer = Mock.Of<IMqttComponent>(x => x.RunAsync() == Task.FromResult(true));
             var fakeClient = Mock.Of<IMqttClientComponent>(x => x.RunAsync() == Task.FromResult(true));
             MqttManager mqttManager = new MqttManager(fakeServer, fakeClient);
-            mqttManager.MqttProtocolStarted += delegate (object sender, EventArgs e)
+            mqttManager.MqttProtocolStarted += delegate (object? sender, EventArgs e)
             {
                 invokedEvenCounter++;
             };
 
             await mqttManager.RunAsync();
 
-            Assert.AreEqual(1, invokedEvenCounter);
+            Assert.That(invokedEvenCounter, Is.EqualTo(1));
         }
 
-        [TestMethod]
+        [Test]
         public async Task MqttProtocolStoped_SubscribeDelegateAndInvokeStartAndStopAsync_DelegateHasBeenInvokedOnce()
         {
             int invokedEvenCounter = 0;
             var fakeServer = Mock.Of<IMqttComponent>();
             var fakeClient = Mock.Of<IMqttClientComponent>();
             MqttManager mqttManager = new MqttManager(fakeServer, fakeClient);
-            mqttManager.MqttProtocolStoped += delegate (object sender, EventArgs e)
+            mqttManager.MqttProtocolStoped += delegate (object? sender, EventArgs e)
             {
                 invokedEvenCounter++;
             };
@@ -57,24 +54,24 @@ namespace DiplomApp.Core.Tests.UnitTests
             await mqttManager.RunAsync();
             await mqttManager.StopAsync();
 
-            Assert.AreEqual(1, invokedEvenCounter);
+            Assert.That(invokedEvenCounter, Is.EqualTo(1));
         }
 
-        [TestMethod]
+        [Test]
         public async Task PropertyChanged_SubscribeDelegateAndInvokeStartAsync_DelegateHasBeenInvokedOnce()
         {
             int invokedEvenCounter = 0;
             var fakeServer = Mock.Of<IMqttComponent>();
             var fakeClient = Mock.Of<IMqttClientComponent>();
             MqttManager mqttManager = new MqttManager(fakeServer, fakeClient);
-            mqttManager.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
+            mqttManager.PropertyChanged += delegate (object? sender, PropertyChangedEventArgs e)
             {
                 invokedEvenCounter++;
             };
 
             await mqttManager.RunAsync();
 
-            Assert.AreEqual(1, invokedEvenCounter);
+            Assert.That(invokedEvenCounter, Is.EqualTo(1));
         }
     }
 }

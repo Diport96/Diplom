@@ -1,34 +1,26 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using MQTTnet;
 using MQTTnet.Client;
+using NUnit.Framework;
 
 namespace DiplomApp.Core.Tests.UnitTests
 {
-    [TestClass]
+    [TestFixture]
     public class MqttClientTests
     {
-        [TestMethod]
+        [Test]
         public async Task IsRunProperty_RunAndStopClient_TrueAfterRunAndFalseAfterStop()
         {
             IMqttClient fakeClient = Mock.Of<IMqttClient>();
-            IMqttClientOptions fakeClientOptions = Mock.Of<IMqttClientOptions>();
+            MqttClientOptions fakeClientOptions = new MqttClientOptionsBuilder().Build();
             Server.MqttClient mqttClient = new Server.MqttClient(fakeClient, fakeClientOptions, Callback);
 
             await mqttClient.RunAsync();
-            Assert.IsTrue(mqttClient.IsRun);
+            Assert.That(mqttClient.IsRun, Is.True);
 
             await mqttClient.StopAsync();
-            Assert.IsFalse(mqttClient.IsRun);
+            Assert.That(mqttClient.IsRun, Is.False);
         }
 
-        /// <summary>
-        /// Заглушка для тестирования
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Callback(object sender, MqttApplicationMessageReceivedEventArgs e) { }
+        private Task Callback(MqttApplicationMessageReceivedEventArgs e) => Task.CompletedTask;
     }
 }

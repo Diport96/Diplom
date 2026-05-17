@@ -1,27 +1,21 @@
-﻿using MQTTnet;
+using MQTTnet;
 using MQTTnet.Client;
 using Newtonsoft.Json;
 using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiplomApp.Server
 {
     class MqttClient : IMqttClientComponent
     {
-        private Guid Id;
+        private readonly Guid Id;
         private readonly IMqttClient client;
-        private readonly IMqttClientOptions clientOptions;
+        private readonly MqttClientOptions clientOptions;
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
-        private readonly TopicFilter topic;
         private readonly object _asyncLocker;
 
         public bool IsRun { get; private set; }
 
-        public MqttClient(EventHandler<MqttApplicationMessageReceivedEventArgs> callback)
+        public MqttClient(Func<MqttApplicationMessageReceivedEventArgs, Task> callback)
         {
             Id = Guid.NewGuid();
             IsRun = false;
@@ -32,27 +26,21 @@ namespace DiplomApp.Server
                 .WithClientId(Id.ToString())
                 .WithTcpServer(Properties.Settings.Default.ServerDomain)
                 .Build();
-            topic = new TopicFilterBuilder()
-                  .WithTopic("#")
-                  .WithExactlyOnceQoS()
-                  .Build();
-            client.ApplicationMessageReceived += callback;
+            client.ApplicationMessageReceivedAsync += callback;
         }
 
-        /// <summary>
-        /// Конструктор для тестирования
-        /// </summary>
-        /// <param name="client"></param>
-        /// <param name="clientOptions"></param>
-        /// <param name="logger"></param>
+        // Constructor for testing — bypasses factory creation
         internal MqttClient(
             IMqttClient client,
-            IMqttClientOptions clientOptions,
-            EventHandler<MqttApplicationMessageReceivedEventArgs> callback)
-            : this(callback)
+            MqttClientOptions clientOptions,
+            Func<MqttApplicationMessageReceivedEventArgs, Task> callback)
         {
+            Id = Guid.NewGuid();
+            IsRun = false;
+            _asyncLocker = new object();
             this.client = client;
             this.clientOptions = clientOptions;
+            client.ApplicationMessageReceivedAsync += callback;
         }
 
         public async Task<bool> RunAsync()
@@ -62,7 +50,8 @@ namespace DiplomApp.Server
                 if (IsRun) return true;
                 IsRun = true;
             }
-            async Task<bool> tryConnect()
+
+            async Task<bool> TryConnect()
             {
                 logger.Debug("Попытка подключения к mqtt серверу");
                 try
@@ -77,11 +66,17 @@ namespace DiplomApp.Server
                 return true;
             }
 
-            if (!await tryConnect()) return false;
-            await client.SubscribeAsync(topic);
+            if (!await TryConnect()) return false;
+
+            await client.SubscribeAsync(
+                new MqttClientSubscribeOptionsBuilder()
+                    .WithTopicFilter(f => f.WithTopic("#").WithExactlyOnceQoS())
+                    .Build());
+
             IsRun = true;
             return true;
         }
+
         public async Task StopAsync()
         {
             lock (_asyncLocker)
@@ -89,18 +84,18 @@ namespace DiplomApp.Server
                 if (!IsRun) return;
                 IsRun = false;
             }
-            await client.DisconnectAsync()
-                .ConfigureAwait(false);
+            await client.DisconnectAsync().ConfigureAwait(false);
         }
 
         public async Task SendMessage(string jsonMessage, string topic)
         {
-            await client.PublishAsync(topic, jsonMessage);                
+            await client.PublishStringAsync(topic, jsonMessage);
         }
+
         public async Task SendMessage(Dictionary<string, string> keyValuePairs, string topic)
         {
             var str = JsonConvert.SerializeObject(keyValuePairs);
-            await client.PublishAsync(topic, str);                
-        }       
+            await client.PublishStringAsync(topic, str);
+        }
     }
 }

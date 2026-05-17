@@ -23,6 +23,9 @@ namespace ClientApp
         /// </summary>
         public static string Path = DiplomApp.Properties.Settings.Default.WebAppUrl;
 
+        // Sync path from settings in case it was changed at runtime
+        public static void RefreshPath() => Path = DiplomApp.Properties.Settings.Default.WebAppUrl;
+
         /// <summary>
         /// Аминхронный запрос на удаленную аутентификацию пользователя
         /// </summary>

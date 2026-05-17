@@ -1,19 +1,29 @@
-﻿using MQTTnet;
+using MQTTnet;
 using MQTTnet.Server;
 using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DiplomApp.Server
 {
+    // Thin adapter interface allows mocking in tests without depending on MQTTnet internals
+    internal interface IMqttServerAdapter
+    {
+        Task StartAsync();
+        Task StopAsync();
+    }
+
+    internal sealed class MqttNetServerAdapter : IMqttServerAdapter
+    {
+        private readonly global::MQTTnet.Server.MqttServer _server;
+
+        public MqttNetServerAdapter(global::MQTTnet.Server.MqttServer server) => _server = server;
+
+        public Task StartAsync() => _server.StartAsync();
+        public Task StopAsync() => _server.StopAsync();
+    }
+
     class MqttServer : IMqttComponent
     {
-        private readonly IMqttServer server;
-        private readonly IMqttServerOptions serverOptions;
+        private readonly IMqttServerAdapter server;
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
         private readonly object _asyncLocker;
 
@@ -23,20 +33,16 @@ namespace DiplomApp.Server
         {
             IsRun = false;
             _asyncLocker = new object();
-            var mqttFactory = new MqttFactory();
-            server = mqttFactory.CreateMqttServer();
-            serverOptions = new MqttServerOptions();
+            var options = new MqttServerOptionsBuilder().Build();
+            var realServer = new MqttFactory().CreateMqttServer(options);
+            server = new MqttNetServerAdapter(realServer);
         }
 
-        /// <summary>
-        /// Конструктор для тестирования
-        /// </summary>
-        /// <param name="server"></param>
-        /// <param name="serverOptions"></param>
-        internal MqttServer(IMqttServer server, IMqttServerOptions serverOptions) : this()
+        internal MqttServer(IMqttServerAdapter serverAdapter)
         {
-            this.server = server;
-            this.serverOptions = serverOptions;
+            IsRun = false;
+            _asyncLocker = new object();
+            server = serverAdapter;
         }
 
         public async Task<bool> RunAsync()
@@ -48,17 +54,17 @@ namespace DiplomApp.Server
             }
             try
             {
-                await server.StartAsync(serverOptions);
+                await server.StartAsync();
             }
             catch (InvalidOperationException e)
             {
                 logger.Error(e, e.Message);
                 return false;
             }
-            IsRun = true;
             logger.Info("Сервер запущен");
             return true;
         }
+
         public async Task StopAsync()
         {
             lock (_asyncLocker)
@@ -66,9 +72,8 @@ namespace DiplomApp.Server
                 if (!IsRun) return;
                 IsRun = false;
             }
-            await server.StopAsync()
-                .ConfigureAwait(false);
+            await server.StopAsync().ConfigureAwait(false);
             logger.Info("Сервер остановлен");
-        }        
+        }
     }
 }

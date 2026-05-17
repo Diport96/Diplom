@@ -1,13 +1,10 @@
-﻿using DiplomApp.Server.RequsestHandlers;
-using MQTTnet;
+using DiplomApp.Server.RequsestHandlers;
+using MQTTnet.Client;
 using Newtonsoft.Json;
 using NLog;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DiplomApp.Server
 {
@@ -16,7 +13,7 @@ namespace DiplomApp.Server
         #region Поля и свойства
 
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
-        private static IMqttProtocolManager instance;
+        private static IMqttProtocolManager? instance;
         private readonly IMqttComponent server;
         private readonly IMqttClientComponent client;
         private readonly IRequestHandleManager handleManager;
@@ -27,13 +24,14 @@ namespace DiplomApp.Server
         {
             get
             {
-                if (instance == null) instance = new MqttManager();
+                instance ??= new MqttManager();
                 return instance;
             }
         }
+
         public bool IsRun
         {
-            get { return isRun; }
+            get => isRun;
             private set
             {
                 isRun = value;
@@ -45,9 +43,9 @@ namespace DiplomApp.Server
 
         #region События
 
-        public event EventHandler MqttProtocolStarted;
-        public event EventHandler MqttProtocolStoped;
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler? MqttProtocolStarted;
+        public event EventHandler? MqttProtocolStoped;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         #endregion
 
@@ -56,16 +54,11 @@ namespace DiplomApp.Server
         private MqttManager()
         {
             server = new MqttServer();
-            client = new MqttClient(Callback);
+            client = new MqttClient(CallbackAsync);
             handleManager = new RequestHandleManager();
             _asyncLocker = new object();
         }
 
-        /// <summary>
-        /// Конструктор для тестирования
-        /// </summary>
-        /// <param name="server"></param>
-        /// <param name="client"></param>
         internal MqttManager(IMqttComponent server, IMqttClientComponent client) : this()
         {
             this.server = server;
@@ -85,11 +78,12 @@ namespace DiplomApp.Server
             }
             if (await server.RunAsync() && await client.RunAsync())
             {
-                MqttProtocolStarted?.Invoke(this, new EventArgs());
+                MqttProtocolStarted?.Invoke(this, EventArgs.Empty);
                 return true;
             }
             return false;
         }
+
         public async Task StopAsync()
         {
             lock (_asyncLocker)
@@ -99,9 +93,10 @@ namespace DiplomApp.Server
             }
             if (client.IsRun) await client.StopAsync();
             if (server.IsRun) await server.StopAsync();
-            MqttProtocolStoped?.Invoke(this, new EventArgs());
+            MqttProtocolStoped?.Invoke(this, EventArgs.Empty);
             IsRun = false;
         }
+
         public void Stop()
         {
             lock (_asyncLocker)
@@ -111,7 +106,7 @@ namespace DiplomApp.Server
             }
             if (client.IsRun) client.StopAsync().Wait();
             if (server.IsRun) server.StopAsync().Wait();
-            MqttProtocolStoped?.Invoke(this, new EventArgs());
+            MqttProtocolStoped?.Invoke(this, EventArgs.Empty);
             IsRun = false;
         }
 
@@ -121,38 +116,38 @@ namespace DiplomApp.Server
 
         public async Task SendMessage(string jsonMessage, string topic)
         {
-            await client.SendMessage(jsonMessage, topic)
-                 .ConfigureAwait(false);
+            await client.SendMessage(jsonMessage, topic).ConfigureAwait(false);
         }
+
         public async Task SendMessage(Dictionary<string, string> keyValuePairs, string topic)
         {
-            await client.SendMessage(keyValuePairs, topic)
-                 .ConfigureAwait(false);
+            await client.SendMessage(keyValuePairs, topic).ConfigureAwait(false);
         }
 
         #endregion
 
         #region Методы обработки полученных сообщений
 
-        private void Callback(object sender, MqttApplicationMessageReceivedEventArgs e)
+        private Task CallbackAsync(MqttApplicationMessageReceivedEventArgs e)
         {
-
-            var jsonMessage = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+            var jsonMessage = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
             var message = GetDataFromJson(jsonMessage);
 
-            message.TryGetValue("Message_Type", out string req);
-            logger.Trace($"Получено сообщение из топика { e.ApplicationMessage.Topic}. Тип сообщения: {req}");
-            if (req == SetOfConstants.MessageTypes.PERMIT_TO_CONNECT) return;
+            message.TryGetValue("Message_Type", out string? req);
+            logger.Trace($"Получено сообщение из топика {e.ApplicationMessage.Topic}. Тип сообщения: {req}");
+            if (req == SetOfConstants.MessageTypes.PERMIT_TO_CONNECT) return Task.CompletedTask;
 
             message.Add("Topic", e.ApplicationMessage.Topic);
             HandleRequest(message);
+            return Task.CompletedTask;
         }
+
         private Dictionary<string, string> GetDataFromJson(string jsonMessage)
         {
             try
             {
-                var message = JsonConvert.DeserializeObject(jsonMessage, typeof(Dictionary<string, string>)) as Dictionary<string, string>;
-                return message;
+                var message = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonMessage);
+                return message ?? new Dictionary<string, string>();
             }
             catch (Exception w)
             {
@@ -160,6 +155,7 @@ namespace DiplomApp.Server
                 throw;
             }
         }
+
         private void HandleRequest(Dictionary<string, string> message)
         {
             try
@@ -176,7 +172,7 @@ namespace DiplomApp.Server
 
         #endregion
 
-        protected void OnPropertyChanged([CallerMemberName]string prop = null)
+        protected void OnPropertyChanged([CallerMemberName] string? prop = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
