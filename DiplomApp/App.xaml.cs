@@ -11,10 +11,10 @@ namespace DiplomApp
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        internal static IMqttProtocolManager Server { get; private set; } = null!;
-        internal static IAccountManager UserAccountManager { get; private set; } = null!;
-        internal static IControllersFactory ControllersFactory { get; private set; } = null!;
-        internal static IWindowService WindowService { get; private set; } = null!;
+        internal static IMqttProtocolManager Server { get; internal set; } = null!;
+        internal static IAccountManager UserAccountManager { get; internal set; } = null!;
+        internal static IControllersFactory ControllersFactory { get; internal set; } = null!;
+        internal static IWindowService WindowService { get; internal set; } = null!;
 
         App()
         {

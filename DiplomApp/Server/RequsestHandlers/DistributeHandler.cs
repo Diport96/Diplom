@@ -35,6 +35,12 @@ namespace DiplomApp.Server.RequsestHandlers
             database = MongoDbInstance.Instance.Database;
         }
 
+        // Конструктор для тестов: позволяет подставить мок IMongoDatabase
+        internal DistributeHandler(IMongoDatabase database)
+        {
+            this.database = database;
+        }
+
         public void Run(Dictionary<string, string> pairs)
         {
             var info = ControllersFactory.GetControllerInfo(pairs["ID"]);
@@ -50,17 +56,18 @@ namespace DiplomApp.Server.RequsestHandlers
             {
                 var controller = ControllersFactory.GetById(pairs["ID"]) as Sensor;
                 double.TryParse(pairs["Value"], out double value);
-                controller.Value = value;
+                if (controller != null) controller.Value = value;
             }
             else if (type == typeof(Switch) || type.IsSubclassOf(typeof(Switch)))
             {
                 var controller = ControllersFactory.GetById(pairs["ID"]) as Switch;
                 bool.TryParse(pairs["Value"], out bool value);
-                controller.Value = value;
+                if (controller != null) controller.Value = value;
             }
 
             pairs.Remove("Topic");
-            pairs.Add("User", App.UserAccountManager.CurrentUser.Login);
+            var login = App.UserAccountManager.CurrentUser?.Login;
+            if (login != null) pairs.Add("User", login);
             pairs.Add("Name", info.Name);
             BsonDocument element = new BsonDocument(pairs);
             try

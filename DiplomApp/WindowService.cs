@@ -19,7 +19,7 @@ namespace DiplomApp
             {
                 authenticationWindow = new AuthentificationWindow
                 {
-                    DataContext = new AuthenticationViewModel(this)
+                    DataContext = new AuthenticationViewModel(this, new ClientApp.WebApiClient())
                 };
                 authenticationWindow.Closed += (sender, e) => authenticationWindow = null;
                 authenticationWindow.Show();

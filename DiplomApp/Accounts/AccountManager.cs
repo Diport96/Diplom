@@ -21,6 +21,13 @@ namespace DiplomApp.Accounts
             database.Database.EnsureCreated();
         }
 
+        // Конструктор для тестов: принимает заранее сконфигурированный контекст
+        internal AccountManager(UserAccountContext context)
+        {
+            database = context;
+            database.Database.EnsureCreated();
+        }
+
         public IAccount CreateAccount(string login, string password)
         {
             var result = database.UserAccounts.FirstOrDefault(x => x.Login == login);

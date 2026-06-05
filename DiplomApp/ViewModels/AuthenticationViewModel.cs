@@ -13,6 +13,7 @@ namespace DiplomApp.ViewModels
     class AuthenticationViewModel : BaseViewModel
     {
         private readonly IWindowService windowService;
+        private readonly IWebApiClient webApiClient;
         private AsyncRelayCommand signInCommand;
         private string login;
         private string attemptMessage;
@@ -74,14 +75,15 @@ namespace DiplomApp.ViewModels
             }
         }
 
-        public AuthenticationViewModel(IWindowService windowService)
+        public AuthenticationViewModel(IWindowService windowService, IWebApiClient webApiClient)
         {
             IsSignInButtonEnabled = true;
             CircualrBarIsVisible = Visibility.Hidden;
             this.windowService = windowService;
+            this.webApiClient = webApiClient;
         }
 
-        private async Task SignIn(string login, string password)
+        internal async Task SignIn(string login, string password)
         {
             BeginProcessing();
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
@@ -89,10 +91,10 @@ namespace DiplomApp.ViewModels
                 AttemptMessage = "Поля логина и пароля не должны быть пустыми";
                 AttemptShow = true;
                 EndProcessing();
+                return;
             }
 
-            //!!! Await exception handle
-            if (await API.LoginAsync(login, password))
+            if (await webApiClient.LoginAsync(login, password))
             {
                 if (!await UserAccountManager.CheckIfAccountExists(login))
                 {
@@ -106,7 +108,7 @@ namespace DiplomApp.ViewModels
             {
                 if (await UserAccountManager.LoginAsync(login, password))
                 {
-                    async Task<bool> connectToWebApp() => await API.LoginAsync(login, password);
+                    async Task<bool> connectToWebApp() => await webApiClient.LoginAsync(login, password);
                     RedirectToMainWindow(login, true, connectToWebApp);
                 }
                 else

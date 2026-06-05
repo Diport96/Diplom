@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="DiplomApp.Core.Tests" />
+    <!-- Позволяет Moq (Castle DynamicProxy) создавать прокси для internal-интерфейсов -->
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 
   <ItemGroup>
